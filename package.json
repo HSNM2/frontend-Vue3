@@ -14,9 +14,11 @@
   },
   "dependencies": {
     "@vee-validate/i18n": "^4.8.6",
+    "@vee-validate/rules": "^4.8.6",
     "pinia": "^2.0.32",
     "vee-validate": "^4.8.6",
     "vue": "^3.2.47",
+    "vue-loading-overlay": "^6.0.3",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
@@ -35,6 +37,8 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.23",
     "prettier": "^2.8.4",
+    "prettier-plugin-tailwindcss": "^0.2.8",
+    "sass": "^1.62.1",
     "tailwindcss": "^3.3.2",
     "typescript": "~4.8.4",
     "vite": "^4.1.4",

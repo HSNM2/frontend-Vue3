@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import statusStore from './stores/status'
+import { storeToRefs } from 'pinia'
+
+const status = statusStore()
+const { isLoading } = storeToRefs(status)
 </script>
 
 <template>
+  <v-loading v-model:active="isLoading" :is-full-page="true" />
+
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
