@@ -17,8 +17,8 @@ export default {
 
     setLocale('zh_TW')
 
-    app.component('v-field', Field)
-    app.component('v-form', Form)
-    app.component('error-message', ErrorMessage)
+    app.component('VField', Field)
+    app.component('VForm', Form)
+    app.component('ErrorMessage', ErrorMessage)
   }
 }

@@ -9,7 +9,7 @@ const { isLoading } = storeToRefs(status)
 </script>
 
 <template>
-  <v-loading v-model:active="isLoading" :is-full-page="true" />
+  <VLoading v-model:active="isLoading" :is-full-page="true" />
 
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
