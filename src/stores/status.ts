@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export default defineStore('statusStore', () => {
+export default defineStore('status', () => {
   const isLoading = ref(false)
 
-  function changeLoadingStatus(status: boolean) {
+  function updateLoading(status: boolean) {
     isLoading.value = status
   }
 
   return {
     isLoading,
 
-    changeLoadingStatus
+    updateLoading
   }
 })
