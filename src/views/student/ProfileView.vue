@@ -1,5 +1,5 @@
 <template>
-  <main>首頁</main>
+  <main>student profile</main>
 </template>
 
 <script setup lang="ts"></script>
