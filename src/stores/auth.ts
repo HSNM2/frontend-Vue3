@@ -7,9 +7,9 @@ interface User {
   name: string
 }
 
-export default defineStore('auth', () => {
+export const useAuthStore = defineStore('auth', () => {
   const apiUrl = import.meta.env.VITE_API_URL
-  const token = ref(Cookies.get('authToken') || '')
+  const token = ref<string>(Cookies.get('access_token') || '')
   const user = ref<User | null>(null)
 
   // loginModal & registerModal 的開關
@@ -19,21 +19,22 @@ export default defineStore('auth', () => {
   function removeToken() {
     token.value = ''
     user.value = null
-    Cookies.remove('authToken')
+    Cookies.remove('access_token')
   }
 
   function login(payload: { email: string; password: string }) {
-    return axios.post(apiUrl + '/user/login', payload).then((res) => {
-      Cookies.set('authToken', 'value', { expires: 7 })
+    return axios.post('/api/user/login', payload).then((res) => {
+      console.log(res)
+      return res
     })
   }
 
   function register(payload: { email: string; password: string; confirmPassword: string }) {
-    return axios.post(apiUrl + '/user/register', payload).then((res) => {})
+    return axios.post(apiUrl + '/api/user/register', payload)
   }
 
   function logout() {
-    return axios.post(apiUrl + '/user/logout').then((res) => {
+    return axios.post(apiUrl + '/api/user/logout').then((res) => {
       removeToken()
     })
   }

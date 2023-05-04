@@ -47,14 +47,17 @@
 
 <script setup lang="ts">
 import Swal from 'sweetalert2'
+import useErrorHandler from '../composables/useErrorHandler.js'
 import { nextTick, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { FormContext } from 'vee-validate'
-import statusStore from '../stores/status'
-import authStore from '../stores/auth'
+import { useStatusStore } from '@/stores/status'
+import { useAuthStore } from '@/stores/auth'
 
-const { updateLoading } = statusStore()
-const auth = authStore()
+const { showError } = useErrorHandler()
+const { updateLoading } = useStatusStore()
+
+const auth = useAuthStore()
 const { login } = auth
 const { loginModal } = storeToRefs(auth)
 
@@ -85,19 +88,16 @@ function onSubmit() {
     email: email.value,
     password: password.value
   })
-    .then(() => {
+    .then((res) => {
       Swal.fire({
         icon: 'success',
-        title: '登入成功'
+        title: res.data.message
       })
       reset()
       loginModal.value = false
     })
     .catch((err) => {
-      Swal.fire({
-        icon: 'error',
-        title: '登入失敗'
-      })
+      showError(err)
     })
     .finally(() => {
       updateLoading(false)
