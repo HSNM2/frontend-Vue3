@@ -64,7 +64,7 @@ import { ref, watch, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useStatusStore } from '@/stores/status'
 import { useAuthStore } from '@/stores/auth'
-import { FormContext } from 'vee-validate'
+import type { FormContext } from 'vee-validate'
 
 const { showError } = useErrorHandler()
 

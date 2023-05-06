@@ -50,7 +50,7 @@ import Swal from 'sweetalert2'
 import useErrorHandler from '../composables/useErrorHandler.js'
 import { nextTick, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { FormContext } from 'vee-validate'
+import type { FormContext } from 'vee-validate'
 import { useStatusStore } from '@/stores/status'
 import { useAuthStore } from '@/stores/auth'
 
