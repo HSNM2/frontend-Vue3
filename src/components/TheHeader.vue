@@ -1,13 +1,25 @@
 <template>
   <header class="h-auto">
-    <div class="container mx-auto flex h-full items-center justify-between py-2">
+    <div class="container mx-auto flex h-full items-center justify-between py-2 lg:py-3">
       <RouterLink to="/">
-        <div class="h-11 w-25 bg-logo bg-contain bg-center bg-no-repeat"></div>
+        <div class="h-11 w-25 bg-logo bg-contain bg-center bg-no-repeat lg:h-12 lg:w-27"></div>
       </RouterLink>
-      <nav>
+      <nav class="md:w-full">
         <div class="flex items-center md:hidden">
           <span class="material-icons pr-1 text-3xl text-primary-5"> shopping_cart </span>
           <span class="material-icons text-4xl text-primary-5"> menu </span>
+        </div>
+        <div class="hidden md:flex md:items-center md:justify-between">
+          <button class="ml-14 flex items-center">
+            <p class="mr-3">探索</p>
+            <span class="material-icons"> expand_more </span>
+          </button>
+          <div class="flex items-center gap-x-4">
+            <span class="material-icons pr-1 text-3xl text-neutral-600"> search </span>
+            <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
+            <button class="btn-primary">登入</button>
+            <button class="btn-secondary">註冊</button>
+          </div>
         </div>
         <!-- <RouterLink to="/course">探索</RouterLink> -->
       </nav>
