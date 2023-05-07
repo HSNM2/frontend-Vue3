@@ -17,8 +17,8 @@
           <div class="flex items-center gap-x-4">
             <span class="material-icons pr-1 text-3xl text-neutral-600"> search </span>
             <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
-            <button class="btn-primary">登入</button>
-            <button class="btn-secondary">註冊</button>
+            <button @click="loginModal = true" class="btn-primary">登入</button>
+            <button @click="registerModal = true" class="btn-secondary">註冊</button>
           </div>
         </div>
         <!-- <RouterLink to="/course">探索</RouterLink> -->
@@ -91,7 +91,10 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '../stores/auth'
 import LoginModal from './LoginModal.vue'
 import RegisterModal from './RegisterModal.vue'
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const auth = useAuthStore()
 const { user, token } = auth

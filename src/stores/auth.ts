@@ -24,7 +24,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   function login(payload: { email: string; password: string }) {
     return axios.post('/api/user/login', payload).then((res) => {
-      console.log(res)
+      console.log(Cookies.get('access_token'))
+      token.value = Cookies.get('access_token') || ''
       return res
     })
   }

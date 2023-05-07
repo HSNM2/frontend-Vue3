@@ -4,7 +4,7 @@ import { RouterView } from 'vue-router'
 import TheHeader from './components/TheHeader.vue'
 import TheFooter from './components/TheFooter.vue'
 
-import { useStatusStore } from './stores/status'
+import { useStatusStore } from './stores/status.js'
 import { storeToRefs } from 'pinia'
 
 const status = useStatusStore()

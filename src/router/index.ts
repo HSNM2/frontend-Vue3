@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { useAuthStore } from '../stores/auth.js'
+import { storeToRefs } from 'pinia'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,8 +25,16 @@ const router = createRouter({
       component: () => import('../views/CoursesView.vue')
     },
     {
+      path: '/discover',
+      name: 'discover',
+      component: () => import('../views/DiscoverView.vue')
+    },
+    {
       path: '/student',
       name: 'student',
+      meta: {
+        requiresAuth: true
+      },
       children: [
         {
           path: '',
@@ -37,8 +47,37 @@ const router = createRouter({
           component: () => import('../views/student/ProfileView.vue')
         }
       ]
+    },
+    {
+      path: '/instructor',
+      name: 'instructor',
+      meta: {
+        requiresAuth: true
+      },
+      children: [
+        {
+          path: '',
+          name: 'instructorHome',
+          component: () => import('../views/instructor/HomeView.vue')
+        }
+      ]
+    },
+    {
+      // not found page
+      path: '/:pathMatch(.*)*',
+      redirect: '/'
     }
   ]
 })
 
+router.beforeEach((to, from) => {
+  if (to.meta.requiresAuth) {
+    const auth = useAuthStore()
+    const { token, loginModal } = storeToRefs(auth)
+    if (!token.value) {
+      loginModal.value = true
+      return { path: from.path, query: { redirect: to.fullPath } }
+    }
+  }
+})
 export default router
