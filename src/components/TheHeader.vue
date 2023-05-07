@@ -88,11 +88,14 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import authStore from '../stores/auth'
+import { useAuthStore } from '../stores/auth'
 import LoginModal from './LoginModal.vue'
 import RegisterModal from './RegisterModal.vue'
+import { onMounted } from 'vue'
 
-const auth = authStore()
-const { user } = auth
+const auth = useAuthStore()
+const { user, token } = auth
 const { loginModal, registerModal } = storeToRefs(auth)
+
+onMounted(() => {})
 </script>

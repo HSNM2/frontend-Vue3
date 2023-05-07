@@ -4,10 +4,10 @@ import { RouterView } from 'vue-router'
 import TheHeader from './components/TheHeader.vue'
 import TheFooter from './components/TheFooter.vue'
 
-import statusStore from './stores/status'
+import { useStatusStore } from './stores/status'
 import { storeToRefs } from 'pinia'
 
-const status = statusStore()
+const status = useStatusStore()
 const { isLoading } = storeToRefs(status)
 </script>
 
