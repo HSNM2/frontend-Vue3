@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="mb-25 w-full">
+    <div class="mb-25 w-full md:mb-30">
       <img class="w-auto md:hidden" src="/image/banner-sm.png" alt="" />
       <img class="hidden w-auto md:block" src="/image/banner-lg.png" alt="" />
     </div>
@@ -14,103 +14,116 @@
         class="mx-auto mb-5 h-3 w-27 bg-icon-rolling-pin bg-contain bg-center bg-no-repeat"
       ></div>
       <p class="mb-4 text-center text-neutral-800">
-        各式各樣的課程，等著充滿熱情的你來探索<br />結合「食 food」智能 AI助教，更能抓準問題的<br />所在，24hr
-        都有他在
+        各式各樣的課程，等著充滿熱情的你來探索<br />結合「食 food」智能 AI助教，更能抓準問題的<br
+          class="md:hidden"
+        />所在，24hr 都有他在
       </p>
       <p class="mb-6 text-center text-neutral-800">想知道課程到底都教了什麼？查看以下的影片：</p>
-      <div class="mb-13">
+      <div class="mb-13 flex flex-col items-center gap-y-6 md:flex-row md:justify-evenly">
         <div
-          class="mx-auto mb-6 flex h-27 w-27 flex-col items-center justify-evenly rounded-full bg-primary-2/20"
+          class="flex h-27 w-27 flex-col items-center justify-evenly rounded-full bg-primary-2/20"
         >
           <p class="text-center text-temporary-1 font-bold text-neutral-800">153</p>
           <p class="text-center">Chapters</p>
         </div>
         <div
-          class="mx-auto mb-6 flex h-27 w-27 flex-col items-center justify-evenly rounded-full bg-primary-2/20"
+          class="flex h-27 w-27 flex-col items-center justify-evenly rounded-full bg-primary-2/20"
         >
           <p class="text-center text-temporary-1 font-bold text-neutral-800">63</p>
           <p class="text-center">Lessons</p>
         </div>
         <div
-          class="mx-auto mb-6 flex h-27 w-27 flex-col items-center justify-evenly rounded-full bg-primary-2/20"
+          class="flex h-27 w-27 flex-col items-center justify-evenly rounded-full bg-primary-2/20"
         >
           <p class="text-center text-temporary-1 font-bold text-neutral-800">100+</p>
           <p class="w-29 text-center">hours of videos</p>
         </div>
       </div>
-      <div class="mb-6 h-39 w-full bg-video-demo bg-contain bg-center bg-no-repeat"></div>
+      <div class="mb-6 h-39 w-full bg-video-demo bg-contain bg-center bg-no-repeat md:h-125"></div>
     </div>
-    <div class="relative mb-12.5 overflow-x-scroll">
+    <div class="relative mb-12.5 overflow-x-scroll md:mb-30">
       <div class="flex gap-6 px-3">
         <div class="w-auto">
-          <div class="h-41 w-64 rounded-t-xl bg-course-1 bg-cover bg-center bg-no-repeat"></div>
-          <div class="h-22 flex w-64 flex-col justify-evenly rounded-b-xl bg-neutral-100 p-2">
-            <p class="mb-2">意式甜點大師班：手工鮮奶油千層蛋糕</p>
-            <p class="text-right text-primary-4">NT$2,680</p>
+          <div
+            class="md:h-66 h-41 w-64 rounded-t-xl bg-course-1 bg-cover bg-center bg-no-repeat md:w-104"
+          ></div>
+          <div
+            class="h-22 md:h-34 flex w-64 flex-col justify-evenly rounded-b-xl bg-neutral-100 p-2 md:w-104 md:p-5"
+          >
+            <p class="mb-2 md:text-heading-xl">意式甜點大師班：手工鮮奶油千層蛋糕</p>
+            <p class="text-right text-primary-4 md:text-lg">NT$2,680</p>
           </div>
         </div>
         <div class="w-auto">
-          <div class="h-41 w-64 rounded-t-xl bg-course-1 bg-cover bg-center bg-no-repeat"></div>
-          <div class="h-22 flex w-64 flex-col justify-evenly rounded-b-xl bg-neutral-100 p-2">
-            <p class="mb-2">意式甜點大師班：手工鮮奶油千層蛋糕</p>
-            <p class="text-right text-primary-4">NT$2,680</p>
+          <div
+            class="md:h-66 h-41 w-64 rounded-t-xl bg-course-1 bg-cover bg-center bg-no-repeat md:w-104"
+          ></div>
+          <div
+            class="h-22 md:h-34 flex w-64 flex-col justify-evenly rounded-b-xl bg-neutral-100 p-2 md:w-104 md:p-5"
+          >
+            <p class="mb-2 md:text-heading-xl">意式甜點大師班：手工鮮奶油千層蛋糕</p>
+            <p class="text-right text-primary-4 md:text-lg">NT$2,680</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="container py-12.5">
-      <div class="relative mb-6 lg:bg-feature lg:bg-cover lg:bg-center lg:bg-no-repeat">
-        <div
-          class="absolute -left-3 top-1/2 -z-10 -mt-7.5 h-15 w-screen bg-primary-1 md:hidden lg:hidden"
-        ></div>
-        <div class="rounded-full border border-primary-2 p-7">
+    <div class="mb-12.5 md:mb-30">
+      <div class="lg:bg-feature lg:bg-cover lg:bg-center lg:bg-no-repeat">
+        <div class="relative md:flex md:flex-col md:items-center">
+          <div class="absolute top-36.5 h-15 w-screen bg-primary-1 md:top-61.5 lg:hidden"></div>
+          <div class="mb-6 px-3 md:px-0">
+            <div class="mx-auto rounded-full border border-primary-2 p-7 md:w-145 md:p-12">
+              <div
+                class="h-73 w-full rounded-full bg-feature-center bg-cover bg-center bg-no-repeat md:h-123 md:w-123"
+              ></div>
+            </div>
+          </div>
           <div
-            class="h-73 w-full rounded-full bg-feature-center bg-cover bg-center bg-no-repeat"
-          ></div>
-        </div>
-      </div>
-      <div class="flex flex-col">
-        <div class="flex flex-col items-center">
-          <div class="mb-6 w-76">
-            <div
-              class="mx-auto mb-4 h-40 w-40 bg-feature-icon-1 bg-contain bg-center bg-no-repeat"
-            ></div>
-            <p class="text-center text-lg text-primary-6">
-              嚴謹的篩選機制與演算法，讓你能快速搜尋到心目中理想的甜點
-            </p>
-          </div>
-          <div class="mb-6 w-76">
-            <div
-              class="mx-auto mb-4 h-40 w-40 bg-feature-icon-2 bg-contain bg-center bg-no-repeat"
-            ></div>
-            <p class="text-center text-lg text-primary-6">
-              完善的審查機制，讓線上教學物超所值，每一次都是趟精美的旅程
-            </p>
-          </div>
-        </div>
-        <div class="flex flex-col items-center">
-          <div class="mb-6 w-76">
-            <div
-              class="mx-auto mb-4 h-40 w-40 bg-feature-icon-3 bg-contain bg-center bg-no-repeat"
-            ></div>
-            <p class="text-center text-lg text-primary-6">
-              完善的交流環境，讓遇到問題時隨時有甜點的同好替你解答，所有問題迎刃而解
-            </p>
-          </div>
-          <div class="mb-6 w-76">
-            <div
-              class="mx-auto mb-4 h-40 w-40 bg-feature-icon-4 bg-contain bg-center bg-no-repeat"
-            ></div>
-            <p class="text-center text-lg text-primary-6">
-              VIP 紅利優惠，讓你買越多省越多，成為真正的甜點大師
-            </p>
+            class="container flex flex-col lg:absolute lg:top-0 lg:h-full lg:flex-row lg:justify-between"
+          >
+            <div class="flex flex-col items-center md:justify-between">
+              <div class="mb-6 w-76">
+                <div
+                  class="mx-auto mb-4 h-40 w-40 bg-feature-icon-1 bg-contain bg-center bg-no-repeat"
+                ></div>
+                <p class="text-center text-lg text-primary-6">
+                  嚴謹的篩選機制與演算法，讓你能快速搜尋到心目中理想的甜點
+                </p>
+              </div>
+              <div class="mb-6 w-76">
+                <div
+                  class="mx-auto mb-4 h-40 w-40 bg-feature-icon-2 bg-contain bg-center bg-no-repeat"
+                ></div>
+                <p class="text-center text-lg text-primary-6">
+                  完善的審查機制，讓線上教學物超所值，每一次都是趟精美的旅程
+                </p>
+              </div>
+            </div>
+            <div class="flex flex-col items-center md:justify-between">
+              <div class="mb-6 w-76">
+                <div
+                  class="mx-auto mb-4 h-40 w-40 bg-feature-icon-3 bg-contain bg-center bg-no-repeat"
+                ></div>
+                <p class="text-center text-lg text-primary-6">
+                  完善的交流環境，讓遇到問題時隨時有甜點的同好替你解答，所有問題迎刃而解
+                </p>
+              </div>
+              <div class="mb-6 w-76">
+                <div
+                  class="mx-auto mb-4 h-40 w-40 bg-feature-icon-4 bg-contain bg-center bg-no-repeat"
+                ></div>
+                <p class="text-center text-lg text-primary-6">
+                  VIP 紅利優惠，讓你買越多省越多，成為真正的甜點大師
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="container py-12.5">
       <h2 class="mb-6 text-center text-heading-3xl font-bold text-primary-5">大家都怎麼說？</h2>
-      <div class="flex flex-col gap-y-6">
+      <div class="columns-1 gap-6 md:columns-2 lg:columns-3">
         <div class="rounded-xl border border-primary-4 bg-primary-4/10 p-5">
           <p class="mb-5">
             糖漬時光 線上教學網站的客服非常親切，對我的問題耐心解答，讓我很感動。 ✨
