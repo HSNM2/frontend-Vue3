@@ -69,7 +69,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useStatusStore } from '@/stores/status'
 import useErrorHandler from '../../composables/useErrorHandler'
-import { FormContext } from 'vee-validate'
+import type { FormContext } from 'vee-validate'
 
 const { updateLoading } = useStatusStore()
 const { showError } = useErrorHandler()
