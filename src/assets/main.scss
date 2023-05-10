@@ -17,4 +17,20 @@
   .btn-secondary {
     @apply max-h-10 rounded-3xl border border-primary-5 px-10 py-2 text-center text-primary-5 hover:border-neutral-50 hover:bg-primary-3 hover:text-neutral-50 active:border-neutral-50 active:bg-primary-4 active:text-neutral-900;
   }
+
+  // 表單樣式
+  .form-label {
+    @apply text-neutral-800 inline-block mb-2;
+  }
+  .form-control {
+    @apply text-neutral-800 px-4 py-1.5 w-full border border-neutral-400 rounded focus:ring-1 focus:border-primary-4 focus:outline-none focus:ring-primary-4;
+
+    &.invalid {
+      @apply border-rose-500 focus:ring-rose-500;
+    }
+
+  }
+  .invalid-feedback {
+    @apply text-sm text-rose-500;
+  }
 }

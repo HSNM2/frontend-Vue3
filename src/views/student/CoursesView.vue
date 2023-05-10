@@ -1,5 +1,5 @@
 <template>
-  <main>student home</main>
+  <div>我的學習</div>
 </template>
 
 <script setup lang="ts"></script>

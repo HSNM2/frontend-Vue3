@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import { useAuthStore } from '../stores/auth.js'
 import { storeToRefs } from 'pinia'
+import Swal from 'sweetalert2'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,16 +36,17 @@ const router = createRouter({
       meta: {
         requiresAuth: true
       },
+      component: () => import('../views/student/DashboardView.vue'),
       children: [
-        {
-          path: '',
-          name: 'studentHome',
-          component: () => import('../views/student/HomeView.vue')
-        },
         {
           path: 'profile',
           name: 'studentProfile',
           component: () => import('../views/student/ProfileView.vue')
+        },
+        {
+          path: 'profile',
+          name: 'studentCourses',
+          component: () => import('../views/student/CoursesView.vue')
         }
       ]
     },
