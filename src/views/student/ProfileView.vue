@@ -41,7 +41,7 @@
         <ErrorMessage class="invalid-feedback" name="nickName" />
       </div>
       <div>
-        <label for="gender">性別*</label>
+        <label for="gender" class="form-label">性別*</label>
         <VField
           id="gender"
           class="form-control"

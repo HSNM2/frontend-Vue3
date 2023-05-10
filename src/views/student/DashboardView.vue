@@ -7,7 +7,7 @@
             <img src="https://fakeimg.pl/100x100/B7B7B7/" class="mx-auto rounded-full" />
             <label
               id="profilePhoto"
-              class="absolute bottom-0 bottom-0 right-0 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-red-50"
+              class="absolute bottom-0 bottom-0 right-0 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-primary-4 text-white"
             >
               <span class="material-icons text-sm">photo_camera</span>
               <input class="hidden" type="file" name="profile-photo" id="profilePhoto" />
