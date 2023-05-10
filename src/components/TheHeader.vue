@@ -11,8 +11,8 @@
         </div>
         <div class="hidden md:flex md:items-center md:justify-between">
           <button class="ml-14 flex items-center">
-            <p class="mr-3">探索</p>
-            <span class="material-icons"> expand_more </span>
+            <p class="mr-3 text-primary-5">探索</p>
+            <span class="material-icons text-primary-5"> expand_more </span>
           </button>
           <div class="flex items-center gap-x-4">
             <span class="material-icons pr-1 text-3xl text-neutral-600"> search </span>
