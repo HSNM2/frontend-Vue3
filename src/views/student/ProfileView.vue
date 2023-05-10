@@ -84,10 +84,6 @@ function reset() {
   name.value = ''
   nickName.value = ''
   gender.value = 'M'
-
-  nextTick(() => {
-    profileForm.value?.resetForm()
-  })
 }
 
 onMounted(() => {

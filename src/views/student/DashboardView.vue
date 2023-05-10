@@ -1,5 +1,5 @@
 <template>
-  <main class="bg-primary-1 py-8">
+  <main class="bg-neutral-100 py-8">
     <div class="container">
       <div class="grid grid-cols-12 gap-6">
         <aside class="col-span-3 flex flex-col items-center bg-neutral-50 py-6">
@@ -27,7 +27,7 @@
             >
           </nav>
         </aside>
-        <div class="col-span-9 bg-primary-1">
+        <div class="col-span-9 bg-neutral-100">
           <router-view></router-view>
         </div>
       </div>
