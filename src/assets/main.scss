@@ -17,6 +17,14 @@
   .btn-secondary {
     @apply max-h-10 rounded-3xl border border-primary-5 px-10 py-2 text-center text-primary-5 hover:border-neutral-50 hover:bg-primary-3 hover:text-neutral-50 active:border-neutral-50 active:bg-primary-4 active:text-neutral-900;
   }
+  .btn-back {
+    @apply max-h-10 rounded-3xl bg-primary-3 px-10 py-2 text-center text-neutral-900 hover:bg-primary-4
+    hover:text-neutral-50 active:bg-primary-5 active:text-neutral-50;
+  }
+  .btn-back2 {
+    @apply h-10 w-10 rounded-full bg-primary-3 text-center text-neutral-900 hover:bg-primary-4
+    hover:text-neutral-50 active:bg-primary-5 active:text-neutral-50;
+  }
 
   // 表單樣式
   .form-label {

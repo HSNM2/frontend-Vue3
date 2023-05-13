@@ -87,9 +87,13 @@ module.exports = {
       },
       maxWidth: {
         214: '53.5rem'
+      },
+      borderRadius: {
+        DEFAULT: '20px'
       }
     },
     fontSize: {
+      xs: ['12px'],
       sm: ['14px', '21px'],
       base: ['16px', '24px'],
       lg: ['20px', '30px'],
