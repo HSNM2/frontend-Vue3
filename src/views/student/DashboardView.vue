@@ -1,6 +1,6 @@
 <template>
   <main class="bg-neutral-100 py-8">
-    <div class="container">
+    <div class="px-4 lg:container">
       <div class="grid grid-cols-12 gap-6">
         <aside class="col-span-3 flex flex-col items-center bg-neutral-50 py-6">
           <div class="relative">
@@ -13,7 +13,7 @@
               <input class="hidden" type="file" name="profile-photo" id="profilePhoto" />
             </label>
           </div>
-          <span class="py-6 text-center">會員名字</span>
+          <span class="py-6 text-center">{{ user ? user.name : '' }}</span>
           <nav class="w-full border-t py-2">
             <router-link
               v-for="link in sidebarMenuLinks"
@@ -27,7 +27,7 @@
           </nav>
         </aside>
         <div class="col-span-9 bg-neutral-100">
-          <router-view></router-view>
+          <router-view v-if="user"></router-view>
         </div>
       </div>
     </div>
@@ -37,6 +37,11 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '@/stores/auth'
+
+const auth = useAuthStore()
+const { user } = storeToRefs(auth)
 
 const sidebarMenuLinks = ref([
   { name: '我的學習', icon: 'computer', to: '/student/courses' },

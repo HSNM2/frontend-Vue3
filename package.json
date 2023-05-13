@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.7",
     "@types/js-cookie": "^3.0.3",
     "@vee-validate/i18n": "^4.8.6",
     "@vee-validate/rules": "^4.8.6",
@@ -20,6 +21,7 @@
     "js-cookie": "^3.0.5",
     "pinia": "^2.0.32",
     "sweetalert2": "^11.7.3",
+    "v-calendar": "^3.0.3",
     "vee-validate": "^4.8.6",
     "vue": "^3.2.47",
     "vue-loading-overlay": "^6.0.3",

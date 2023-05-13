@@ -58,7 +58,7 @@ const { showError } = useErrorHandler()
 const { updateLoading } = useStatusStore()
 
 const auth = useAuthStore()
-const { login } = auth
+const { login, getUser } = auth
 const { loginModal } = storeToRefs(auth)
 
 const modalContent = ref<HTMLInputElement | null>(null)
@@ -88,11 +88,7 @@ function onSubmit() {
     email: email.value,
     password: password.value
   })
-    .then((res) => {
-      Swal.fire({
-        icon: 'success',
-        title: res.data.message
-      })
+    .then(() => {
       reset()
       loginModal.value = false
     })
