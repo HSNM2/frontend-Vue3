@@ -16,9 +16,50 @@
           </button>
           <div class="flex items-center gap-x-4">
             <span class="material-icons pr-1 text-3xl text-neutral-600"> search </span>
-            <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
-            <button @click="loginModal = true" class="btn-primary">登入</button>
-            <button @click="registerModal = true" class="btn-secondary">註冊</button>
+            <template v-if="!user">
+              <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
+              <button @click="loginModal = true" class="btn-primary">登入</button>
+              <button @click="registerModal = true" class="btn-secondary">註冊</button>
+            </template>
+            <template v-else>
+              <button class="btn-primary">我的學習</button>
+              <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
+              <div class="group relative">
+                <img src="https://fakeimg.pl/40/" class="cursor-pointer rounded-full" alt="頭像" />
+                <div
+                  class="absolute right-0 top-full z-10 hidden w-72 pt-2 hover:block group-hover:block"
+                >
+                  <div class="rounded border bg-neutral-50">
+                    <div class="flex items-center p-4 pb-2">
+                      <img src="https://fakeimg.pl/60/" class="rounded-full" alt="頭像" />
+                      <div class="pl-2">
+                        <span class="block font-bold">{{ user.name }}</span>
+                        <span class="block text-sm text-neutral-600">{{ user.email }}</span>
+                      </div>
+                    </div>
+                    <hr class="my-2" />
+                    <nav class="text-neutral-800">
+                      <router-link to="/student/profile" class="block px-4 py-2"
+                        >會員資料</router-link
+                      >
+                      <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
+                        >我的學習</router-link
+                      >
+                      <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
+                        >我的購物車</router-link
+                      >
+                      <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
+                        >我的收藏</router-link
+                      >
+                      <hr class="my-2" />
+                      <a href="/" @click.prevent="handleLogout" class="block px-4 py-2 pb-4"
+                        >登出</a
+                      >
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </template>
           </div>
         </div>
         <!-- <RouterLink to="/course">探索</RouterLink> -->
@@ -88,17 +129,32 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useAuthStore } from '../stores/auth'
+import { useAuthStore } from '@/stores/auth'
+import { useStatusStore } from '@/stores/status'
 import LoginModal from './LoginModal.vue'
 import RegisterModal from './RegisterModal.vue'
-import { onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import useErrorHandler from '../composables/useErrorHandler'
 
-const route = useRoute()
+const router = useRouter()
+const { showError } = useErrorHandler()
 
+const { updateLoading } = useStatusStore()
 const auth = useAuthStore()
-const { user, token } = auth
-const { loginModal, registerModal } = storeToRefs(auth)
+const { logout } = auth
+const { loginModal, registerModal, user } = storeToRefs(auth)
 
-onMounted(() => {})
+function handleLogout() {
+  updateLoading(true)
+  logout()
+    .then(() => {
+      router.push('/')
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
+}
 </script>

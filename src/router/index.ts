@@ -72,13 +72,13 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from) => {
+router.beforeResolve((to, from) => {
   if (to.meta.requiresAuth) {
     const auth = useAuthStore()
-    const { token, loginModal } = storeToRefs(auth)
-    if (!token.value) {
+    const { user, loginModal } = storeToRefs(auth)
+    if (!user.value) {
       loginModal.value = true
-      return { path: from.path, query: { redirect: to.fullPath } }
+      return { path: from.path }
     }
   }
 })
