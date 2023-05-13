@@ -19,7 +19,6 @@
               v-for="link in sidebarMenuLinks"
               :key="link.to"
               class="flex items-center justify-center p-4 text-neutral-600 hover:text-primary-4"
-              :class="{ 'text-primary-4': $route.path.startsWith(link.to) }"
               :to="link.to"
             >
               <span class="material-icons me-2"> {{ link.icon }}</span>
