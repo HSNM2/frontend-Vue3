@@ -109,6 +109,7 @@
           v-slot="{ field, errors }"
         >
           <input
+            disabled
             id="nickName"
             class="form-control"
             v-bind="field"
@@ -198,7 +199,7 @@ function onSubmit() {
       gender: gender.value,
       birthday: birthday.value,
       phone: phone.value,
-      email: email.value,
+      // email: email.value,
       address: address.value
     })
     .then((res) => {

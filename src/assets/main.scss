@@ -31,7 +31,7 @@
     @apply text-neutral-800 inline-block mb-2;
   }
   .form-control {
-    @apply text-neutral-800 px-4 py-1.5 w-full border border-neutral-400 rounded focus:ring-1 focus:border-primary-4 focus:outline-none focus:ring-primary-4;
+    @apply text-neutral-800 px-4 py-1.5 w-full border border-neutral-400 rounded focus:ring-1 focus:border-primary-4 focus:outline-none focus:ring-primary-4 disabled:opacity-50 disabled:bg-neutral-200;
 
     &.invalid {
       @apply border-rose-500 focus:ring-rose-500;
