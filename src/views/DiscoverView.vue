@@ -114,8 +114,8 @@
     <div class="mb-6">
       <h3 class="mb-2 text-xl font-bold">card</h3>
       <div>
-        <div class="rounded border border-neutral-200 p-4">
-          <div class="rounded px-5 py-6">
+        <div class="rounded-2.5xl border border-neutral-200 p-4">
+          <div class="rounded-2.5xl px-5 py-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
                 <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
@@ -127,7 +127,7 @@
               <p>老師好，請問馬卡龍算是餅乾？</p>
             </div>
           </div>
-          <div class="rounded bg-secondary-2 px-5 py-6">
+          <div class="rounded-2.5xl bg-secondary-2 px-5 py-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
                 <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
@@ -142,7 +142,7 @@
               </p>
             </div>
           </div>
-          <div class="rounded bg-neutral-100 px-5 py-6">
+          <div class="rounded-2.5xl bg-neutral-100 px-5 py-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
                 <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />

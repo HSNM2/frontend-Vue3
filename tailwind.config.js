@@ -89,7 +89,7 @@ module.exports = {
         214: '53.5rem'
       },
       borderRadius: {
-        DEFAULT: '20px'
+        '2.5xl': '20px'
       }
     },
     fontSize: {
