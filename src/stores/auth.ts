@@ -36,7 +36,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   function getUser() {
     return axios.get('/api/user/profile').then((res) => {
-      user.value = { ...res.data.data, phone: '0944337722' }
+      user.value = { ...res.data.data }
       return res
     })
   }

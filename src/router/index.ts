@@ -72,11 +72,19 @@ const router = createRouter({
   ]
 })
 
-router.beforeResolve((to, from) => {
-  if (to.meta.requiresAuth) {
-    const auth = useAuthStore()
-    const { user, loginModal } = storeToRefs(auth)
-    if (!user.value) {
+router.beforeEach(async (to, from) => {
+  const auth = useAuthStore()
+  const { getUser } = auth
+  const { user, loginModal } = storeToRefs(auth)
+
+  if (!user.value) {
+    try {
+      await getUser()
+    } catch (err) {
+      console.log('無登入')
+    }
+
+    if (to.meta.requiresAuth && !user.value) {
       loginModal.value = true
       return { path: from.path }
     }
