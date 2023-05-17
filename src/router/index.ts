@@ -58,9 +58,26 @@ const router = createRouter({
       },
       children: [
         {
-          path: '',
-          name: 'instructorHome',
-          component: () => import('../views/instructor/HomeView.vue')
+          path: 'courses',
+          name: 'instructorCourses',
+          component: () => import('../views/instructor/CoursesView.vue')
+        },
+        {
+          path: 'course/:id',
+          name: 'instructorCourse',
+          component: () => import('../views/instructor/CourseLayoutView.vue'),
+          children: [
+            {
+              path: '',
+              name: 'instructorCourseId',
+              component: () => import('../views/instructor/CourseView.vue')
+            },
+            {
+              path: 'chapter/:chapterId',
+              name: 'instructorCourseChapter',
+              component: () => import('../views/instructor/CourseChapterView.vue')
+            }
+          ]
         }
       ]
     },
