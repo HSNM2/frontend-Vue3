@@ -11,7 +11,7 @@
     <div class="flex-1 bg-neutral-100 p-8">
       <div class="mb-4 flex items-center justify-between rounded bg-neutral-50 p-4">
         <h1>課程列表</h1>
-        <button class="btn-primary">新增課程</button>
+        <button class="btn-primary" @click="showAddCourseModal = true">新增課程</button>
       </div>
       <div class="rounded bg-neutral-50 p-6">
         <ul class="">
@@ -62,10 +62,46 @@
         </ul>
       </div>
     </div>
+
+    <!--新增課程 Modal-->
+    <CommonModal v-model="showAddCourseModal">
+      <template v-slot:title>新增課程</template>
+      <VForm ref="loginForm" v-slot="{ meta }" @submit="addCourse">
+        <div class="mb-6">
+          <VField
+            name="course"
+            type="text"
+            rules="required"
+            v-model="course"
+            v-slot="{ field, errors }"
+            label="課程"
+          >
+            <input
+              id="course"
+              class="form-control"
+              placeholder="輸入課程名稱"
+              v-bind="field"
+              :class="{ invalid: !!errors.length }"
+            />
+          </VField>
+          <ErrorMessage class="invalid-feedback" name="course" />
+        </div>
+        <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
+          新增
+        </button>
+      </VForm>
+    </CommonModal>
   </main>
 </template>
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { nextTick, onMounted } from 'vue'
+import { ref } from 'vue'
+import CommonModal from '../../components/CommonModal.vue'
+
+const showAddCourseModal = ref(false)
+
+const course = ref('')
+
+function addCourse() {}
 </script>

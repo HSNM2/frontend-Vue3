@@ -11,7 +11,7 @@
       <ul class="border-t p-6">
         <li class="mb-8">
           <span class="text-sm text-neutral-600">內容</span>
-          <router-link to="/instructor/course/123123" class="block">內容管理</router-link>
+          <router-link to="/instructor/course/123123" class="block">章節管理</router-link>
         </li>
         <li class="mb-8">
           <span class="text-sm text-neutral-600">學員</span>

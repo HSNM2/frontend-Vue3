@@ -23,7 +23,7 @@
       <ErrorMessage class="invalid-feedback" name="email" />
     </div>
     <div class="mb-6">
-      <label for="" class="form-label">新增單元內容</label>
+      <label for="" class="form-label">單元內容</label>
       <div class="rounded border">
         <nav class="flex border-b px-6 pt-2">
           <a

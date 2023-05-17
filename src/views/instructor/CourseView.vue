@@ -1,7 +1,7 @@
 <template>
   <div class="mb-4 flex items-center justify-between rounded bg-neutral-50 p-4">
-    <h1>內容管理</h1>
-    <button class="btn-primary">新增章節</button>
+    <h1>章節管理</h1>
+    <button class="btn-primary" @click="showAddChapterModal = true">新增章節</button>
   </div>
   <div class="rounded bg-neutral-50 p-6">
     <ul>
@@ -77,18 +77,54 @@
       </li>
     </ul>
   </div>
+
+  <!--新增章節 Modal-->
+  <CommonModal v-model="showAddChapterModal">
+    <template v-slot:title>新增章節</template>
+    <VForm ref="loginForm" v-slot="{ meta }" @submit="addChapter">
+      <div class="mb-6">
+        <VField
+          name="chapter"
+          type="text"
+          rules="required"
+          v-model="chapter"
+          v-slot="{ field, errors }"
+          label="章節"
+        >
+          <input
+            id="chapter"
+            class="form-control"
+            placeholder="輸入章節標題"
+            v-bind="field"
+            :class="{ invalid: !!errors.length }"
+          />
+        </VField>
+        <ErrorMessage class="invalid-feedback" name="chapter" />
+      </div>
+      <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
+        新增
+      </button>
+    </VForm>
+  </CommonModal>
 </template>
 
 <script setup lang="ts">
 import { nextTick, onMounted, ref } from 'vue'
 import Swal from 'sweetalert2'
+import CommonModal from '../../components/CommonModal.vue'
 
+const showAddChapterModal = ref(false)
+const chapter = ref('')
 const edit = ref('第一章：產品設計的核心觀念')
 const isEdit = ref(false)
 
 function editSubmit() {
   console.log('edit success')
   isEdit.value = false
+}
+
+function addChapter() {
+  console.log('addChapter')
 }
 
 function deleteChapter(idx: number) {
