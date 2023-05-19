@@ -65,17 +65,17 @@ const router = createRouter({
         {
           path: 'course/:id',
           name: 'instructorCourse',
-          component: () => import('../views/instructor/CourseLayoutView.vue'),
+          component: () => import('../views/instructor/course/CourseLayoutView.vue'),
           children: [
             {
               path: '',
               name: 'instructorCourseId',
-              component: () => import('../views/instructor/CourseView.vue')
+              component: () => import('../views/instructor/course/CourseChapterView.vue')
             },
             {
               path: 'chapter/:chapterId',
               name: 'instructorCourseChapter',
-              component: () => import('../views/instructor/CourseChapterView.vue')
+              component: () => import('../views/instructor/course/CourseChapterEditView.vue')
             }
           ]
         }
@@ -92,7 +92,7 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
   const auth = useAuthStore()
   const { getUser } = auth
-  const { user, loginModal } = storeToRefs(auth)
+  const { user, authModal, authModalType } = storeToRefs(auth)
 
   if (!user.value) {
     try {
@@ -102,7 +102,8 @@ router.beforeEach(async (to, from) => {
     }
 
     if (to.meta.requiresAuth && !user.value) {
-      loginModal.value = true
+      authModal.value = true
+      authModalType.value = 'login'
       return { path: from.path }
     }
   }

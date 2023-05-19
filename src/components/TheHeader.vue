@@ -18,8 +18,8 @@
             <span class="material-icons pr-1 text-3xl text-neutral-600"> search </span>
             <template v-if="!user">
               <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
-              <button @click="loginModal = true" class="btn-primary">登入</button>
-              <button @click="registerModal = true" class="btn-secondary">註冊</button>
+              <button @click="openAuthModal('login')" class="btn-primary">登入</button>
+              <button @click="openAuthModal('register')" class="btn-secondary">註冊</button>
             </template>
             <template v-else>
               <button class="btn-primary">我的學習</button>
@@ -123,16 +123,14 @@
       </div>
     </div>
   </header>
-  <LoginModal />
-  <RegisterModal />
+  <AuthModal />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useStatusStore } from '@/stores/status'
-import LoginModal from './LoginModal.vue'
-import RegisterModal from './RegisterModal.vue'
+import AuthModal from './AuthModal.vue'
 import { useRouter } from 'vue-router'
 import useErrorHandler from '../composables/useErrorHandler'
 
@@ -142,7 +140,12 @@ const { showError } = useErrorHandler()
 const { updateLoading } = useStatusStore()
 const auth = useAuthStore()
 const { logout } = auth
-const { loginModal, registerModal, user } = storeToRefs(auth)
+const { authModal, authModalType, user } = storeToRefs(auth)
+
+function openAuthModal(type = 'login') {
+  authModal.value = true
+  authModalType.value = type
+}
 
 function handleLogout() {
   updateLoading(true)

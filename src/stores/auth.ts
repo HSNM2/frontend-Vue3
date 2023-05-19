@@ -15,9 +15,9 @@ interface User {
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
 
-  // loginModal & registerModal 的開關
-  const loginModal = ref(false)
-  const registerModal = ref(false)
+  // 登入註冊 Modal
+  const authModal = ref(false)
+  const authModalType = ref('login') // 表單切換：login | register
 
   function login(payload: { email: string; password: string }) {
     return axios.post('/api/user/login', payload).then(() => getUser())
@@ -44,8 +44,8 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     user,
 
-    loginModal,
-    registerModal,
+    authModal,
+    authModalType,
 
     login,
     register,

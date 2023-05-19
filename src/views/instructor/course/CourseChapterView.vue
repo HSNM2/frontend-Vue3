@@ -111,7 +111,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref } from 'vue'
 import Swal from 'sweetalert2'
-import CommonModal from '../../components/CommonModal.vue'
+import CommonModal from '../../../components/CommonModal.vue'
 
 const showAddChapterModal = ref(false)
 const chapter = ref('')
