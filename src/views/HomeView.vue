@@ -1,3 +1,5 @@
+<script setup lang="ts"></script>
+
 <template>
   <main>
     <div class="mb-25 w-full md:mb-30">
@@ -123,8 +125,8 @@
     </div>
     <div class="container py-12.5">
       <h2 class="mb-6 text-center text-heading-3xl font-bold text-primary-5">大家都怎麼說？</h2>
-      <div class="columns-1 gap-6 md:columns-2 lg:columns-3">
-        <div class="rounded-xl border border-primary-4 bg-primary-4/10 p-5">
+      <div class="gap-6 lg:columns-3">
+        <div class="overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5">
           <p class="mb-5">
             糖漬時光 線上教學網站的客服非常親切，對我的問題耐心解答，讓我很感動。 ✨
           </p>
@@ -138,7 +140,7 @@
             </div>
           </div>
         </div>
-        <div class="rounded-xl border border-primary-4 bg-primary-4/10 p-5">
+        <div class="mt-6 overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5">
           <p class="mb-5">
             從前我對於網路課程持有很懷疑的態度，總覺得自己要是無法面對面與老師互動，就無法有效學習。但當我決定開始自學甜點製作時，發現了
             糖漬時光
@@ -156,7 +158,117 @@
             </div>
           </div>
         </div>
-        <div class="rounded-xl border border-primary-4 bg-primary-4/10 p-5">
+        <div class="mt-6 overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5">
+          <p class="mb-5">
+            自從我開始在 糖漬時光
+            上學習甜點製作，就完全愛上了這個網站。每一個課程都非常有趣，老師講解得也非常清晰，讓我能夠輕鬆學會製作各種美味的甜點。而且
+            糖漬時光 的課程品質非常優秀，讓我對於其他線上課程都產生了懷疑，只有 糖漬時光
+            能夠讓我信心滿滿地學習。
+          </p>
+          <div class="flex items-center">
+            <div class="mr-6">
+              <img class="h-15 w-15 rounded-full" src="/image/profile/user-3.png" alt="" />
+            </div>
+            <div>
+              <p class="font-bold">Paper Hsiao</p>
+              <p class="text-sm text-neutral-400">Engineer</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-6 hidden overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5 lg:block"
+        >
+          <p class="mb-5">
+            糖漬時光
+            的課程分類非常清晰，能夠根據自己的需求和興趣找到適合自己的課程，真的非常方便。而且網站的內容也非常豐富，讓我能夠學習到很多不同種類的甜點製作方法。✨
+          </p>
+          <div class="flex items-center">
+            <div class="mr-6">
+              <img class="h-15 w-15 rounded-full" src="/image/profile/user-4.png" alt="" />
+            </div>
+            <div>
+              <p class="font-bold">Paper Hsiao</p>
+              <p class="text-sm text-neutral-400">Engineer</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-6 hidden overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5 lg:block"
+        >
+          <p class="mb-5">
+            從前我對於網路課程持有很懷疑的態度，總覺得自己要是無法面對面與老師互動，就無法有效學習。但當我決定開始自學甜點製作時，發現了
+            糖漬時光
+            的甜點線上教學課程，開啟了我對網路課程的認識。我從一開始的菜鳥，學習基本製作技巧，到現在的深度研究各式各樣的甜點，糖漬時光
+            提供了很豐富、有系統性的課程，絕對不比在實體學校學習差，反而更自由且方便。從此以後，我對網路課程的態度完全改觀，感謝
+            糖漬時光 讓我有這麼好的學習體驗！
+          </p>
+          <div class="flex items-center">
+            <div class="mr-6">
+              <img class="h-15 w-15 rounded-full" src="/image/profile/user-5.png" alt="" />
+            </div>
+            <div>
+              <p class="font-bold">Paper Hsiao</p>
+              <p class="text-sm text-neutral-400">Engineer</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-6 hidden overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5 lg:block"
+        >
+          <p class="mb-5">
+            糖漬時光
+            讓我愛上了烘焙，我之前對於甜點的製作完全是一知半解，但是透過這個網站的課程，我不僅學會了很多基礎的技巧，也學習到如何嘗試創新和發揮自己的創造力。而且教學過程中，老師的講解非常清晰明瞭，讓初學者也能夠很容易地跟上。糖漬時光
+            真的是非常優秀的一個學習平台，讓我在烘焙的世界中找到了自己的興趣和樂趣。
+          </p>
+          <div class="flex items-center">
+            <div class="mr-6">
+              <img class="h-15 w-15 rounded-full" src="/image/profile/user-6.png" alt="" />
+            </div>
+            <div>
+              <p class="font-bold">Paper Hsiao</p>
+              <p class="text-sm text-neutral-400">Engineer</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-6 hidden overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5 lg:block"
+        >
+          <p class="mb-5">
+            糖漬時光
+            課程不僅內容豐富，而且每個課程都非常詳細，讓人容易理解和學習。我非常喜歡這個網站，因為它不僅幫助我提高了自己的甜點製作技能，還讓我能夠學習到許多不同的食譜和製作技巧。
+            ✨
+          </p>
+          <div class="flex items-center">
+            <div class="mr-6">
+              <img class="h-15 w-15 rounded-full" src="/image/profile/user-7.png" alt="" />
+            </div>
+            <div>
+              <p class="font-bold">Paper Hsiao</p>
+              <p class="text-sm text-neutral-400">Engineer</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-6 hidden overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5 lg:block"
+        >
+          <p class="mb-5">
+            當我第一次到 糖漬時光
+            時，我對於學習甜點的熱情瞬間被激發，因為他們的課程內容非常實用，且能夠讓我學習到很多有用的技能和技巧。
+            ✨
+          </p>
+          <div class="flex items-center">
+            <div class="mr-6">
+              <img class="h-15 w-15 rounded-full" src="/image/profile/user-8.png" alt="" />
+            </div>
+            <div>
+              <p class="font-bold">Paper Hsiao</p>
+              <p class="text-sm text-neutral-400">Engineer</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-6 hidden overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5 lg:block"
+        >
           <p class="mb-5">
             糖漬時光
             的課程價格非常實惠，這讓我能夠在不花太多錢的情況下學習到高質量的課程，我真的非常感謝他們提供這樣的學習平台。
@@ -164,7 +276,61 @@
           </p>
           <div class="flex items-center">
             <div class="mr-6">
-              <img class="h-15 w-15 rounded-full" src="/image/profile/user-3.png" alt="" />
+              <img class="h-15 w-15 rounded-full" src="/image/profile/user-9.png" alt="" />
+            </div>
+            <div>
+              <p class="font-bold">Paper Hsiao</p>
+              <p class="text-sm text-neutral-400">Engineer</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-6 hidden overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5 lg:block"
+        >
+          <p class="mb-5">
+            糖漬時光
+            是我最喜愛的學習平台之一，因為它提供了非常多實用的甜點製作技巧和知識。每個課程都很有趣和實用，讓我能夠輕鬆地學習和理解甜點製作的方法。
+            ✨
+          </p>
+          <div class="flex items-center">
+            <div class="mr-6">
+              <img class="h-15 w-15 rounded-full" src="/image/profile/user-10.png" alt="" />
+            </div>
+            <div>
+              <p class="font-bold">Paper Hsiao</p>
+              <p class="text-sm text-neutral-400">Engineer</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-6 hidden overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5 lg:block"
+        >
+          <p class="mb-5">
+            我從 糖漬時光
+            學到了很多有用的技巧和知識，讓我成為了一個更好的甜點製作師。這個網站的教學方法非常生動和實用，每次上課都讓我感到非常有收穫。我非常感謝
+            糖漬時光 ，因為它讓我能夠實現自己的夢想，成為了一名優秀的甜點師傅。 ✨
+          </p>
+          <div class="flex items-center">
+            <div class="mr-6">
+              <img class="h-15 w-15 rounded-full" src="/image/profile/user-11.png" alt="" />
+            </div>
+            <div>
+              <p class="font-bold">Paper Hsiao</p>
+              <p class="text-sm text-neutral-400">Engineer</p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-6 hidden overflow-hidden rounded-xl border border-primary-4 bg-primary-4/10 p-5 lg:block"
+        >
+          <p class="mb-5">
+            糖漬時光
+            的介面非常友善和易於使用，我從來沒有遇到過任何問題。課程也非常精心設計，讓人能夠輕鬆學習和掌握甜點製作技能。總之，我非常喜歡這個網站，希望它能夠繼續提供高品質的教學資源，讓更多人能夠受益。
+            ✨
+          </p>
+          <div class="flex items-center">
+            <div class="mr-6">
+              <img class="h-15 w-15 rounded-full" src="/image/profile/user-12.png" alt="" />
             </div>
             <div>
               <p class="font-bold">Paper Hsiao</p>
@@ -238,5 +404,3 @@
     </div>
   </main>
 </template>
-
-<script setup lang="ts"></script>

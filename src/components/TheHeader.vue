@@ -42,6 +42,9 @@
                       <router-link to="/student/profile" class="block px-4 py-2"
                         >會員資料</router-link
                       >
+                      <router-link v-if="user.identity == '[1]'" to="/" class="block px-4 py-2"
+                        >課程後台</router-link
+                      >
                       <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
                         >我的學習</router-link
                       >
@@ -51,6 +54,14 @@
                       <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
                         >我的收藏</router-link
                       >
+                      <button
+                        v-if="!user.identity"
+                        type="button"
+                        class="block w-full px-4 py-2 text-left"
+                        @click="courseProviderAllowModal = true"
+                      >
+                        開啟開課功能
+                      </button>
                       <hr class="my-2" />
                       <a href="/" @click.prevent="handleLogout" class="block px-4 py-2 pb-4"
                         >登出</a
@@ -125,6 +136,7 @@
   </header>
   <LoginModal />
   <RegisterModal />
+  <CourseProviderAllowModal />
 </template>
 
 <script setup lang="ts">
@@ -133,6 +145,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useStatusStore } from '@/stores/status'
 import LoginModal from './LoginModal.vue'
 import RegisterModal from './RegisterModal.vue'
+import CourseProviderAllowModal from './CourseProviderAllowModal.vue'
 import { useRouter } from 'vue-router'
 import useErrorHandler from '../composables/useErrorHandler'
 
@@ -142,7 +155,7 @@ const { showError } = useErrorHandler()
 const { updateLoading } = useStatusStore()
 const auth = useAuthStore()
 const { logout } = auth
-const { loginModal, registerModal, user } = storeToRefs(auth)
+const { loginModal, registerModal, courseProviderAllowModal, user } = storeToRefs(auth)
 
 function handleLogout() {
   updateLoading(true)
