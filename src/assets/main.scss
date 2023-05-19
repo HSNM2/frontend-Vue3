@@ -12,10 +12,10 @@
 
 @layer components {
   .btn-primary {
-    @apply max-h-10 rounded-3xl bg-primary-5 px-10 py-2 text-center text-neutral-50 hover:bg-primary-3 active:bg-primary-4 active:text-neutral-900;
+    @apply max-h-10 rounded-3xl bg-primary-5 px-10 py-2 text-center text-neutral-50 enabled:hover:bg-primary-3 enabled:active:bg-primary-4 enabled:active:text-neutral-900 disabled:opacity-75;
   }
   .btn-secondary {
-    @apply max-h-10 rounded-3xl border border-primary-5 px-10 py-2 text-center text-primary-5 hover:border-neutral-50 hover:bg-primary-3 hover:text-neutral-50 active:border-neutral-50 active:bg-primary-4 active:text-neutral-900;
+    @apply max-h-10 rounded-3xl border border-primary-5 px-10 py-2 text-center text-primary-5 enabled:hover:border-neutral-50 enabled:hover:bg-primary-3 enabled:hover:text-neutral-50 enabled:active:border-neutral-50 enabled:active:bg-primary-4 enabled:active:text-neutral-900 disabled:opacity-75;
   }
   .btn-back {
     @apply max-h-10 rounded-3xl bg-primary-3 px-10 py-2 text-center text-neutral-900 hover:bg-primary-4

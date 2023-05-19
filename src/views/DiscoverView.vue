@@ -44,12 +44,20 @@
           <p>neutral-100</p>
         </div>
         <div>
+          <p class="bg-neutral-150 h-8 w-24 border border-sky-500 text-white">#ECE9E9</p>
+          <p>neutral-150</p>
+        </div>
+        <div>
           <p class="h-8 w-24 border border-sky-500 bg-neutral-200">#D9D9D9</p>
           <p>neutral-200</p>
         </div>
         <div>
           <p class="h-8 w-24 border border-sky-500 bg-neutral-400">#B7B7B7</p>
           <p>neutral-400</p>
+        </div>
+        <div>
+          <p class="h-8 w-24 border border-sky-500 bg-neutral-500 text-white">#757575</p>
+          <p>neutral-500</p>
         </div>
         <div>
           <p class="h-8 w-24 border border-sky-500 bg-neutral-600 text-white">#6F6F6F</p>
@@ -113,9 +121,10 @@
     </div>
     <div class="mb-6">
       <h3 class="mb-2 text-xl font-bold">card</h3>
-      <div>
-        <div class="rounded-2.5xl border border-neutral-200 p-4">
-          <div class="rounded-2.5xl px-5 py-6">
+      <h6 class="text-md mb-2 font-bold">問答留言</h6>
+      <div class="grid grid-cols-12">
+        <div class="col-span-12 rounded-2.5xl border border-neutral-200 p-2 md:col-span-9 md:p-4">
+          <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
                 <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
@@ -127,7 +136,7 @@
               <p>老師好，請問馬卡龍算是餅乾？</p>
             </div>
           </div>
-          <div class="rounded-2.5xl bg-secondary-2 px-5 py-6">
+          <div class="rounded-2.5xl bg-secondary-2/50 px-4 py-4 md:px-5 md:py-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
                 <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
@@ -142,7 +151,7 @@
               </p>
             </div>
           </div>
-          <div class="rounded-2.5xl bg-neutral-100 px-5 py-6">
+          <div class="rounded-2.5xl bg-neutral-100 px-4 py-4 md:px-5 md:py-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
                 <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
@@ -153,6 +162,34 @@
             <div class="ml-14 mt-4">
               <p>謝謝回覆</p>
             </div>
+          </div>
+        </div>
+      </div>
+      <h6 class="text-md mb-2 mt-6 font-bold">評價</h6>
+      <div class="grid grid-cols-12">
+        <div class="col-span-12 rounded-2.5xl border border-secondary-2 p-5 md:col-span-9">
+          <div
+            class="flex flex-col gap-y-4 md:flex-row md:items-center md:justify-between md:gap-y-0"
+          >
+            <div class="flex items-center gap-x-4">
+              <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
+              <p class="">漂亮阿姨</p>
+            </div>
+            <div class="flex items-center justify-between md:gap-x-4">
+              <div class="flex items-center">
+                <span class="material-icons text-base text-primary-3"> star </span>
+                <span class="material-icons text-base text-primary-3"> star </span>
+                <span class="material-icons text-base text-primary-3"> star </span>
+                <span class="material-icons text-base text-primary-3"> star </span>
+                <span class="material-icons text-base text-primary-3"> star_border </span>
+              </div>
+              <p class="text-sm text-primary-4">2023/02/07 10:04</p>
+            </div>
+          </div>
+          <div class="mt-4 md:ml-14">
+            <p>
+              這個法式馬卡龍的教學真的超棒的！講解詳細，步驟清晰易懂，而且影片拍攝也非常專業，謝謝這個網站提供這麼棒的課程！
+            </p>
           </div>
         </div>
       </div>
