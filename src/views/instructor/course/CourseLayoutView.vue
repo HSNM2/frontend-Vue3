@@ -15,7 +15,9 @@
         </li>
         <li class="mb-8">
           <span class="text-sm text-neutral-600">學員</span>
-          <router-link to="/" class="mb-8 block">學員列表</router-link>
+          <router-link to="/instructor/course/1112222/students" class="mb-8 block"
+            >學員列表</router-link
+          >
         </li>
         <li>
           <span class="text-sm text-neutral-600">設定</span>

@@ -69,13 +69,18 @@ const router = createRouter({
           children: [
             {
               path: '',
-              name: 'instructorCourseId',
+              name: 'instructorCourseChapter',
               component: () => import('../views/instructor/course/CourseChapterView.vue')
             },
             {
               path: 'chapter/:chapterId',
-              name: 'instructorCourseChapter',
+              name: 'instructorCourseChapterEdit',
               component: () => import('../views/instructor/course/CourseChapterEditView.vue')
+            },
+            {
+              path: 'students',
+              name: 'instructorCourseStudent',
+              component: () => import('../views/instructor/course/CourseStudentsView.vue')
             }
           ]
         }
