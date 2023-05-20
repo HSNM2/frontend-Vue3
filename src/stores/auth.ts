@@ -18,9 +18,9 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
   const identity = ref<User | null>(null)
 
-  // loginModal & registerModal 的開關
-  const loginModal = ref(false)
-  const registerModal = ref(false)
+  // 登入註冊 Modal
+  const authModal = ref(false)
+  const authModalType = ref('login') // 表單切換：login | register
   const courseProviderAllowModal = ref(false)
 
   function login(payload: { email: string; password: string }) {
@@ -32,7 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function courseProviderAllow(payload: { identityType: number }) {
-    return axios.post('/api/user/identity', payload).then(() => getIdentity())
+    return axios.post('/api/user/identity', payload).then(() => getUser())
   }
 
   function logout() {
@@ -59,8 +59,8 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     user,
 
-    loginModal,
-    registerModal,
+    authModal,
+    authModalType,
     courseProviderAllowModal,
 
     login,

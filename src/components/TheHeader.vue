@@ -18,8 +18,8 @@
             <span class="material-icons pr-1 text-3xl text-neutral-600"> search </span>
             <template v-if="!user">
               <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
-              <button @click="loginModal = true" class="btn-primary">登入</button>
-              <button @click="registerModal = true" class="btn-secondary">註冊</button>
+              <button @click="openAuthModal('login')" class="btn-primary">登入</button>
+              <button @click="openAuthModal('register')" class="btn-secondary">註冊</button>
             </template>
             <template v-else>
               <button class="btn-primary">我的學習</button>
@@ -42,7 +42,10 @@
                       <router-link to="/student/profile" class="block px-4 py-2"
                         >會員資料</router-link
                       >
-                      <router-link v-if="user.identity == '[1]'" to="/" class="block px-4 py-2"
+                      <router-link
+                        v-if="user.identity == '[1]'"
+                        to="/instructor/courses"
+                        class="block px-4 py-2"
                         >課程後台</router-link
                       >
                       <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
@@ -134,8 +137,7 @@
       </div>
     </div>
   </header>
-  <LoginModal />
-  <RegisterModal />
+  <AuthModal />
   <CourseProviderAllowModal />
 </template>
 
@@ -143,8 +145,7 @@
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useStatusStore } from '@/stores/status'
-import LoginModal from './LoginModal.vue'
-import RegisterModal from './RegisterModal.vue'
+import AuthModal from './AuthModal.vue'
 import CourseProviderAllowModal from './CourseProviderAllowModal.vue'
 import { useRouter } from 'vue-router'
 import useErrorHandler from '../composables/useErrorHandler'
@@ -155,7 +156,12 @@ const { showError } = useErrorHandler()
 const { updateLoading } = useStatusStore()
 const auth = useAuthStore()
 const { logout } = auth
-const { loginModal, registerModal, courseProviderAllowModal, user } = storeToRefs(auth)
+const { authModal, authModalType, courseProviderAllowModal, user } = storeToRefs(auth)
+
+function openAuthModal(type = 'login') {
+  authModal.value = true
+  authModalType.value = type
+}
 
 function handleLogout() {
   updateLoading(true)
