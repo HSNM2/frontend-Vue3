@@ -42,7 +42,10 @@
                       <router-link to="/student/profile" class="block px-4 py-2"
                         >會員資料</router-link
                       >
-                      <router-link v-if="user.identity == '[1]'" to="/" class="block px-4 py-2"
+                      <router-link
+                        v-if="user.identity == '[1]'"
+                        to="/instructor/courses"
+                        class="block px-4 py-2"
                         >課程後台</router-link
                       >
                       <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"

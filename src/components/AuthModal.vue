@@ -19,10 +19,10 @@
           @submit="onLoginSubmit()"
         >
           <div class="mb-4 flex items-end justify-between">
-            <h2 class="text-lg text-neutral-800">登入</h2>
+            <h2 class="text-2xl font-bold text-primary-5">歡迎回來！</h2>
             <a
               href="/"
-              class="text-xs text-neutral-600 underline"
+              class="text-sm text-neutral-600 underline"
               @click.prevent="authModalType = 'register'"
               >不是會員？註冊</a
             >
@@ -37,9 +37,10 @@
               <input
                 type="email"
                 class="form-control"
+                id="usernameInput"
                 placeholder="信箱"
                 v-bind="field"
-                autofocus
+                autocomplete="username"
                 :class="{ invalid: meta.validated && !!errors.length }"
               />
               <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="email" />
@@ -59,9 +60,17 @@
                 v-bind="field"
                 placeholder="密碼"
                 :class="{ invalid: meta.validated && !!errors.length }"
+                autocomplete="current-password"
               />
               <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="password" />
             </VField>
+          </div>
+          <div class="mb-8 flex items-center justify-between">
+            <div>
+              <input type="checkbox" id="keep-login" class="mr-2" />
+              <label for="keep-login">維持登入狀態</label>
+            </div>
+            <button disabled class="text-neutral-600 underline">忘記密碼?</button>
           </div>
           <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
             確認
@@ -75,10 +84,10 @@
           @submit="onRegisterSubmit()"
         >
           <div class="mb-4 flex items-end justify-between">
-            <h2 class="text-lg text-neutral-800">註冊</h2>
+            <h2 class="text-2xl font-bold text-primary-5">註冊</h2>
             <a
               href="/"
-              class="text-xs text-neutral-600 underline"
+              class="text-sm text-neutral-600 underline"
               @click.prevent="authModalType = 'login'"
               >已經是會員?登入</a
             >

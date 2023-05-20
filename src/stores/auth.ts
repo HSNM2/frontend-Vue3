@@ -32,7 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function courseProviderAllow(payload: { identityType: number }) {
-    return axios.post('/api/user/identity', payload).then(() => getIdentity())
+    return axios.post('/api/user/identity', payload).then(() => getUser())
   }
 
   function logout() {
