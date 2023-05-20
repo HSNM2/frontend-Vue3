@@ -6,7 +6,7 @@
     <VForm ref="form" v-slot="{ meta }" @submit="onSubmit()">
       <!--封面圖片-->
       <div class="mb-6">
-        <label for="link" class="form-label">介紹影片</label>
+        <label for="link" class="form-label">封面圖片</label>
         <div class="h-96 rounded border border-dashed">
           <div class="flex h-full flex-col items-center justify-center">
             <i class="material-icons text-4xl">file_upload</i>
@@ -60,14 +60,14 @@
           >
         </VField>
       </div>
-      <!--課程名稱-->
+      <!--課程副標題-->
       <div class="mb-6">
         <label for="subTitle" class="form-label">課程副標題</label>
         <VField
           name="subTitle"
           rules="required"
           label="課程副標題"
-          v-model="name"
+          v-model="subTitle"
           v-slot="{ field, errors, meta }"
         >
           <input
@@ -81,6 +81,53 @@
           <span v-if="!errors.length" class="form-text"
             >顯示在課程名稱下方，你可以替課程增加額外的說明，精神口號或標語</span
           >
+        </VField>
+      </div>
+      <!--標籤-->
+      <div class="mb-6">
+        <label for="tag" class="form-label">標籤</label>
+        <input
+          id="tag"
+          type="text"
+          class="form-control"
+          v-model.trim="tag"
+          @keyup.enter="addTag()"
+        />
+        <span class="form-text">新增5個跟課程相似的分類，讓喜愛類別的學習者能找到你的影片</span>
+        <ul class="flex flex-wrap gap-3 pt-2">
+          <li
+            v-for="(tag, idx) in tags"
+            :key="idx"
+            class="inline-flex items-center rounded-2.5xl bg-secondary-2 px-3 py-1"
+          >
+            <span class="me-2 text-sm">＃{{ tag }}</span>
+            <i
+              class="material-icons cursor-pointer text-sm text-neutral-800 hover:text-neutral-900"
+              @click="removeTag(idx)"
+              >close</i
+            >
+          </li>
+        </ul>
+      </div>
+      <!--課程簡介-->
+      <div class="mb-6">
+        <label for="description" class="form-label">課程簡介</label>
+        <VField
+          name="description"
+          rules="required"
+          label="課程簡介"
+          v-model="description"
+          v-slot="{ field, errors, meta }"
+        >
+          <input
+            id="description"
+            type="text"
+            class="form-control"
+            v-bind="field"
+            :class="{ invalid: meta.validated && !!errors.length }"
+          />
+          <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="description" />
+          <span class="form-text">列出本課程的學習重點</span>
         </VField>
       </div>
       <!--價格-->
@@ -144,9 +191,9 @@
           </VField>
         </div>
       </div>
-      <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
-        確認
-      </button>
+
+      <button type="submit" class="me-3 inline-block" :disabled="!meta.valid">更新</button>
+      <button class="inline-block">取消</button>
     </VForm>
   </div>
 </template>
@@ -154,14 +201,27 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
+const tag = ref('') // 標籤 input
+
 const name = ref('') // 課程名稱
 const subTitle = ref('') // 課程副標題
 const description = ref('') // 課程簡介
 const price = ref(0) // 銷售價格
 const originPrice = ref(0) // 原價
-const tag = ref(['Google', '外商', '十大企業']) // 標籤
+const tags = ref(['Google', '外商', '十大企業']) // 標籤
 const image_path = ref('') // 封面圖片
 const link = ref('') // 介紹影片
+
+function removeTag(idx: number) {
+  tags.value = tags.value.filter((_, tagIdx) => tagIdx !== idx)
+}
+
+function addTag() {
+  if (tag.value) {
+    tags.value.push(tag.value)
+    tag.value = ''
+  }
+}
 
 function onSubmit() {}
 </script>
