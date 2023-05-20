@@ -48,7 +48,7 @@
         >
           <li class="border">
             <RouterLink
-              to="/instructor/course/123456789/chapter/33333"
+              to="/instructor/course/123456789/chapter/33333/lesson/44444"
               class="flex items-center p-4"
             >
               <i class="material-icons me-2">sort</i>
@@ -76,6 +76,18 @@
         </ul>
       </li>
     </ul>
+
+    <draggable
+      v-model="chapters"
+      group="people"
+      @start="drag = true"
+      @end="drag = false"
+      item-key="id"
+    >
+      <template #item="{ element }">
+        <div>{{ element.name }}</div>
+      </template>
+    </draggable>
   </div>
 
   <!--新增章節 Modal-->
@@ -112,8 +124,11 @@
 import { nextTick, onMounted, ref } from 'vue'
 import Swal from 'sweetalert2'
 import CommonModal from '../../../components/CommonModal.vue'
+import draggable from 'vuedraggable'
 
+const drag = ref(false)
 const showAddChapterModal = ref(false)
+const chapters = ref([{ name: '1' }, { name: '2' }, { name: '3' }])
 const chapter = ref('')
 const edit = ref('第一章：產品設計的核心觀念')
 const isEdit = ref(false)

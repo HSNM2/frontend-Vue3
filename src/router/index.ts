@@ -79,9 +79,9 @@ const router = createRouter({
               component: () => import('../views/instructor/course/CourseChapterView.vue')
             },
             {
-              path: 'chapter/:chapterId',
+              path: 'chapter/:chapterId/lesson/:lessonId',
               name: 'instructorCourseChapterEdit',
-              component: () => import('../views/instructor/course/CourseChapterEditView.vue')
+              component: () => import('../views/instructor/course/CourseLessonView.vue')
             },
             {
               path: 'students',
