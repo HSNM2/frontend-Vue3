@@ -10,7 +10,7 @@
     <!--主內容-->
     <div class="flex-1 bg-neutral-100 p-8">
       <div class="mb-4 flex items-center justify-between rounded bg-neutral-50 p-4">
-        <h1>課程列表</h1>
+        <h1 class="font-bold text-neutral-800">課程列表</h1>
         <button class="btn-primary" @click="showAddCourseModal = true">新增課程</button>
       </div>
       <div class="rounded bg-neutral-50 p-6">

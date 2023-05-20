@@ -6,7 +6,7 @@
         <RouterLink to="/instructor/courses" class="mb-4 flex items-center text-xs text-neutral-600"
           ><i class="material-icons me-1 text-xs">arrow_back_ios_new</i>課程列表</RouterLink
         >
-        <h2 class="">產品設計實戰：用Figma打造絕佳UI</h2>
+        <h2 class="text-lg font-bold text-neutral-800">產品設計實戰：用Figma打造絕佳UI</h2>
       </div>
       <ul class="border-t p-6">
         <li class="mb-8">
@@ -21,7 +21,9 @@
         </li>
         <li>
           <span class="text-sm text-neutral-600">設定</span>
-          <router-link to="/" class="mb-1 block">課程資訊</router-link>
+          <router-link to="/instructor/course/1112222/info" class="mb-1 block"
+            >課程資訊</router-link
+          >
           <router-link to="/" class="mb-1 block">常見資訊</router-link>
           <router-link to="/" class="block">進階設定</router-link>
         </li>

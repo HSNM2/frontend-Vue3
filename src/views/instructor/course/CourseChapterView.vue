@@ -1,6 +1,6 @@
 <template>
   <div class="mb-4 flex items-center justify-between rounded bg-neutral-50 p-4">
-    <h1>章節管理</h1>
+    <h1 class="font-bold text-neutral-800">章節管理</h1>
     <button class="btn-primary" @click="showAddChapterModal = true">新增章節</button>
   </div>
   <div class="rounded bg-neutral-50 p-6">

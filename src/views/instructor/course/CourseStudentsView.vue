@@ -1,6 +1,6 @@
 <template>
   <div class="mb-4 flex items-center justify-between rounded bg-neutral-50 p-4">
-    <h1>學員列表</h1>
+    <h1 class="font-bold text-neutral-800">學員列表</h1>
   </div>
   <div class="rounded bg-neutral-50 p-6">
     <table
@@ -20,7 +20,7 @@
         <tr class="hover:bg-neutral-100">
           <td class="border-b p-3 text-center">
             <div
-              class="mx-auto flex w-fit items-center rounded bg-green-100 p-1 px-2 text-sm text-green-600"
+              class="mx-auto flex w-fit items-center rounded bg-green-100 p-1 px-2 text-xs text-green-600"
             >
               <span class="me-2 h-2 w-2 rounded-full bg-green-600"></span>已加入
             </div>
@@ -40,7 +40,7 @@
         <tr class="hover:bg-neutral-100">
           <td class="border-b p-3 text-center">
             <div
-              class="mx-auto flex w-fit items-center rounded bg-rose-100 p-1 px-2 text-sm text-rose-600"
+              class="mx-auto flex w-fit items-center rounded bg-rose-100 p-1 px-2 text-xs text-rose-600"
             >
               <span class="me-2 h-2 w-2 rounded-full bg-rose-600"></span>退款中
             </div>

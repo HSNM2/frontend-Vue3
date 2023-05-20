@@ -38,6 +38,9 @@
     }
 
   }
+  .form-text {
+    @apply text-sm text-neutral-400;
+  }
   .invalid-feedback {
     @apply text-sm text-rose-500;
   }
