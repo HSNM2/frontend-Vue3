@@ -122,7 +122,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
 import Swal from 'sweetalert2'
-import { FormContext } from 'vee-validate'
+import type { FormContext } from 'vee-validate'
 import draggable from 'vuedraggable'
 import CommonModal from '../../../components/CommonModal.vue'
 

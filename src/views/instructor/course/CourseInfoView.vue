@@ -250,7 +250,7 @@ const editorConfig = {
     ]
   }
 }
-const editorData = ''
+const editorData = ref('')
 
 function removeTag(idx: number) {
   tags.value = tags.value.filter((_, tagIdx) => tagIdx !== idx)
