@@ -12,6 +12,7 @@ interface User {
   address: string
   identity: string
   identityType: number
+  avatarImagePath: string
 }
 
 export const useAuthStore = defineStore('auth', () => {
