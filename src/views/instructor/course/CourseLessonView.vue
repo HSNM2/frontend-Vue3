@@ -4,23 +4,23 @@
   </div>
   <div class="rounded bg-neutral-50 p-6">
     <div class="mb-6">
-      <label for="email" class="form-label">單元名稱</label>
+      <label for="lesson" class="form-label">單元名稱</label>
       <VField
-        v-model.trim="chapterName"
-        name="email"
+        v-model.trim="lessonTitle"
+        name="lesson"
         type="text"
         rules="required"
         label="單元名稱"
         v-slot="{ field, errors }"
       >
         <input
-          id="nickName"
+          id="lesson"
           class="form-control"
           v-bind="field"
           :class="{ invalid: !!errors.length }"
         />
       </VField>
-      <ErrorMessage class="invalid-feedback" name="email" />
+      <ErrorMessage class="invalid-feedback" name="lesson" />
     </div>
     <div class="mb-6">
       <label for="" class="form-label">單元內容</label>
@@ -84,18 +84,33 @@
     </div>
     <div class="flex items-center">
       <button class="me-4">更新</button>
-      <button class="text-neutral-500">取消</button>
+      <button class="text-neutral-500" @click="cancel()">取消</button>
       <button class="ms-auto text-red-500">刪除</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const chapterName = ref('單元2：UI/UX設計師理念')
+const route = useRoute()
+const router = useRouter()
 
-const url = ref('')
+const lessonTitle = ref('')
 
 const selectedChapterType = ref('file') // file, videoUrl
+const url = ref('')
+
+onMounted(() => {
+  if (route.params.lessonId) {
+    lessonTitle.value = '單元1：餅乾麵糰製作'
+  } else {
+    lessonTitle.value = ''
+  }
+})
+
+function cancel() {
+  router.back()
+}
 </script>

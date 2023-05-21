@@ -11,20 +11,20 @@
       handle=".js-draggable"
       :group="{ name: 'g1' }"
     >
-      <template #item="{ element: chapter, index }">
+      <template #item="{ element: chapter, index: chapterIdx }">
         <div class="relative mb-8 rounded border bg-neutral-50">
           <div class="group flex h-14 items-center pe-12 ps-4">
             <i class="material-icons js-draggable me-2 cursor-row-resize">sort</i>
-            <template v-if="!isEdit">
+            <template v-if="!chapter.isEdit">
               <span class="me-4">{{ chapter.title }}</span>
               <i
                 class="material-icons me-4 hidden cursor-pointer text-red-400 group-hover:block"
-                @click="deleteChapter(index)"
+                @click="deleteChapter(chapterIdx)"
                 >delete_outline</i
               >
               <i
                 class="material-icons hidden cursor-pointer text-neutral-400 group-hover:block"
-                @click="isEdit = true"
+                @click="showEditChapterTitle(chapterIdx)"
                 >edit</i
               >
             </template>
@@ -34,12 +34,14 @@
                 id="url"
                 class="form-control me-4 max-w-sm"
                 :class="{ invalid: !edit }"
-                @keyup.enter="!!edit && editSubmit()"
+                @keyup.enter="!!edit && editChapterTitle(chapterIdx)"
               />
-              <button class="me-4" :disabled="edit === ''" @click="editSubmit()">確定</button>
-              <button @click="isEdit = false">取消</button>
+              <button class="me-4" :disabled="edit === ''" @click="editChapterTitle(chapterIdx)">
+                確定
+              </button>
+              <button @click="cancelEditChapterTitle(chapterIdx)">取消</button>
             </template>
-            <button class="btn-secondary ms-auto">新增單元</button>
+            <button class="btn-secondary ms-auto" @click="addLesson(chapterIdx)">新增單元</button>
           </div>
           <input
             checked
@@ -59,11 +61,11 @@
             item-key="id"
             handle=".js-draggable"
           >
-            <template #item="{ element: lesson }">
+            <template #item="{ element: lesson, index: lessonIdx }">
               <li class="border">
-                <RouterLink
-                  to="/instructor/course/123456789/chapter/33333/lesson/44444"
-                  class="flex items-center p-4"
+                <div
+                  @click="editLesson(chapterIdx, lessonIdx)"
+                  class="flex cursor-pointer items-center p-4"
                 >
                   <i class="material-icons js-draggable me-2 cursor-row-resize">sort</i>
                   <span class="me-3">{{ lesson.title }}</span>
@@ -80,7 +82,7 @@
                     class="material-icons cursor-pointer"
                     >check_circle_outline</i
                   >
-                </RouterLink>
+                </div>
               </li>
             </template>
           </draggable>
@@ -121,10 +123,13 @@
 
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import type { FormContext } from 'vee-validate'
 import draggable from 'vuedraggable'
 import CommonModal from '../../../components/CommonModal.vue'
+
+const router = useRouter()
 
 const chapters = ref([
   {
@@ -145,7 +150,8 @@ const chapters = ref([
         video: 'lesson_video_url',
         is_publish: false
       }
-    ]
+    ],
+    isEdit: false
   },
   {
     id: '2',
@@ -165,12 +171,50 @@ const chapters = ref([
         video: 'lesson_video_url',
         is_publish: false
       }
-    ]
+    ],
+    isEdit: false
   }
 ])
 
-const edit = ref('第一章：產品設計的核心觀念')
-const isEdit = ref(false)
+// 章節
+function deleteChapter(chapterIdx: number) {
+  Swal.fire({
+    icon: 'warning',
+    title: '確定刪除嗎？',
+    showCancelButton: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      chapters.value = chapters.value.filter((_, idx) => idx !== chapterIdx)
+    }
+  })
+}
+
+const edit = ref('')
+
+function showEditChapterTitle(chapterIdx: number) {
+  edit.value = chapters.value[chapterIdx].title
+  chapters.value[chapterIdx].isEdit = true
+}
+
+function editChapterTitle(chapterIdx: number) {
+  chapters.value[chapterIdx].title = edit.value
+  chapters.value[chapterIdx].isEdit = false
+  edit.value = ''
+}
+
+function cancelEditChapterTitle(chapterIdx: number) {
+  chapters.value[chapterIdx].isEdit = false
+  edit.value = ''
+}
+
+// 單元
+function addLesson(chapterIdx: number) {
+  router.push(`/instructor/course/11111/chapter/${chapterIdx}/lesson`)
+}
+
+function editLesson(chapterIdx: number, lessonIdx: number) {
+  router.push(`/instructor/course/11111/chapter/${chapterIdx}/lesson/${lessonIdx}`)
+}
 
 // 新增章節 modal
 const showAddChapterModal = ref(false)
@@ -189,26 +233,10 @@ function addChapter() {
   chapters.value.push({
     id: chapters.value.length.toString(),
     title: chapter.value,
-    lessons: []
+    lessons: [],
+    isEdit: false
   })
   showAddChapterModal.value = false
-}
-
-function editSubmit() {
-  console.log('edit success')
-  isEdit.value = false
-}
-
-function deleteChapter(idx: number) {
-  Swal.fire({
-    icon: 'warning',
-    title: '確定刪除嗎？',
-    showCancelButton: true
-  }).then((result) => {
-    if (result.isConfirmed) {
-      console.log('確定刪除', idx)
-    }
-  })
 }
 
 onMounted(() => {
