@@ -4,7 +4,14 @@
       <div class="grid grid-cols-12 gap-6">
         <aside class="col-span-3 flex flex-col items-center bg-neutral-50 py-6">
           <div class="relative">
-            <img :src="user?.avatarImagePath" class="mx-auto rounded-full" />
+            <img
+              :src="
+                user?.avatarImagePath
+                  ? user?.avatarImagePath
+                  : 'https://fakeimg.pl/100x100/B7B7B7/?text=用戶'
+              "
+              class="mx-auto h-25 w-25 rounded-full object-cover"
+            />
             <label
               id="profilePhoto"
               class="absolute bottom-0 right-0 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-primary-4 text-white"
