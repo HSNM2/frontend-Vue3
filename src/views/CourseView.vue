@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, ref, watch } from 'vue'
+import { shallowRef, ref, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import CourseTabs from '@/components/CourseTabs.vue'
@@ -83,9 +83,17 @@ const auth = useAuthStore()
 const { user } = storeToRefs(auth)
 const isLogin = ref(false)
 
-watch(user, () => {
+const checkLogin = () => {
   if (user.value !== null) isLogin.value = true
   else isLogin.value = false
+}
+
+watch(user, () => {
+  checkLogin()
+})
+
+onMounted(() => {
+  checkLogin()
 })
 
 const tabs = [
