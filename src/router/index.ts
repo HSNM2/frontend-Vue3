@@ -59,7 +59,8 @@ const router = createRouter({
       path: '/instructor',
       name: 'instructor',
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        isInstructor: true
       },
       children: [
         {
@@ -78,9 +79,9 @@ const router = createRouter({
               component: () => import('../views/instructor/course/CourseChapterView.vue')
             },
             {
-              path: 'chapter/:chapterId',
+              path: 'chapter/:chapterId/lesson/:lessonId',
               name: 'instructorCourseChapterEdit',
-              component: () => import('../views/instructor/course/CourseChapterEditView.vue')
+              component: () => import('../views/instructor/course/CourseLessonView.vue')
             },
             {
               path: 'students',
@@ -120,10 +121,22 @@ router.beforeEach(async (to, from) => {
     } catch (err) {
       console.log('無登入')
     }
+  }
 
-    if (to.meta.requiresAuth && !user.value) {
+  if (!user.value) {
+    if (to.meta.requiresAuth) {
+      // 無登入狀態
       authModal.value = true
       authModalType.value = 'login'
+      return { path: from.path }
+    }
+  } else {
+    if (to.meta.isInstructor && (!user.value.identity || user.value.identity !== '[1]')) {
+      // 無開課權限
+      Swal.fire({
+        icon: 'warning',
+        title: '尚無開啟開課功能'
+      })
       return { path: from.path }
     }
   }
