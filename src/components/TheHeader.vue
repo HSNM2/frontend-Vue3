@@ -18,20 +18,36 @@
             <span class="material-icons pr-1 text-3xl text-neutral-600"> search </span>
             <template v-if="!user">
               <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
-              <button @click="loginModal = true" class="btn-primary">登入</button>
-              <button @click="registerModal = true" class="btn-secondary">註冊</button>
+              <button @click="openAuthModal('login')" class="btn-primary">登入</button>
+              <button @click="openAuthModal('register')" class="btn-secondary">註冊</button>
             </template>
             <template v-else>
               <button class="btn-primary">我的學習</button>
               <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
               <div class="group relative">
-                <img src="https://fakeimg.pl/40/" class="cursor-pointer rounded-full" alt="頭像" />
+                <img
+                  :src="
+                    user?.avatarImagePath
+                      ? user?.avatarImagePath
+                      : 'https://fakeimg.pl/40x40/B7B7B7/?text=User'
+                  "
+                  class="h-10 w-10 cursor-pointer rounded-full object-cover"
+                  alt="頭像"
+                />
                 <div
                   class="absolute right-0 top-full z-10 hidden w-72 pt-2 hover:block group-hover:block"
                 >
                   <div class="rounded border bg-neutral-50">
                     <div class="flex items-center p-4 pb-2">
-                      <img src="https://fakeimg.pl/60/" class="rounded-full" alt="頭像" />
+                      <img
+                        :src="
+                          user?.avatarImagePath
+                            ? user?.avatarImagePath
+                            : 'https://fakeimg.pl/60x60/B7B7B7/?text=User'
+                        "
+                        class="h-15 w-15 rounded-full object-cover"
+                        alt="頭像"
+                      />
                       <div class="pl-2">
                         <span class="block font-bold">{{ user.name }}</span>
                         <span class="block text-sm text-neutral-600">{{ user.email }}</span>
@@ -42,6 +58,12 @@
                       <router-link to="/student/profile" class="block px-4 py-2"
                         >會員資料</router-link
                       >
+                      <router-link
+                        v-if="user.identity == '[1]'"
+                        to="/instructor/courses"
+                        class="block px-4 py-2"
+                        >課程後台</router-link
+                      >
                       <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
                         >我的學習</router-link
                       >
@@ -51,6 +73,14 @@
                       <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
                         >我的收藏</router-link
                       >
+                      <button
+                        v-if="!user.identity"
+                        type="button"
+                        class="block w-full px-4 py-2 text-left"
+                        @click="courseProviderAllowModal = true"
+                      >
+                        開啟開課功能
+                      </button>
                       <hr class="my-2" />
                       <a href="/" @click.prevent="handleLogout" class="block px-4 py-2 pb-4"
                         >登出</a
@@ -123,16 +153,16 @@
       </div>
     </div>
   </header>
-  <LoginModal />
-  <RegisterModal />
+  <AuthModal />
+  <CourseProviderAllowModal />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useStatusStore } from '@/stores/status'
-import LoginModal from './LoginModal.vue'
-import RegisterModal from './RegisterModal.vue'
+import AuthModal from './AuthModal.vue'
+import CourseProviderAllowModal from './CourseProviderAllowModal.vue'
 import { useRouter } from 'vue-router'
 import useErrorHandler from '../composables/useErrorHandler'
 
@@ -142,7 +172,12 @@ const { showError } = useErrorHandler()
 const { updateLoading } = useStatusStore()
 const auth = useAuthStore()
 const { logout } = auth
-const { loginModal, registerModal, user } = storeToRefs(auth)
+const { authModal, authModalType, courseProviderAllowModal, user } = storeToRefs(auth)
+
+function openAuthModal(type = 'login') {
+  authModal.value = true
+  authModalType.value = type
+}
 
 function handleLogout() {
   updateLoading(true)
