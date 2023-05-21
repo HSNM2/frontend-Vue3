@@ -26,11 +26,7 @@
             </div>
           </td>
           <td class="border-b p-3 text-center">
-            <img
-              src="https://fakeimg.pl/40/"
-              class="mx-auto cursor-pointer rounded-full"
-              alt="圖示"
-            />
+            <img src="https://fakeimg.pl/40/" class="mx-auto rounded-full" alt="圖示" />
           </td>
           <td class="border-b p-3 text-center">paper</td>
           <td class="border-b p-3 text-center">paper@gmail.com</td>
@@ -46,11 +42,7 @@
             </div>
           </td>
           <td class="border-b p-3 text-center">
-            <img
-              src="https://fakeimg.pl/40/"
-              class="mx-auto cursor-pointer rounded-full"
-              alt="圖示"
-            />
+            <img src="https://fakeimg.pl/40/" class="mx-auto rounded-full" alt="圖示" />
           </td>
           <td class="border-b p-3 text-center">ruby</td>
           <td class="border-b p-3 text-center">ruby0002@gmail.com</td>
