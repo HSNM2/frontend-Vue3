@@ -16,7 +16,7 @@
               <span class="material-icons text-base text-primary-3"> star </span>
               <span class="material-icons text-base text-primary-3"> star </span>
             </div>
-            <div class="bg-neutral-150 h-1 w-7/12"></div>
+            <div class="h-1 w-7/12 bg-neutral-150"></div>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -26,7 +26,7 @@
               <span class="material-icons text-base text-primary-3"> star </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="bg-neutral-150 h-1 w-7/12"></div>
+            <div class="h-1 w-7/12 bg-neutral-150"></div>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -36,7 +36,7 @@
               <span class="material-icons text-base text-primary-3"> star_border </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="bg-neutral-150 h-1 w-7/12"></div>
+            <div class="h-1 w-7/12 bg-neutral-150"></div>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -46,7 +46,7 @@
               <span class="material-icons text-base text-primary-3"> star_border </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="bg-neutral-150 h-1 w-7/12"></div>
+            <div class="h-1 w-7/12 bg-neutral-150"></div>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -56,10 +56,12 @@
               <span class="material-icons text-base text-primary-3"> star_border </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="bg-neutral-150 h-1 w-7/12"></div>
+            <div class="h-1 w-7/12 bg-neutral-150"></div>
           </div>
         </div>
-        <button type="button" class="btn-primary mx-auto block">對課程有心得？ 開始評價</button>
+        <button type="button" class="btn-primary mx-auto block" @click="reviewAction()">
+          對課程有心得？ 開始評價
+        </button>
       </div>
     </div>
     <div class="col-span-12 lg:col-span-9 lg:row-start-1">
@@ -116,5 +118,12 @@
     </div>
   </div>
 </template>
-
+<script setup lang="ts">
+const reviewAction = () => {
+  // 點選後判斷是否登入
+  // 未登入 => 登入視窗 ； 登入 => 判斷是否有買此課程
+  // 登入後判斷是否已買課程
+  // 未買，不顯示此案紐 ； 已買，顯示評價modal
+}
+</script>
 <style lang=""></style>
