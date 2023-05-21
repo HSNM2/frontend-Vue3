@@ -69,6 +69,7 @@ const sidebarMenuLinks = ref([
 
 function avatarPicChange(e: Event) {
   const files: FileList | null = (e.target as HTMLInputElement).files
+  if (!files) return
   avatarPic.value?.append('avatar', files[0])
   axios.post('/api/user/profile/pic/upload', avatarPic.value).then(() => {
     getUser()
