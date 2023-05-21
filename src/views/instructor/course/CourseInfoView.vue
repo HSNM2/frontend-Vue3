@@ -206,7 +206,7 @@ const subTitle = ref('') // 課程副標題
 const description = ref('') // 課程簡介
 const price = ref(0) // 銷售價格
 const originPrice = ref(0) // 原價
-const tags = ref(['Google', '外商', '十大企業']) // 標籤
+const tags = ref(['擠花技巧', '烤製方式']) // 標籤
 const image_path = ref('') // 封面圖片
 const link = ref('') // 介紹影片
 
@@ -250,7 +250,7 @@ const editorConfig = {
     ]
   }
 }
-const editorData = ''
+const editorData = ref('')
 
 function removeTag(idx: number) {
   tags.value = tags.value.filter((_, tagIdx) => tagIdx !== idx)
