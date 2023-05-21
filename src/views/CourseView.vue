@@ -54,7 +54,7 @@
           </div>
         </div>
       </div>
-      <component :is="currentTab"></component>
+      <component :is="currentTab" :isLogin="isLogin"></component>
     </div>
   </main>
   <teleport to="body">
@@ -69,13 +69,24 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef } from 'vue'
+import { shallowRef, ref, watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '@/stores/auth'
 import CourseTabs from '@/components/CourseTabs.vue'
 import IntroduceView from '@/views/courseDtl/IntroduceView.vue'
 import OutlineView from '@/views/courseDtl/OutlineView.vue'
 import QAView from '@/views/courseDtl/QAView.vue'
 import CommonProblemView from '@/views/courseDtl/CommonProblemView.vue'
 import ReviewView from '@/views/courseDtl/ReviewView.vue'
+
+const auth = useAuthStore()
+const { user } = storeToRefs(auth)
+const isLogin = ref(false)
+
+watch(user, () => {
+  if (user.value !== null) isLogin.value = true
+  else isLogin.value = false
+})
 
 const tabs = [
   { name: '課程介紹', comp: IntroduceView },
