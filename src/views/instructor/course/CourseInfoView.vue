@@ -112,23 +112,8 @@
       <!--課程簡介-->
       <div class="mb-6">
         <label for="description" class="form-label">課程簡介</label>
-        <VField
-          name="description"
-          rules="required"
-          label="課程簡介"
-          v-model="description"
-          v-slot="{ field, errors, meta }"
-        >
-          <input
-            id="description"
-            type="text"
-            class="form-control"
-            v-bind="field"
-            :class="{ invalid: meta.validated && !!errors.length }"
-          />
-          <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="description" />
-          <span class="form-text">列出本課程的學習重點</span>
-        </VField>
+        <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+        <span class="form-text">列出本課程的學習重點</span>
       </div>
       <!--價格-->
       <label class="form-label mb-2 font-bold">價格</label>
@@ -201,6 +186,19 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
+import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic'
+import { Essentials } from '@ckeditor/ckeditor5-essentials'
+import { Bold, Code, Italic, Strikethrough, Underline } from '@ckeditor/ckeditor5-basic-styles'
+import { Link, LinkImage } from '@ckeditor/ckeditor5-link'
+import { Paragraph } from '@ckeditor/ckeditor5-paragraph'
+import { Alignment } from '@ckeditor/ckeditor5-alignment'
+import { Font } from '@ckeditor/ckeditor5-font'
+import { Heading } from '@ckeditor/ckeditor5-heading'
+import { ImageInsert } from '@ckeditor/ckeditor5-image'
+import { List } from '@ckeditor/ckeditor5-list'
+import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line'
+import { BlockQuote } from '@ckeditor/ckeditor5-block-quote'
+
 const tag = ref('') // 標籤 input
 
 const name = ref('') // 課程名稱
@@ -211,6 +209,48 @@ const originPrice = ref(0) // 原價
 const tags = ref(['Google', '外商', '十大企業']) // 標籤
 const image_path = ref('') // 封面圖片
 const link = ref('') // 介紹影片
+
+const editor = ClassicEditor
+const editorConfig = {
+  plugins: [
+    Essentials,
+    Font,
+    Alignment,
+    Heading,
+    Strikethrough,
+    Underline,
+    Bold,
+    Code,
+    Italic,
+    Link,
+    Paragraph,
+    ImageInsert,
+    List,
+    HorizontalLine,
+    BlockQuote
+  ],
+  toolbar: {
+    items: [
+      'undo',
+      'redo',
+      'heading',
+      'alignment',
+      'fontColor',
+      'bold',
+      'italic',
+      'underline',
+      'strikethrough',
+      'code',
+      'bulletedList',
+      'numberedList',
+      'link',
+      'insertImage',
+      'blockQuote',
+      'horizontalLine'
+    ]
+  }
+}
+const editorData = ''
 
 function removeTag(idx: number) {
   tags.value = tags.value.filter((_, tagIdx) => tagIdx !== idx)
