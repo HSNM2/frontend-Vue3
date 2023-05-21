@@ -25,13 +25,29 @@
               <button class="btn-primary">我的學習</button>
               <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
               <div class="group relative">
-                <img src="https://fakeimg.pl/40/" class="cursor-pointer rounded-full" alt="頭像" />
+                <img
+                  :src="
+                    user?.avatarImagePath
+                      ? user?.avatarImagePath
+                      : 'https://fakeimg.pl/40x40/B7B7B7/?text=User'
+                  "
+                  class="h-10 w-10 cursor-pointer rounded-full object-cover"
+                  alt="頭像"
+                />
                 <div
                   class="absolute right-0 top-full z-10 hidden w-72 pt-2 hover:block group-hover:block"
                 >
                   <div class="rounded border bg-neutral-50">
                     <div class="flex items-center p-4 pb-2">
-                      <img src="https://fakeimg.pl/60/" class="rounded-full" alt="頭像" />
+                      <img
+                        :src="
+                          user?.avatarImagePath
+                            ? user?.avatarImagePath
+                            : 'https://fakeimg.pl/60x60/B7B7B7/?text=User'
+                        "
+                        class="h-15 w-15 rounded-full object-cover"
+                        alt="頭像"
+                      />
                       <div class="pl-2">
                         <span class="block font-bold">{{ user.name }}</span>
                         <span class="block text-sm text-neutral-600">{{ user.email }}</span>
