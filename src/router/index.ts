@@ -92,6 +92,11 @@ const router = createRouter({
               path: 'info',
               name: 'instructorCourseInfo',
               component: () => import('../views/instructor/course/CourseInfoView.vue')
+            },
+            {
+              path: 'setting',
+              name: 'instructorCourseSetting',
+              component: () => import('../views/instructor/course/CourseSettingView.vue')
             }
           ]
         }

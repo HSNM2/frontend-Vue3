@@ -25,7 +25,7 @@
             >課程資訊</router-link
           >
           <router-link to="/" class="mb-1 block">常見問題</router-link>
-          <router-link to="/" class="block">進階設定</router-link>
+          <router-link to="/instructor/course/1112222/setting" class="block">進階設定</router-link>
         </li>
       </ul>
     </aside>
