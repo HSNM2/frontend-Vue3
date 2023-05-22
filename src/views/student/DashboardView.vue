@@ -54,6 +54,8 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import axios from 'axios'
 
+import { AvatarPicRequest } from '@/models/auth'
+
 const auth = useAuthStore()
 const { user } = storeToRefs(auth)
 const { getUser } = auth
@@ -71,7 +73,8 @@ function avatarPicChange(e: Event) {
   const files: FileList | null = (e.target as HTMLInputElement).files
   if (!files) return
   avatarPic.value?.append('avatar', files[0])
-  axios.post('/api/user/profile/pic/upload', avatarPic.value).then(() => {
+
+  AvatarPicRequest(avatarPic.value).then(() => {
     getUser()
   })
 }
