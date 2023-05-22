@@ -44,7 +44,7 @@
           <p>neutral-100</p>
         </div>
         <div>
-          <p class="bg-neutral-150 h-8 w-24 border border-sky-500 text-white">#ECE9E9</p>
+          <p class="h-8 w-24 border border-sky-500 bg-neutral-150 text-white">#ECE9E9</p>
           <p>neutral-150</p>
         </div>
         <div>
@@ -81,7 +81,7 @@
       </div>
       <div>
         <button class="btn-back mr-2">btn-back</button>
-        <button class="btn-back2 mr-2"><span class="material-icons"> undo </span></button>
+        <button class="btn-back-round mr-2"><span class="material-icons"> undo </span></button>
       </div>
     </div>
     <div class="mb-6">

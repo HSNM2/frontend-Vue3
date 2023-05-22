@@ -1,26 +1,36 @@
 <template>
-  <button
-    v-for="item in tabs"
-    :key="item.name"
-    type="button"
-    class="flex items-center px-2 text-base font-bold text-primary-4 md:px-8"
-    :class="activeStyle(item.name)"
-    @click="changeTabAction(item.name)"
-  >
-    <span class="hidden font-bold md:block">
-      {{ item.name.substring(0, 2) }}
-    </span>
-    {{ item.name.substring(2, 4) }}
-  </button>
+  <template v-for="item in tabs" :key="item.name">
+    <div :class="item.style">
+      <button
+        type="button"
+        class="flex items-center px-2 text-base font-bold text-primary-4 md:px-8"
+        :class="activeStyle(item.name)"
+        @click="changeTabAction(item.name)"
+      >
+        <template v-if="$route.name === 'course'">
+          <span class="hidden font-bold md:block">
+            {{ item.name.substring(0, 2) }}
+          </span>
+          {{ item.name.substring(2, 4) }}
+        </template>
+        <template v-else>
+          {{ item.name }}
+        </template>
+      </button>
+    </div>
+  </template>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
+
 const emit = defineEmits(['changeTabView'])
 const props = defineProps({
   tabs: { type: Object, required: true }
 })
-const tabName = ref('課程介紹')
+const route = useRoute()
+const tabName = route.name === 'learn' ? ref('課程討論') : ref('課程介紹')
 
 const changeTabAction = (name: string) => {
   tabName.value = name
