@@ -153,6 +153,8 @@ import useErrorHandler from '../../composables/useErrorHandler'
 import type { FormContext } from 'vee-validate'
 import { storeToRefs } from 'pinia'
 
+import { UserRequest } from '@/models/auth'
+
 const { updateLoading } = useStatusStore()
 const auth = useAuthStore()
 const { getUser } = auth
@@ -192,16 +194,15 @@ onMounted(() => {
 function onSubmit() {
   updateLoading(true)
 
-  axios
-    .patch('/api/user/profile', {
-      name: name.value,
-      nickName: nickName.value,
-      gender: gender.value,
-      birthday: birthday.value,
-      phone: phone.value,
-      // email: email.value,
-      address: address.value
-    })
+  UserRequest('patch', {
+    name: name.value,
+    nickName: nickName.value,
+    gender: gender.value,
+    birthday: birthday.value,
+    phone: phone.value,
+    // email: email.value,
+    address: address.value
+  })
     .then((res) => {
       Swal.fire({
         icon: 'success',

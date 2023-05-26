@@ -14,9 +14,6 @@ import './assets/main.scss'
 
 const app = createApp(App)
 
-axios.defaults.baseURL = import.meta.env.VITE_API_URL
-axios.defaults.withCredentials = true
-
 app.use(createPinia())
 app.use(router)
 
