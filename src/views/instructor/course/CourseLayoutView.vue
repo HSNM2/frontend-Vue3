@@ -24,12 +24,18 @@
           <router-link to="/instructor/course/1112222/info" class="mb-1 block"
             >課程資訊</router-link
           >
-          <router-link to="/instructor/faq" class="mb-1 block">常見問題</router-link>
+          <router-link to="/instructor/course/112332/faq" class="mb-1 block">常見問題</router-link>
           <router-link to="/" class="block">進階設定</router-link>
         </li>
         <li>
           <span class="text-sm text-neutral-600">發布</span>
-          <label class="mb-1 block">課程發布</label>
+          <label class="relative mb-1 flex items-center justify-between">
+            <span class="">課程發布</span>
+            <input type="checkbox" name="" id="" class="peer sr-only" />
+            <div
+              class="h-6 w-11 items-center rounded-full bg-neutral-400 after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-neutral-50 after:transition-all after:content-[''] peer-checked:bg-primary-6 peer-checked:after:translate-x-full peer-focus:ring-4 peer-focus:ring-primary-3"
+            ></div>
+          </label>
         </li>
       </ul>
     </aside>
