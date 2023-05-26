@@ -45,7 +45,7 @@
               >
             </template>
 
-            <button class="btn-secondary ms-auto" @click="showAddQuestionModal = true">
+            <button class="btn-secondary ms-auto" @click="addQuestionHandle(faq.id, faq.questions)">
               新增問題內容
             </button>
           </div>
@@ -271,6 +271,8 @@ const showAddQuestionModal = ref(false)
 const addQuestionForm = ref<FormContext | null>(null)
 
 const question = ref('') // 新增問題
+const questionList = ref<any | null>(null)
+const questionListId = ref<any | null>(null)
 
 watch(showAddQuestionModal, () => {
   question.value = ''
@@ -279,11 +281,17 @@ watch(showAddQuestionModal, () => {
   })
 })
 
+function addQuestionHandle(id: any, list: any) {
+  questionListId.value = id
+  questionList.value = list
+  showAddQuestionModal.value = true
+}
+
 function addQuestion() {
-  faqs.value.push({
-    id: question.value.length.toString(),
-    title: question.value,
-    questions: []
+  questionList.value.push({
+    id: `${questionListId.value}-${questionList.value.length + 1}`,
+    content: question.value,
+    is_publish: false
   })
   showAddQuestionModal.value = false
 }
