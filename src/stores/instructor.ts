@@ -10,22 +10,14 @@ export const useInstructorStore = defineStore('instructor', () => {
 
   // 取得課程清單
   function getCourses() {
-    // return axios.get('/api/courseProvider/courses').then((res) => {
-    //   courses.value = res.data.data
-    // })
     return CoursesListRequest().then((res) => {
-      courses.value = res.data.data
+      courses.value = res.data.data.course
     })
   }
 
   // 新增課程
-  function addCourse() {
-    // return axios.post('/api/courseProvider/course').then((res) => {
-    //   courses.value = res.data.data
-    // })
-    return AddCourseRequest().then((res) => {
-      courses.value = res.data.data
-    })
+  function addCourse(payload: { title: string }) {
+    return AddCourseRequest(payload).then(() => getCourses())
   }
 
   // 取得單一課程

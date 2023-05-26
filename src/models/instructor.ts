@@ -7,10 +7,11 @@ export function CoursesListRequest() {
   })
 }
 
-export function AddCourseRequest() {
+export function AddCourseRequest(data: object) {
   return request({
     url: '/api/courseProvider/course',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 

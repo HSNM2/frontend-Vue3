@@ -37,17 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
+import useSetMinMainHeight from '@/composables/useSetMinMainHeight'
 
-const main = ref<HTMLElement | null>(null)
-
-onMounted(() => {
-  nextTick(() => {
-    if (main.value) {
-      main.value.style.minHeight = `calc(100vh - ${
-        (document.querySelector('header') as HTMLElement).offsetHeight
-      }px - ${(document.querySelector('footer') as HTMLElement).offsetHeight}px)`
-    }
-  })
-})
+useSetMinMainHeight()
 </script>
