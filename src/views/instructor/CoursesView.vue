@@ -62,7 +62,6 @@
             v-slot="{ field, errors, meta }"
             label="課程名稱"
           >
-            {{ meta }}
             <input
               id="course"
               class="form-control"
@@ -117,13 +116,11 @@ const addCourseForm = ref<FormContext | null>(null)
 const showAddCourseModal = ref(false)
 const courseTitle = ref('')
 
-watch(showAddCourseModal, (newVal) => {
-  if (newVal) {
-    nextTick(() => {
-      courseTitle.value = ''
-      addCourseForm.value?.resetForm()
-    })
-  }
+watch(showAddCourseModal, () => {
+  nextTick(() => {
+    courseTitle.value = ''
+    addCourseForm.value?.resetForm()
+  })
 })
 
 function handleAddCourse() {
