@@ -192,6 +192,10 @@ function deleteChapter(chapterIdx: number) {
 const edit = ref('')
 
 function showEditChapterTitle(chapterIdx: number) {
+  chapters.value = chapters.value.map((chapter) => ({
+    ...chapter,
+    isEdit: false
+  }))
   edit.value = chapters.value[chapterIdx].title
   chapters.value[chapterIdx].isEdit = true
 }
