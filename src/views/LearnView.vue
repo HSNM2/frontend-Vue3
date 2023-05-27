@@ -28,30 +28,35 @@
                 <button
                   type="button"
                   class="hidden rounded-2xl border border-secondary-2 px-6 py-1 lg:block"
+                  @click="scrollToTabs('課程討論')"
                 >
                   <span class="material-icons pr-1 text-base text-secondary-2">
-                    import_contacts </span
-                  >課程討論
+                    import_contacts
+                  </span>
+                  課程討論
                 </button>
                 <button
                   type="button"
                   class="hidden rounded-2xl border border-primary-3 px-6 py-1 lg:block"
+                  @click="scrollToTabs('課程評價')"
                 >
-                  <span class="material-icons pr-1 text-base text-primary-3"> star </span>課程評價
+                  <span class="material-icons pr-1 text-base text-primary-3"> star </span>
+                  課程評價
                 </button>
               </div>
             </div>
 
-            <div>
+            <div ref="tabsElement">
               <div class="relative pb-6 pt-[52px]">
                 <div
                   class="flex justify-around gap-x-[19px] pb-2 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-primary-3 after:content-[''] lg:justify-start"
                 >
-                  <CourseTabs :tabs="tabs" @changeTabView="changeTabView"> </CourseTabs>
+                  <CourseTabs :tabs="tabs" @changeTabView="changeTabView" ref="tabsCompRef">
+                  </CourseTabs>
                 </div>
               </div>
 
-              <component :is="currentTab" :isLogin="isLogin"></component>
+              <component :is="currentTab"></component>
             </div>
           </div>
 
@@ -64,39 +69,27 @@
   </main>
 </template>
 <script setup lang="ts">
-import { shallowRef, ref, watch, onMounted } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useAuthStore } from '@/stores/auth'
+import type { Ref } from 'vue'
+import { shallowRef, ref, onMounted } from 'vue'
 import CourseTabs from '@/components/CourseTabs.vue'
 import ChapterView from '@/views/courseDtl/ChapterView.vue'
-import DiscussView from '@/views/courseDtl/DiSussView.vue'
+import DiscussView from '@/views/courseDtl/DiscussView.vue'
 import ReviewView from '@/views/courseDtl/ReviewView.vue'
-
-const auth = useAuthStore()
-const { user } = storeToRefs(auth)
-const isLogin = ref(false)
-
-const checkLogin = () => {
-  if (user.value !== null) isLogin.value = true
-  else isLogin.value = false
-}
-
-watch(user, () => {
-  checkLogin()
-})
-
-onMounted(() => {
-  checkLogin()
-  changeTabView('課程討論')
-})
 
 const tabs = [
   { name: '課程內容', comp: ChapterView, style: 'lg:hidden' },
   { name: '課程討論', comp: DiscussView, style: '' },
   { name: '課程評價', comp: ReviewView, style: '' }
 ]
-
 const currentTab = shallowRef(tabs[0].comp)
+const tabsElement = ref<null | HTMLDivElement>(null)
+const tabsCompRef: Ref<null | typeof CourseTabs> = ref(null)
+const scrollToTabs = (tabName: string) => {
+  if (tabsElement.value) {
+    tabsElement.value.scrollIntoView({ behavior: 'smooth' })
+    tabsCompRef.value?.changeTabAction(tabName)
+  }
+}
 
 const changeTabView = (name: string) => {
   tabs.forEach((item) => {
@@ -105,4 +98,8 @@ const changeTabView = (name: string) => {
     }
   })
 }
+
+onMounted(() => {
+  changeTabView('課程討論')
+})
 </script>

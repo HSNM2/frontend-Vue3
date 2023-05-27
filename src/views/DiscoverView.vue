@@ -1,7 +1,7 @@
 <template>
   <div class="container py-6">
     <div class="mb-6">
-      <h2 class="mb-2 text-xl font-bold">color</h2>
+      <h3 class="mb-2 text-xl font-bold">color</h3>
       <div class="grid grid-cols-3 gap-4 md:grid-cols-6 lg:grid-cols-8">
         <div>
           <p class="h-8 w-24 border border-sky-500 bg-primary-1">#FFFAEC</p>
@@ -118,6 +118,14 @@
           <ErrorMessage class="invalid-feedback" name="username" />
         </div>
       </VForm>
+      <div class="mt-4">
+        <input
+          id="draft"
+          class="mr-1 h-3 w-3 appearance-none rounded-full outline outline-1 outline-offset-1 outline-primary-6 checked:bg-primary-5"
+          type="radio"
+        />
+        <label for="draft" class="text-primary-5">Draft</label>
+      </div>
     </div>
     <div class="mb-6">
       <h3 class="mb-2 text-xl font-bold">card</h3>

@@ -44,6 +44,10 @@ const activeStyle = computed(() => {
     }
   }
 })
+
+defineExpose({
+  changeTabAction
+})
 </script>
 
 <style lang="scss" scoped>
