@@ -89,7 +89,7 @@ import useErrorHandler from '@/composables/useErrorHandler'
 import { useInstructorStore } from '@/stores/instructor'
 import { useStatusStore } from '@/stores/status'
 import { storeToRefs } from 'pinia'
-import { FormContext } from 'vee-validate'
+import type { FormContext } from 'vee-validate'
 
 useSetMinMainHeight()
 

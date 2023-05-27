@@ -65,7 +65,7 @@
             item-key="id"
             handle=".js-draggable"
           >
-            <template #item="{ element: lesson, index: lessonIdx }">
+            <template #item="{ element: lesson }">
               <li class="border">
                 <div
                   @click="editLesson(chapter.id, lesson.id)"

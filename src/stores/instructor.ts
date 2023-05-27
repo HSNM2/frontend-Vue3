@@ -12,9 +12,10 @@ import {
   AddCourseLessonRequest
 } from '@/models/instructor'
 
-interface CourseLesson {
+interface Course {
+  id: number
   title: string
-  videoPath: string
+  isPublish: boolean
 }
 
 interface CourseChapter {
@@ -25,9 +26,14 @@ interface CourseChapter {
 
 type EditCourseChapter = CourseChapter & { isEdit: boolean }
 
+interface CourseLesson {
+  title: string
+  videoPath: string
+}
+
 export const useInstructorStore = defineStore('instructor', () => {
-  const courses = ref([])
-  const course = ref(null)
+  const courses = ref<Course[]>([])
+  const course = ref<Course | null>(null)
 
   const chapters = ref<EditCourseChapter[]>([])
   const chapter = ref<CourseChapter | null>(null)
