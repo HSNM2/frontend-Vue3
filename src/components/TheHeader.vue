@@ -23,7 +23,67 @@
             </template>
             <template v-else>
               <button class="btn-primary">我的學習</button>
-              <span class="material-icons pr-1 text-3xl text-neutral-600"> shopping_cart </span>
+              <div class="group">
+                <span class="material-icons cursor-pointer pr-1 text-3xl text-neutral-600">
+                  shopping_cart
+                </span>
+                <div
+                  class="absolute right-0 top-full z-10 hidden w-72 pt-2 hover:block group-hover:block"
+                >
+                  <div class="rounded border bg-neutral-50">
+                    <div class="flex items-center justify-between px-4 py-3 pb-1">
+                      <p class="text-lg font-bold">購物車</p>
+                      <button v-if="!cart.isEmpty" class="btn-secondary">清空購物車</button>
+                    </div>
+                    <hr class="my-2" />
+                    <div v-if="!cart.isEmpty">
+                      <div class="" v-for="item in cart.cartItem" :key="item.id">
+                        <div class="flex p-2 pt-0">
+                          <!-- <img
+                            src="https://fakeimg.pl/90x56/B7B7B7/?text=Courses"
+                            class="w-22 h-14 object-cover"
+                            alt="課程圖片"
+                          /> -->
+                          <div class="mr-2 w-1/2">
+                            <div
+                              class="flex h-full w-full items-center justify-center bg-primary-3"
+                            >
+                              <span>courses</span>
+                            </div>
+                          </div>
+                          <div class="">
+                            <p>{{ item.title }}</p>
+                            <div class="flex items-end justify-between">
+                              <div>
+                                <span class="text-lg text-primary-5"
+                                  >{{ `$${item.price} `
+                                  }}<span class="text-sm text-neutral-900 line-through">{{
+                                    `$${item.origin_price}`
+                                  }}</span></span
+                                >
+                              </div>
+                              <i class="material-icons cursor-pointer text-red-400"
+                                >delete_outline</i
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <p v-if="cart.isEmpty" class="mb-2 text-center">
+                      購物車還是空的<br />快來探索一下課程吧
+                    </p>
+
+                    <hr v-if="!cart.isEmpty" class="mb-2" />
+
+                    <div v-if="!cart.isEmpty" class="flex items-center justify-between p-2 pt-0">
+                      <span class="text-lg">{{ `總價：${cart.totalPrice}` }}</span>
+                      <button class="btn-primary">結帳</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div class="group relative">
                 <img
                   :src="
@@ -158,9 +218,11 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useStatusStore } from '@/stores/status'
+import { useCartStore } from '@/stores/cart'
 import AuthModal from './AuthModal.vue'
 import CourseProviderAllowModal from './CourseProviderAllowModal.vue'
 import { useRouter } from 'vue-router'
@@ -171,6 +233,7 @@ const { showError } = useErrorHandler()
 
 const { updateLoading } = useStatusStore()
 const auth = useAuthStore()
+const { cart, cartHandle } = useCartStore()
 const { logout } = auth
 const { authModal, authModalType, courseProviderAllowModal, user } = storeToRefs(auth)
 
@@ -192,4 +255,8 @@ function handleLogout() {
       updateLoading(false)
     })
 }
+
+onMounted(() => {
+  cartHandle()
+})
 </script>

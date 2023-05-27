@@ -1,6 +1,9 @@
 <template>
   <div class="mb-16 grid grid-cols-12 gap-x-6 gap-y-4 px-3">
-    <div class="col-span-12 lg:col-span-3 lg:col-start-10">
+    <div
+      class="col-span-12"
+      :class="$route.name === 'course' ? 'lg:col-span-3 lg:col-start-10' : ''"
+    >
       <div class="rounded-2.5xl border border-neutral-200 px-[38px] py-5 lg:px-4">
         <div class="flex items-center justify-center gap-x-1.5">
           <span class="material-icons text-4xl text-primary-3"> star </span>
@@ -16,7 +19,7 @@
               <span class="material-icons text-base text-primary-3"> star </span>
               <span class="material-icons text-base text-primary-3"> star </span>
             </div>
-            <div class="h-1 w-7/12 bg-neutral-150"></div>
+            <div class="h-1 flex-1 bg-neutral-150"></div>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -26,7 +29,7 @@
               <span class="material-icons text-base text-primary-3"> star </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="h-1 w-7/12 bg-neutral-150"></div>
+            <div class="h-1 flex-1 bg-neutral-150"></div>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -36,7 +39,7 @@
               <span class="material-icons text-base text-primary-3"> star_border </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="h-1 w-7/12 bg-neutral-150"></div>
+            <div class="h-1 flex-1 bg-neutral-150"></div>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -46,7 +49,7 @@
               <span class="material-icons text-base text-primary-3"> star_border </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="h-1 w-7/12 bg-neutral-150"></div>
+            <div class="h-1 flex-1 bg-neutral-150"></div>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -56,15 +59,19 @@
               <span class="material-icons text-base text-primary-3"> star_border </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="h-1 w-7/12 bg-neutral-150"></div>
+            <div class="h-1 flex-1 bg-neutral-150"></div>
           </div>
         </div>
-        <button type="button" class="btn-primary mx-auto block" @click="reviewAction()">
+        <button type="button" class="btn-primary mx-auto block px-4" @click="reviewAction()">
           對課程有心得？ 開始評價
         </button>
       </div>
     </div>
-    <div class="col-span-12 lg:col-span-9 lg:row-start-1">
+
+    <div
+      class="col-span-12"
+      :class="$route.name === 'course' ? 'lg:col-span-9 lg:row-start-1' : ''"
+    >
       <div class="mb-4 rounded-2.5xl border border-secondary-2 p-5">
         <div
           class="flex flex-col gap-y-4 md:flex-row md:items-center md:justify-between md:gap-y-0"
@@ -117,9 +124,15 @@
       </div>
     </div>
   </div>
+  <ReviewModal v-if="isShowModal" @close-modal="isShowModal = false"></ReviewModal>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue'
+
+import ReviewModal from '@/components/ReviewModal.vue'
+const isShowModal = ref(false)
 const reviewAction = () => {
+  isShowModal.value = true
   // 點選後判斷是否登入
   // 未登入 => 登入視窗 ； 登入 => 判斷是否有買此課程
   // 登入後判斷是否已買課程

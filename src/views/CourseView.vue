@@ -97,11 +97,11 @@ onMounted(() => {
 })
 
 const tabs = [
-  { name: '課程介紹', comp: IntroduceView },
-  { name: '課程大綱', comp: OutlineView },
-  { name: '課前問答', comp: QAView },
-  { name: '常見問題', comp: CommonProblemView },
-  { name: '課程評價', comp: ReviewView }
+  { name: '課程介紹', comp: IntroduceView, style: '' },
+  { name: '課程大綱', comp: OutlineView, style: '' },
+  { name: '課前問答', comp: QAView, style: '' },
+  { name: '常見問題', comp: CommonProblemView, style: '' },
+  { name: '課程評價', comp: ReviewView, style: '' }
 ]
 
 const currentTab = shallowRef(tabs[0].comp)
