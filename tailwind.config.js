@@ -65,7 +65,9 @@ module.exports = {
         }
       },
       spacing: {
+        0.5: '0.125rem',
         7.5: '1.875rem',
+        11: '2.75rem',
         12.5: '3.125rem',
         13: '3.25rem',
         13.5: '3.375rem',
@@ -92,6 +94,9 @@ module.exports = {
       },
       width: {
         33: '8.25rem'
+      },
+      minWidth: {
+        19: '4.75rem'
       },
       maxWidth: {
         214: '53.5rem'
