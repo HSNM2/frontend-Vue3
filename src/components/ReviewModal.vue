@@ -12,11 +12,16 @@
         <div class="">
           <h2 class="mb-2 text-center text-2xl font-bold text-primary-5">課程評價</h2>
           <div class="flex items-center justify-center">
-            <span class="material-icons text-xl text-primary-3"> star </span>
-            <span class="material-icons text-xl text-primary-3"> star </span>
-            <span class="material-icons text-xl text-primary-3"> star </span>
-            <span class="material-icons text-xl text-primary-3"> star </span>
-            <span class="material-icons text-xl text-primary-3"> star </span>
+            <template v-for="(item, index) in 5" :key="index">
+              <span
+                class="material-icons text-xl text-primary-3"
+                @mouseover="mouseoverAction(index + 1)"
+                @mouseout="tempScore = 6"
+                @click="getScore(index + 1)"
+              >
+                {{ getStar(index) }}
+              </span>
+            </template>
           </div>
           <p class="text-center font-bold">點擊星星來評等，若未點選，則預設五顆星</p>
           <div class="my-4">
@@ -41,7 +46,36 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+
 const emits = defineEmits(['close-modal'])
+
+const currentScore = ref(5)
+const tempScore = ref(6)
+
+const mouseoverAction = (score: number) => {
+  tempScore.value = score
+}
+
+const getScore = (score: number) => {
+  currentScore.value = score
+}
+
+const getStar = (index: number) => {
+  if (tempScore.value === 6) {
+    if (index + 1 <= currentScore.value) {
+      return 'star'
+    } else {
+      return 'star_border'
+    }
+  } else {
+    if (index + 1 <= tempScore.value) {
+      return 'star'
+    } else {
+      return 'star_border'
+    }
+  }
+}
+
 const saveAction = () => {
   emits('close-modal')
 }
