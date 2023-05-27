@@ -1,5 +1,5 @@
 <template>
-  <main class="flex items-stretch bg-neutral-100">
+  <main class="flex items-stretch bg-neutral-100" v-if="course">
     <!--左側選單-->
     <aside class="w-72 bg-primary-1">
       <div class="p-6 pt-2">
@@ -11,21 +11,25 @@
       <ul class="border-t p-6">
         <li class="mb-8">
           <span class="text-sm text-neutral-600">內容</span>
-          <router-link to="/instructor/course/123123" class="block">章節管理</router-link>
+          <router-link :to="`/instructor/course/${course.id}`" class="block">章節管理</router-link>
         </li>
         <li class="mb-8">
           <span class="text-sm text-neutral-600">學員</span>
-          <router-link to="/instructor/course/1112222/students" class="mb-8 block"
+          <router-link :to="`/instructor/course/${course.id}/students`" class="mb-8 block"
             >學員列表</router-link
           >
         </li>
         <li class="mb-8">
           <span class="text-sm text-neutral-600">設定</span>
-          <router-link to="/instructor/course/1112222/info" class="mb-1 block"
+          <router-link :to="`/instructor/course/${course.id}/info`" class="mb-1 block"
             >課程資訊</router-link
           >
-          <router-link to="/instructor/course/112332/faq" class="mb-1 block">常見問題</router-link>
-          <router-link to="/instructor/course/112332/setting" class="block">進階設定</router-link>
+          <router-link :to="`/instructor/course/${course.id}/faq`" class="mb-1 block"
+            >常見問題</router-link
+          >
+          <router-link :to="`/instructor/course/${course.id}/setting`" class="block"
+            >進階設定</router-link
+          >
         </li>
         <li>
           <span class="text-sm text-neutral-600">發布</span>
@@ -41,14 +45,14 @@
     </aside>
     <!--主內容-->
     <div class="flex-1 bg-neutral-100 p-8">
-      <RouterView v-if="course"></RouterView>
+      <RouterView></RouterView>
     </div>
   </main>
 </template>
 
 <script setup lang="ts">
 import useSetMinMainHeight from '@/composables/useSetMinMainHeight'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import { useInstructorStore } from '@/stores/instructor'
 import { storeToRefs } from 'pinia'
