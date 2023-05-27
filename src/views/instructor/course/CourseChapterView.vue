@@ -44,16 +44,18 @@
             </template>
             <button class="btn-secondary ms-auto" @click="addLesson(chapter.id)">新增單元</button>
           </div>
-          <input
-            checked
-            type="checkbox"
-            class="peer absolute right-4 top-4 z-10 h-6 w-6 cursor-pointer opacity-0"
-          />
-          <span
-            v-if="chapter.lessons.length !== 0"
-            class="material-icons absolute right-4 top-4 rotate-0 transition-transform transition-transform duration-300 peer-checked:rotate-180"
-            >keyboard_arrow_down</span
-          >
+          <!--展開按鈕-->
+          <template v-if="chapter.lessons.length !== 0">
+            <input
+              checked
+              type="checkbox"
+              class="peer absolute right-4 top-4 z-10 h-6 w-6 cursor-pointer opacity-0"
+            />
+            <span
+              class="material-icons absolute right-4 top-4 rotate-0 transition-transform transition-transform duration-300 peer-checked:rotate-180"
+              >keyboard_arrow_down</span
+            >
+          </template>
           <draggable
             :key="chapter.id"
             class="max-h-0 overflow-hidden bg-neutral-100 transition-all duration-300 peer-checked:max-h-full"
@@ -149,7 +151,7 @@ const { chapters, course } = storeToRefs(instructor)
 
 onMounted(() => {
   updateLoading(true)
-  getCourseChapters({ courseId: +route.params.id })
+  getCourseChapters({ courseId: +route.params.courseId })
     .catch((err) => {
       showError(err)
     })
@@ -169,7 +171,7 @@ function deleteChapter(chapterId: number) {
   }).then((result) => {
     if (result.isConfirmed) {
       updateLoading(true)
-      deleteCourseChapter({ courseId: +route.params.id, chapterId })
+      deleteCourseChapter({ courseId: +route.params.courseId, chapterId })
         .then(() => {})
         .catch((err) => {
           showError(err)
@@ -195,7 +197,7 @@ function showEditChapterTitle(chapterIdx: number) {
 function editChapterTitle(chapterIdx: number) {
   updateLoading(true)
   editCourseChapterTitle({
-    courseId: +route.params.id.toString(),
+    courseId: +route.params.courseId,
     chapterId: chapters.value[chapterIdx].id,
     chapterTitle: edit.value
   })
@@ -234,7 +236,7 @@ watch(showAddChapterModal, () => {
 
 function addChapter() {
   updateLoading(false)
-  addCourseChapter({ courseId: +route.params.id, chapterTitle: chapterTitle.value })
+  addCourseChapter({ courseId: +route.params.courseId, chapterTitle: chapterTitle.value })
     .then(() => {
       chapterTitle.value = ''
       showAddChapterModal.value = false
@@ -251,10 +253,12 @@ function addChapter() {
 // 單元
 //
 function addLesson(chapterId: number) {
-  router.push(`/instructor/course/${+route.params.id}/chapter/${chapterId}/lesson`)
+  router.push(`/instructor/course/${+route.params.courseId}/chapter/${chapterId}/lesson`)
 }
 
 function editLesson(chapterId: number, lessonId: number) {
-  router.push(`/instructor/course/${+route.params.id}/chapter/${chapterId}/lesson/${lessonId}`)
+  router.push(
+    `/instructor/course/${+route.params.courseId}/chapter/${chapterId}/lesson/${lessonId}`
+  )
 }
 </script>

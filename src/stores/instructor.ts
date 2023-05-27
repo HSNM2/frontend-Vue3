@@ -12,10 +12,15 @@ import {
   AddCourseLessonRequest
 } from '@/models/instructor'
 
+interface CourseLesson {
+  title: string
+  videoPath: string
+}
+
 interface CourseChapter {
   id: number
   title: string
-  lessons: []
+  lessons: CourseLesson[]
 }
 
 type EditCourseChapter = CourseChapter & { isEdit: boolean }
@@ -23,7 +28,9 @@ type EditCourseChapter = CourseChapter & { isEdit: boolean }
 export const useInstructorStore = defineStore('instructor', () => {
   const courses = ref([])
   const course = ref(null)
+
   const chapters = ref<EditCourseChapter[]>([])
+  const chapter = ref<CourseChapter | null>(null)
 
   //
   // 課程相關
@@ -56,6 +63,13 @@ export const useInstructorStore = defineStore('instructor', () => {
     })
   }
 
+  function getCourseChapter(payload: { courseId: number; chapterId: number }) {
+    chapter.value = null
+    return getCourseChapters({ courseId: payload.courseId }).then(() => {
+      chapter.value = chapters.value.find((item) => item.id === payload.chapterId) || null
+    })
+  }
+
   function addCourseChapter(payload: { courseId: number; chapterTitle: string }) {
     return AddCourseChapterRequest(payload).then(() =>
       getCourseChapters({ courseId: payload.courseId })
@@ -82,18 +96,20 @@ export const useInstructorStore = defineStore('instructor', () => {
   // 課程單元相關
   //
   function addCourseLesson(payload: { courseId: number; chapterId: number; data: object }) {
-    return AddCourseLessonRequest(payload).then(() => {})
+    return AddCourseLessonRequest(payload)
   }
 
   return {
     courses,
     course,
     chapters,
+    chapter,
 
     getCourses,
     addCourse,
     getCourse,
     getCourseChapters,
+    getCourseChapter,
     addCourseChapter,
     deleteCourseChapter,
     editCourseChapterTitle

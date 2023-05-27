@@ -68,7 +68,7 @@ useSetMinMainHeight()
 
 onMounted(() => {
   updateLoading(true)
-  getCourse({ id: +route.params.id })
+  getCourse({ id: +route.params.courseId })
     .catch((err) => {
       showError(err)
     })

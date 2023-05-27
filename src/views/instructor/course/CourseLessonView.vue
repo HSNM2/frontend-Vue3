@@ -1,6 +1,6 @@
 <template>
   <div class="mb-4 rounded bg-neutral-50 p-4">
-    <h1>第一章 產品核心的概念</h1>
+    <h1 class="font-bold text-neutral-800">{{ chapter && chapter.title }}</h1>
   </div>
   <div class="rounded bg-neutral-50 p-6">
     <div class="mb-6">
@@ -93,9 +93,20 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useInstructorStore } from '@/stores/instructor'
+import { storeToRefs } from 'pinia'
+import useErrorHandler from '@/composables/useErrorHandler'
+import { useStatusStore } from '@/stores/status'
 
 const route = useRoute()
 const router = useRouter()
+
+const { showError } = useErrorHandler()
+
+const { updateLoading } = useStatusStore()
+const instructor = useInstructorStore()
+const { getCourseChapter } = instructor
+const { chapter } = storeToRefs(instructor)
 
 const lessonTitle = ref('')
 
@@ -103,6 +114,18 @@ const selectedChapterType = ref('file') // file, videoUrl
 const url = ref('')
 
 onMounted(() => {
+  console.log(route.params.courseId, route.params.chapterId, route.params.lessonId)
+
+  updateLoading(true)
+  getCourseChapter({ courseId: +route.params.courseId, chapterId: +route.params.chapterId })
+    .then(() => {})
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
+
   if (route.params.lessonId) {
     lessonTitle.value = '單元1：餅乾麵糰製作'
   } else {
