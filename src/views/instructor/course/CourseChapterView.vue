@@ -42,7 +42,7 @@
               </button>
               <button @click="cancelEditChapterTitle(chapterIdx)">取消</button>
             </template>
-            <button class="btn-secondary ms-auto" @click="addLesson(chapterId)">新增單元</button>
+            <button class="btn-secondary ms-auto" @click="addLesson(chapter.id)">新增單元</button>
           </div>
           <input
             checked
