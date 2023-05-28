@@ -23,8 +23,16 @@
             <div class="mt-6 border border-neutral-200 p-3">
               <div class="flex items-center gap-x-4">
                 <span>目前進度</span>
-                <div class="h-1 flex-1 rounded bg-neutral-100"></div>
-                <span>15%</span>
+                <ProgressBar
+                  :currentVal="progressVal"
+                  :minVal="minVal"
+                  :maxVal="maxVal"
+                  :style="progressBarStyle"
+                  v-slot="{ percent }"
+                >
+                  {{ percent + '%' }}
+                </ProgressBar>
+
                 <button
                   type="button"
                   class="hidden rounded-2xl border border-secondary-2 px-6 py-1 lg:block"
@@ -71,10 +79,16 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import { shallowRef, ref, onMounted } from 'vue'
+import ProgressBar from '@/components/ProgressBar.vue'
 import CourseTabs from '@/components/CourseTabs.vue'
 import ChapterView from '@/views/courseDtl/ChapterView.vue'
 import DiscussView from '@/views/courseDtl/DiscussView.vue'
 import ReviewView from '@/views/courseDtl/ReviewView.vue'
+
+const minVal = ref(0)
+const maxVal = ref(100)
+const progressVal = ref(15)
+const progressBarStyle = { bg: 'bg-neutral-100', progress: 'bg-secondary-2', height: 'h-2' }
 
 const tabs = [
   { name: '課程內容', comp: ChapterView, style: 'lg:hidden' },

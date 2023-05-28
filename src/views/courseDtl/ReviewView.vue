@@ -19,7 +19,12 @@
               <span class="material-icons text-base text-primary-3"> star </span>
               <span class="material-icons text-base text-primary-3"> star </span>
             </div>
-            <div class="h-1 flex-1 bg-neutral-150"></div>
+            <ProgressBar
+              :currentVal="progressVal"
+              :minVal="minVal"
+              :maxVal="maxVal"
+              :style="progressBarStyle"
+            ></ProgressBar>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -29,7 +34,12 @@
               <span class="material-icons text-base text-primary-3"> star </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="h-1 flex-1 bg-neutral-150"></div>
+            <ProgressBar
+              :currentVal="progressVal"
+              :minVal="minVal"
+              :maxVal="maxVal"
+              :style="progressBarStyle"
+            ></ProgressBar>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -39,7 +49,12 @@
               <span class="material-icons text-base text-primary-3"> star_border </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="h-1 flex-1 bg-neutral-150"></div>
+            <ProgressBar
+              :currentVal="progressVal"
+              :minVal="minVal"
+              :maxVal="maxVal"
+              :style="progressBarStyle"
+            ></ProgressBar>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -49,7 +64,12 @@
               <span class="material-icons text-base text-primary-3"> star_border </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="h-1 flex-1 bg-neutral-150"></div>
+            <ProgressBar
+              :currentVal="progressVal"
+              :minVal="minVal"
+              :maxVal="maxVal"
+              :style="progressBarStyle"
+            ></ProgressBar>
           </div>
           <div class="flex items-center justify-center gap-x-4">
             <div class="">
@@ -59,7 +79,12 @@
               <span class="material-icons text-base text-primary-3"> star_border </span>
               <span class="material-icons text-base text-primary-3"> star_border </span>
             </div>
-            <div class="h-1 flex-1 bg-neutral-150"></div>
+            <ProgressBar
+              :currentVal="progressVal"
+              :minVal="minVal"
+              :maxVal="maxVal"
+              :style="progressBarStyle"
+            ></ProgressBar>
           </div>
         </div>
         <button type="button" class="btn-primary mx-auto block px-4" @click="reviewAction()">
@@ -128,8 +153,17 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
-
+import ProgressBar from '@/components/ProgressBar.vue'
 import ReviewModal from '@/components/ReviewModal.vue'
+const props = defineProps({
+  isLogin: { type: Boolean }
+})
+
+const minVal = ref(0)
+const maxVal = ref(100)
+const progressVal = ref(80)
+const progressBarStyle = { bg: 'bg-neutral-150', progress: 'bg-neutral-500', height: 'h-1' }
+
 const isShowModal = ref(false)
 const reviewAction = () => {
   isShowModal.value = true
