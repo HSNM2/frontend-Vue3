@@ -74,6 +74,17 @@ export function CourseLessonsRequest(params: { courseId: number; chapterId: numb
   })
 }
 
+export function CourseLessonRequest(params: {
+  courseId: number
+  chapterId: number
+  lessonId: number
+}) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/chapter/${params.chapterId}/lesson/${params.lessonId}`,
+    method: 'get'
+  })
+}
+
 export function AddCourseLessonRequest(params: {
   courseId: number
   chapterId: number
@@ -82,6 +93,33 @@ export function AddCourseLessonRequest(params: {
   return request({
     url: `api/courseProvider/course/${params.courseId}/chapter/${params.chapterId}/lesson`,
     method: 'post',
+    data: params.data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+export function EditCourseLessonRequest(params: {
+  courseId: number
+  chapterId: number
+  lessonId: number
+  data: object
+}) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/chapter/${params.chapterId}/lesson/${params.lessonId}`,
+    method: 'patch',
     data: params.data
+  })
+}
+
+export function DeleteCourseLessonRequest(params: {
+  courseId: number
+  chapterId: number
+  lessonId: number
+}) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/chapter/${params.chapterId}/lesson/${params.lessonId}`,
+    method: 'delete'
   })
 }
