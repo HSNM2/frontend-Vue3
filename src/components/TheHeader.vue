@@ -48,7 +48,7 @@
                             <div
                               class="flex h-full w-full items-center justify-center bg-primary-3"
                             >
-                              <span>courses</span>
+                              <span class="font-bold">courses</span>
                             </div>
                           </div>
                           <div class="">
@@ -78,7 +78,9 @@
 
                     <div v-if="!cart.isEmpty" class="flex items-center justify-between p-2 pt-0">
                       <span class="text-lg">{{ `總價：${cart.totalPrice}` }}</span>
-                      <button class="btn-primary">結帳</button>
+                      <router-link to="/shoppingCart/orderConfirmation" class="btn-primary"
+                        >結帳</router-link
+                      >
                     </div>
                   </div>
                 </div>

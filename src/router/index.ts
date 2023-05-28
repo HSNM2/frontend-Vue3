@@ -44,6 +44,18 @@ const router = createRouter({
       component: () => import('../views/DiscoverView.vue')
     },
     {
+      path: '/shoppingCart',
+      name: 'shoppingCart',
+      component: () => import('../views/shoppingCart/ShoppingCartLayoutView.vue'),
+      children: [
+        {
+          path: 'orderConfirmation',
+          name: 'orderConfirmation',
+          component: () => import('../views/shoppingCart/OrderConfirmationView.vue')
+        }
+      ]
+    },
+    {
       path: '/student',
       name: 'student',
       meta: {

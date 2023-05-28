@@ -7,7 +7,9 @@ interface Cart {
   cartId: string
   cartItem: Array<any>
   usedCoupon: string
+  totalOriginPrice: number
   totalPrice: number
+  offPercent: number
   isEmpty: boolean
 }
 
@@ -35,13 +37,15 @@ export const useCartStore = defineStore('cart', () => {
         provider: 'course_provider',
         category: 'course_category',
         type: 'course_type',
-        avg_rating: 'course_avg_rating',
+        avg_rating: 4,
         origin_price: 1500,
         price: 1000
       }
     ],
     usedCoupon: '',
+    totalOriginPrice: 0,
     totalPrice: 0,
+    offPercent: 0,
     isEmpty: false
   })
 
@@ -67,7 +71,15 @@ export const useCartStore = defineStore('cart', () => {
   function cartHandle() {
     cart.value.cartItem.forEach((item) => {
       cart.value.totalPrice = cart.value.totalPrice += item.price
+      if (item.origin_price != 0) {
+        cart.value.totalOriginPrice = cart.value.totalOriginPrice += item.origin_price
+      } else {
+        cart.value.totalOriginPrice = cart.value.totalOriginPrice += item.price
+      }
     })
+    cart.value.offPercent = Math.round(
+      ((cart.value.totalOriginPrice - cart.value.totalPrice) / cart.value.totalOriginPrice) * 100
+    )
     // if (getLocalCart() && !remoteCart.value) {
     //   cart.value = getLocalCart()
     // } else if (!getLocalCart() && user) {
