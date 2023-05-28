@@ -5,14 +5,17 @@ import {
   CoursesRequest,
   AddCourseRequest,
   CourseRequest,
+  DeleteCourseRequest,
+  PublishCourseRequest,
+  UnpublishCourseRequest,
   CourseChaptersRequest,
   AddCourseChapterRequest,
   DeleteCourseChapterRequest,
   EditCourseChapterTitleRequest,
+  CourseLessonRequest,
   AddCourseLessonRequest,
-  // DeleteCourseRequest
-  PublishCourseRequest,
-  UnpublishCourseRequest
+  EditCourseLessonRequest,
+  DeleteCourseLessonRequest
 } from '@/models/instructor'
 
 interface Course {
@@ -30,6 +33,8 @@ interface CourseChapter {
 type EditCourseChapter = CourseChapter & { isEdit: boolean }
 
 interface CourseLesson {
+  id: number
+  isPublish: boolean
   title: string
   videoPath: string
 }
@@ -40,6 +45,7 @@ export const useInstructorStore = defineStore('instructor', () => {
 
   const chapters = ref<EditCourseChapter[]>([])
   const chapter = ref<CourseChapter | null>(null)
+  const lesson = ref<CourseLesson | null>(null)
 
   //
   // 課程相關
@@ -61,9 +67,9 @@ export const useInstructorStore = defineStore('instructor', () => {
     return AddCourseRequest(payload).then(() => getCourses())
   }
 
-  // function deleteCourse(payload: { id: string }) {
-  //   return DeleteCourseRequest(payload)
-  // }
+  function deleteCourse(payload: { id: number }) {
+    return DeleteCourseRequest(payload)
+  }
 
   //
   // 課程章節相關
@@ -108,9 +114,28 @@ export const useInstructorStore = defineStore('instructor', () => {
   //
   // 課程單元相關
   //
+  function getCourseLesson(payload: { courseId: number; chapterId: number; lessonId: number }) {
+    lesson.value = null
+    return CourseLessonRequest(payload).then((res) => {
+      lesson.value = res.data.data
+    })
+  }
 
   function addCourseLesson(payload: { courseId: number; chapterId: number; data: object }) {
     return AddCourseLessonRequest(payload)
+  }
+
+  function editCourseLesson(payload: {
+    courseId: number
+    chapterId: number
+    lessonId: number
+    data: object
+  }) {
+    return EditCourseLessonRequest(payload)
+  }
+
+  function deleteCourseLesson(payload: { courseId: number; chapterId: number; lessonId: number }) {
+    return DeleteCourseLessonRequest(payload)
   }
 
   //
@@ -128,15 +153,24 @@ export const useInstructorStore = defineStore('instructor', () => {
     course,
     chapters,
     chapter,
+    lesson,
 
     getCourses,
     addCourse,
     getCourse,
+    deleteCourse,
+
     getCourseChapters,
     getCourseChapter,
     addCourseChapter,
     deleteCourseChapter,
     editCourseChapterTitle,
+
+    getCourseLesson,
+    addCourseLesson,
+    editCourseLesson,
+    deleteCourseLesson,
+
     coursePublish,
     courseUnpublish
   }
