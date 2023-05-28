@@ -1,6 +1,6 @@
 <template>
   <div class="mb-4 rounded bg-neutral-50 p-4">
-    <h1>第一章 產品核心的概念</h1>
+    <h1 class="font-bold text-neutral-800">{{ chapter && chapter.title }}</h1>
   </div>
   <div class="rounded bg-neutral-50 p-6">
     <div class="mb-6">
@@ -27,14 +27,14 @@
       <div class="rounded border">
         <nav class="flex border-b px-6 pt-2">
           <a
-            href="/public"
+            href="#"
             class="px-4 py-2"
             :class="{ 'border-b-2 border-primary-4': selectedChapterType === 'file' }"
             @click.prevent="selectedChapterType = 'file'"
             >上傳檔案</a
           >
           <a
-            href="/public"
+            href="#"
             class="px-4 py-2"
             @click.prevent="selectedChapterType = 'videoUrl'"
             :class="{ 'border-b-2 border-primary-4': selectedChapterType === 'videoUrl' }"
@@ -43,14 +43,31 @@
         </nav>
         <div class="p-6">
           <div v-if="selectedChapterType === 'file'" class="h-96 rounded border border-dashed">
-            <div class="flex h-full flex-col items-center justify-center">
-              <i class="material-icons text-4xl">file_upload</i>
-              <div class="mb-2 text-2xl">將檔案拖曳至此或點擊此處選擇檔案</div>
-              <p class="text-neutral-600">
-                檔案格式限定為 .JPG、.PNG、MP4、MP3、AVI、DOC、DOCX、XLSX、XLS、PPT、PPTX、PDF, RAR
-                以及 ZIP
-              </p>
-            </div>
+            <VField
+              rules="ext:mp4,mov"
+              name="file"
+              v-slot="{ handleChange, handleBlur }"
+              @drag="dragFile"
+              @dragover="ondragover"
+            >
+              <label for="lessonFile">
+                <span class="block flex h-full flex-col items-center justify-center">
+                  <i class="material-icons text-4xl">file_upload</i>
+                  <span class="mb-2 block text-2xl">將檔案拖曳至此或點擊此處選擇檔案</span>
+                  <span class="block text-neutral-600">
+                    檔案格式限定為 .JPG、.PNG、MP4、MP3、AVI、DOC、DOCX、XLSX、XLS、PPT、PPTX、PDF,
+                    RAR 以及 ZIP
+                  </span>
+                </span>
+              </label>
+              <input
+                id="lessonFile"
+                type="file"
+                class="absolute hidden"
+                @change="handleChange"
+                @blur="handleBlur"
+              />
+            </VField>
           </div>
           <div v-if="selectedChapterType === 'videoUrl'">
             <div class="mb-6 border-b pb-6">
@@ -77,9 +94,6 @@
             <button class="ms-auto block w-fit">新增</button>
           </div>
         </div>
-        <!--              <Field name="file" v-slot="{ handleChange, handleBlur }">-->
-        <!--                <input type="file" @change="handleChange" @blur="handleBlur" />-->
-        <!--              </Field>-->
       </div>
     </div>
     <div class="flex items-center">
@@ -93,16 +107,38 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useInstructorStore } from '@/stores/instructor'
+import { storeToRefs } from 'pinia'
+import useErrorHandler from '@/composables/useErrorHandler'
+import { useStatusStore } from '@/stores/status'
 
 const route = useRoute()
 const router = useRouter()
 
+const { showError } = useErrorHandler()
+
+const { updateLoading } = useStatusStore()
+const instructor = useInstructorStore()
+const { getCourseChapter } = instructor
+const { chapter } = storeToRefs(instructor)
+
 const lessonTitle = ref('')
 
 const selectedChapterType = ref('file') // file, videoUrl
+const videoUrl = ref('')
 const url = ref('')
 
 onMounted(() => {
+  updateLoading(true)
+  getCourseChapter({ courseId: +route.params.courseId, chapterId: +route.params.chapterId })
+    .then(() => {})
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
+
   if (route.params.lessonId) {
     lessonTitle.value = '單元1：餅乾麵糰製作'
   } else {
@@ -112,5 +148,13 @@ onMounted(() => {
 
 function cancel() {
   router.back()
+}
+
+function dragFile() {
+  console.log('drag')
+}
+
+function ondragover() {
+  console.log('dragover')
 }
 </script>

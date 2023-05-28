@@ -1,48 +1,123 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import axios from 'axios'
 
-import { CoursesListRequest, AddCourseRequest, CourseRequest } from '@/models/instructor'
+import {
+  CoursesRequest,
+  AddCourseRequest,
+  CourseRequest,
+  CourseChaptersRequest,
+  AddCourseChapterRequest,
+  DeleteCourseChapterRequest,
+  EditCourseChapterTitleRequest,
+  AddCourseLessonRequest
+} from '@/models/instructor'
+
+interface Course {
+  id: number
+  title: string
+  isPublish: boolean
+}
+
+interface CourseChapter {
+  id: number
+  title: string
+  lessons: CourseLesson[]
+}
+
+type EditCourseChapter = CourseChapter & { isEdit: boolean }
+
+interface CourseLesson {
+  title: string
+  videoPath: string
+}
 
 export const useInstructorStore = defineStore('instructor', () => {
-  const courses = ref([])
-  const course = ref(null)
+  const courses = ref<Course[]>([])
+  const course = ref<Course | null>(null)
 
-  // 取得課程清單
+  const chapters = ref<EditCourseChapter[]>([])
+  const chapter = ref<CourseChapter | null>(null)
+
+  //
+  // 課程相關
+  //
   function getCourses() {
-    // return axios.get('/api/courseProvider/courses').then((res) => {
-    //   courses.value = res.data.data
-    // })
-    return CoursesListRequest().then((res) => {
-      courses.value = res.data.data
+    courses.value = []
+    return CoursesRequest().then((res) => {
+      courses.value = res.data.data.course
     })
   }
 
-  // 新增課程
-  function addCourse() {
-    // return axios.post('/api/courseProvider/course').then((res) => {
-    //   courses.value = res.data.data
-    // })
-    return AddCourseRequest().then((res) => {
-      courses.value = res.data.data
-    })
-  }
-
-  // 取得單一課程
-  function getCourse(payload: { id: string }) {
-    // return axios.get('/api/courseProvider/course/' + payload).then((res) => {
-    //   console.log(res)
-    // })
+  function getCourse(payload: { id: number }) {
     return CourseRequest(payload).then((res) => {
-      console.log(res)
+      course.value = res.data.data.course
     })
+  }
+
+  function addCourse(payload: { title: string }) {
+    return AddCourseRequest(payload).then(() => getCourses())
+  }
+
+  //
+  // 課程章節相關
+  //
+  function getCourseChapters(payload: { courseId: number }) {
+    chapters.value = []
+    return CourseChaptersRequest(payload).then((res) => {
+      // isEdit：前台編輯用
+      chapters.value = res.data.message.map((item: CourseChapter) => ({ ...item, isEdit: false }))
+    })
+  }
+
+  function getCourseChapter(payload: { courseId: number; chapterId: number }) {
+    chapter.value = null
+    return getCourseChapters({ courseId: payload.courseId }).then(() => {
+      chapter.value = chapters.value.find((item) => item.id === payload.chapterId) || null
+    })
+  }
+
+  function addCourseChapter(payload: { courseId: number; chapterTitle: string }) {
+    return AddCourseChapterRequest(payload).then(() =>
+      getCourseChapters({ courseId: payload.courseId })
+    )
+  }
+
+  function editCourseChapterTitle(payload: {
+    courseId: number
+    chapterId: number
+    chapterTitle: string
+  }) {
+    return EditCourseChapterTitleRequest(payload).then(() =>
+      getCourseChapters({ courseId: payload.courseId })
+    )
+  }
+
+  function deleteCourseChapter(payload: { courseId: number; chapterId: number }) {
+    return DeleteCourseChapterRequest(payload).then(() =>
+      getCourseChapters({ courseId: payload.courseId })
+    )
+  }
+
+  //
+  // 課程單元相關
+  //
+  function addCourseLesson(payload: { courseId: number; chapterId: number; data: object }) {
+    return AddCourseLessonRequest(payload)
   }
 
   return {
     courses,
+    course,
+    chapters,
+    chapter,
 
     getCourses,
     addCourse,
-    getCourse
+    getCourse,
+    getCourseChapters,
+    getCourseChapter,
+    addCourseChapter,
+    deleteCourseChapter,
+    editCourseChapterTitle
   }
 })

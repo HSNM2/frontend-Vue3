@@ -14,14 +14,22 @@
         <button class="btn-primary" @click="showAddCourseModal = true">新增課程</button>
       </div>
       <div class="rounded bg-neutral-50 p-6">
-        <ul class="">
-          <li class="mb-4 flex flex-col rounded bg-neutral-100 p-6 md:flex-row md:items-center">
+        <div v-if="courses.length === 0">尚未有課程</div>
+        <ul v-else class="">
+          <li
+            class="mb-4 flex flex-col rounded bg-neutral-100 p-6 md:flex-row md:items-center"
+            v-for="course in courses"
+            :key="course.id"
+          >
             <div class="mb-2 flex items-center md:mb-0">
-              <div class="me-2 h-2 w-2 rounded-full bg-amber-400"></div>
-              <span class="text-sm md:w-20">尚未發布</span>
+              <div
+                class="me-2 h-2 w-2 rounded-full"
+                :class="[course.isPublish ? 'bg-success-50' : 'bg-warning-50']"
+              ></div>
+              <span class="text-sm md:w-20">{{ course.isPublish ? '已發布' : '尚未發布' }}</span>
               <RouterLink
                 class="material-icons ms-auto cursor-pointer text-primary-5 md:hidden"
-                to="/instructor/course/1123333"
+                :to="`/instructor/course/${course.id}`"
                 >settings</RouterLink
               >
             </div>
@@ -30,32 +38,10 @@
               alt=""
               class="mb-2 h-full w-auto md:mb-0 md:me-4"
             />
-            <span class="text-sm md:me-4 md:text-base">產品設計實戰：用Figma打造絕佳UI</span>
+            <span class="text-sm md:me-4 md:text-base">{{ course.title }}</span>
             <RouterLink
               class="material-icons ms-auto hidden cursor-pointer text-primary-5 md:block"
-              to="/instructor/course/1123333"
-              >settings</RouterLink
-            >
-          </li>
-          <li class="mb-4 flex flex-col rounded bg-neutral-100 p-6 md:flex-row md:items-center">
-            <div class="mb-2 flex items-center md:mb-0">
-              <div class="me-2 h-2 w-2 rounded-full bg-amber-400"></div>
-              <span class="text-sm md:w-20">尚未發布</span>
-              <RouterLink
-                class="material-icons ms-auto cursor-pointer text-primary-5 md:hidden"
-                to="/instructor/course/1123333"
-                >settings</RouterLink
-              >
-            </div>
-            <img
-              src="https://fakeimg.pl/125x80"
-              alt=""
-              class="mb-2 h-full w-auto md:mb-0 md:me-4"
-            />
-            <span class="text-sm md:me-4 md:text-base">產品設計實戰：用Figma打造絕佳UI</span>
-            <RouterLink
-              class="material-icons ms-auto hidden cursor-pointer text-primary-5 md:block"
-              to="/instructor/course/1123333"
+              :to="`/instructor/course/${course.id}`"
               >settings</RouterLink
             >
           </li>
@@ -66,25 +52,25 @@
     <!--新增課程 Modal-->
     <CommonModal v-model="showAddCourseModal">
       <template v-slot:title>新增課程</template>
-      <VForm ref="loginForm" v-slot="{ meta }" @submit="addCourse">
+      <VForm ref="addCourseForm" v-slot="{ meta }" @submit="handleAddCourse">
         <div class="mb-6">
           <VField
             name="course"
             type="text"
             rules="required"
-            v-model="course"
-            v-slot="{ field, errors }"
-            label="課程"
+            v-model="courseTitle"
+            v-slot="{ field, errors, meta }"
+            label="課程名稱"
           >
             <input
               id="course"
               class="form-control"
               placeholder="輸入課程名稱"
               v-bind="field"
-              :class="{ invalid: !!errors.length }"
+              :class="{ invalid: meta.validated && !!errors.length }"
             />
+            <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="course" />
           </VField>
-          <ErrorMessage class="invalid-feedback" name="course" />
         </div>
         <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
           新增
@@ -96,12 +82,59 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { ref } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import CommonModal from '../../components/CommonModal.vue'
+import useSetMinMainHeight from '@/composables/useSetMinMainHeight'
+import useErrorHandler from '@/composables/useErrorHandler'
+import { useInstructorStore } from '@/stores/instructor'
+import { useStatusStore } from '@/stores/status'
+import { storeToRefs } from 'pinia'
+import type { FormContext } from 'vee-validate'
 
+useSetMinMainHeight()
+
+const { showError } = useErrorHandler()
+
+const { updateLoading } = useStatusStore()
+
+const instructor = useInstructorStore()
+const { getCourses, addCourse } = instructor
+const { courses } = storeToRefs(instructor)
+
+onMounted(() => {
+  updateLoading(true)
+  getCourses()
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
+})
+
+const addCourseForm = ref<FormContext | null>(null)
 const showAddCourseModal = ref(false)
+const courseTitle = ref('')
 
-const course = ref('')
+watch(showAddCourseModal, () => {
+  nextTick(() => {
+    courseTitle.value = ''
+    addCourseForm.value?.resetForm()
+  })
+})
 
-function addCourse() {}
+function handleAddCourse() {
+  updateLoading(true)
+  addCourse({ title: courseTitle.value })
+    .then(() => {
+      courseTitle.value = ''
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+      showAddCourseModal.value = false
+    })
+}
 </script>
