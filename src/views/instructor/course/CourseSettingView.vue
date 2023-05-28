@@ -25,16 +25,48 @@
       <i class="material-icons me-2">info</i>
       <span class="text-lg">注意：這個動作無法復原</span>
     </p>
-    <button class="btn-primary mx-auto block w-fit" @click="deleteCourse()">確認</button>
+    <button class="btn-primary mx-auto block w-fit" @click="handleDeleteCourse()">確認</button>
   </CommonModal>
 </template>
 
 <script lang="ts" setup>
 import CommonModal from '../../../components/CommonModal.vue'
 import { ref } from 'vue'
+import { useInstructorStore } from '@/stores/instructor'
+import { storeToRefs } from 'pinia'
+import { useRoute, useRouter } from 'vue-router'
+import useErrorHandler from '@/composables/useErrorHandler'
+import { useStatusStore } from '@/stores/status'
+import Swal from 'sweetalert2'
+
+const route = useRoute()
+const router = useRouter()
+
+const { showError } = useErrorHandler()
+
+const { updateLoading } = useStatusStore()
+const instructor = useInstructorStore()
+const { deleteCourse } = instructor
+const { course } = storeToRefs(instructor)
 
 const showDeleteCourseModal = ref(false)
-function deleteCourse() {
-  console.log('delete')
+function handleDeleteCourse() {
+  updateLoading(true)
+  deleteCourse({ id: +route.params.courseId })
+    .then((res) => {
+      Swal.fire({
+        icon: 'success',
+        title: res.data.message
+      }).then(() => {
+        course.value = null
+        router.push('/instructor/courses')
+      })
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
 }
 </script>
