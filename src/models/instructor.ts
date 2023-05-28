@@ -85,3 +85,17 @@ export function AddCourseLessonRequest(params: {
     data: params.data
   })
 }
+
+export function PublishCourseRequest(params: { courseId: number }) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/inStack`,
+    method: 'post'
+  })
+}
+
+export function UnpublishCourseRequest(params: { courseId: number }) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/offStack`,
+    method: 'post'
+  })
+}
