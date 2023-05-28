@@ -1,31 +1,35 @@
 <template>
-  <main ref="main" class="flex items-stretch bg-neutral-100">
+  <main class="flex items-stretch bg-neutral-100" v-if="course">
     <!--左側選單-->
     <aside class="w-72 bg-primary-1">
       <div class="p-6 pt-2">
         <RouterLink to="/instructor/courses" class="mb-4 flex items-center text-xs text-neutral-600"
           ><i class="material-icons me-1 text-xs">arrow_back_ios_new</i>課程列表</RouterLink
         >
-        <h2 class="text-lg font-bold text-neutral-800">產品設計實戰：用Figma打造絕佳UI</h2>
+        <h2 class="text-lg font-bold text-neutral-800">{{ course && course.title }}</h2>
       </div>
       <ul class="border-t p-6">
         <li class="mb-8">
           <span class="text-sm text-neutral-600">內容</span>
-          <router-link to="/instructor/course/123123" class="block">章節管理</router-link>
+          <router-link :to="`/instructor/course/${course.id}`" class="block">章節管理</router-link>
         </li>
         <li class="mb-8">
           <span class="text-sm text-neutral-600">學員</span>
-          <router-link to="/instructor/course/1112222/students" class="mb-8 block"
+          <router-link :to="`/instructor/course/${course.id}/students`" class="mb-8 block"
             >學員列表</router-link
           >
         </li>
         <li class="mb-8">
           <span class="text-sm text-neutral-600">設定</span>
-          <router-link to="/instructor/course/1112222/info" class="mb-1 block"
+          <router-link :to="`/instructor/course/${course.id}/info`" class="mb-1 block"
             >課程資訊</router-link
           >
-          <router-link to="/instructor/course/112332/faq" class="mb-1 block">常見問題</router-link>
-          <router-link to="/instructor/course/112332/setting" class="block">進階設定</router-link>
+          <router-link :to="`/instructor/course/${course.id}/faq`" class="mb-1 block"
+            >常見問題</router-link
+          >
+          <router-link :to="`/instructor/course/${course.id}/setting`" class="block"
+            >進階設定</router-link
+          >
         </li>
         <li>
           <span class="text-sm text-neutral-600">發布</span>
@@ -47,17 +51,33 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
+import useSetMinMainHeight from '@/composables/useSetMinMainHeight'
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import { useInstructorStore } from '@/stores/instructor'
+import { storeToRefs } from 'pinia'
+import { useStatusStore } from '@/stores/status'
+import useErrorHandler from '@/composables/useErrorHandler'
 
-const main = ref<HTMLElement | null>(null)
+const { showError } = useErrorHandler()
+
+const { updateLoading } = useStatusStore()
+const instructor = useInstructorStore()
+const { getCourse } = instructor
+const { course } = storeToRefs(instructor)
+
+const route = useRoute()
+
+useSetMinMainHeight()
 
 onMounted(() => {
-  nextTick(() => {
-    if (main.value) {
-      main.value.style.minHeight = `calc(100vh - ${
-        (document.querySelector('header') as HTMLElement).offsetHeight
-      }px - ${(document.querySelector('footer') as HTMLElement).offsetHeight}px)`
-    }
-  })
+  updateLoading(true)
+  getCourse({ id: +route.params.courseId })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
 })
 </script>

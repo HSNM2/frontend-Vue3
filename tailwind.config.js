@@ -56,6 +56,12 @@ module.exports = {
           600: '#6F6F6F',
           800: '#3D3D3D',
           900: '#000000'
+        },
+        success: {
+          50: 'rgb(132 204 22)'
+        },
+        warning: {
+          50: 'rgb(251 191 36)'
         }
       },
       spacing: {

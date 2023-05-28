@@ -5,6 +5,7 @@
   </div>
   <div class="rounded bg-neutral-50 p-6">
     <draggable
+      v-if="chapters.length !== 0"
       class="dragArea"
       :list="chapters"
       item-key="id"
@@ -19,7 +20,7 @@
               <span class="me-4">{{ chapter.title }}</span>
               <i
                 class="material-icons me-4 hidden cursor-pointer text-red-400 group-hover:block"
-                @click="deleteChapter(chapterIdx)"
+                @click="deleteChapter(chapter.id)"
                 >delete_outline</i
               >
               <i
@@ -41,17 +42,20 @@
               </button>
               <button @click="cancelEditChapterTitle(chapterIdx)">取消</button>
             </template>
-            <button class="btn-secondary ms-auto" @click="addLesson(chapterIdx)">新增單元</button>
+            <button class="btn-secondary ms-auto" @click="addLesson(chapter.id)">新增單元</button>
           </div>
-          <input
-            checked
-            type="checkbox"
-            class="peer absolute right-4 top-4 z-10 h-6 w-6 cursor-pointer opacity-0"
-          />
-          <span
-            class="material-icons absolute right-4 top-4 rotate-0 transition-transform transition-transform duration-300 peer-checked:rotate-180"
-            >keyboard_arrow_down</span
-          >
+          <!--展開按鈕-->
+          <template v-if="chapter.lessons.length !== 0">
+            <input
+              checked
+              type="checkbox"
+              class="peer absolute right-4 top-4 z-10 h-6 w-6 cursor-pointer opacity-0"
+            />
+            <span
+              class="material-icons absolute right-4 top-4 rotate-0 transition-transform transition-transform duration-300 peer-checked:rotate-180"
+              >keyboard_arrow_down</span
+            >
+          </template>
           <draggable
             :key="chapter.id"
             class="max-h-0 overflow-hidden bg-neutral-100 transition-all duration-300 peer-checked:max-h-full"
@@ -61,10 +65,10 @@
             item-key="id"
             handle=".js-draggable"
           >
-            <template #item="{ element: lesson, index: lessonIdx }">
+            <template #item="{ element: lesson }">
               <li class="border">
                 <div
-                  @click="editLesson(chapterIdx, lessonIdx)"
+                  @click="editLesson(chapter.id, lesson.id)"
                   class="flex cursor-pointer items-center p-4"
                 >
                   <i class="material-icons js-draggable me-2 cursor-row-resize">sort</i>
@@ -89,6 +93,7 @@
         </div>
       </template>
     </draggable>
+    <div v-else>尚無章節</div>
   </div>
 
   <!--新增章節 Modal-->
@@ -100,7 +105,7 @@
           name="chapter"
           type="text"
           rules="required"
-          v-model="chapter"
+          v-model="chapterTitle"
           v-slot="{ field, errors, meta }"
           label="章節"
         >
@@ -123,68 +128,57 @@
 
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
 import type { FormContext } from 'vee-validate'
 import draggable from 'vuedraggable'
 import CommonModal from '../../../components/CommonModal.vue'
+import { useInstructorStore } from '@/stores/instructor'
+import { storeToRefs } from 'pinia'
+import { useStatusStore } from '@/stores/status'
+import useErrorHandler from '@/composables/useErrorHandler'
 
 const router = useRouter()
+const route = useRoute()
 
-const chapters = ref([
-  {
-    id: '1',
-    title: '第一章 麵糰製作',
-    lessons: [
-      {
-        id: '1-1',
-        title: '單元1：餅乾麵糰製作',
-        content: 'lesson_content',
-        video: 'lesson_video_url',
-        is_publish: true
-      },
-      {
-        id: '1-2',
-        title: '單元2：蛋糕麵糰製作',
-        content: 'lesson_content',
-        video: 'lesson_video_url',
-        is_publish: false
-      }
-    ],
-    isEdit: false
-  },
-  {
-    id: '2',
-    title: '第二章 甜點裝飾',
-    lessons: [
-      {
-        id: '2-1',
-        title: '單元1：巧克力裝飾',
-        content: 'lesson_content',
-        video: 'lesson_video_url',
-        is_publish: false
-      },
-      {
-        id: '2-1',
-        title: '單元2：糖霜裝飾',
-        content: 'lesson_content',
-        video: 'lesson_video_url',
-        is_publish: false
-      }
-    ],
-    isEdit: false
-  }
-])
+const { updateLoading } = useStatusStore()
+const { showError } = useErrorHandler()
 
+const instructor = useInstructorStore()
+const { getCourseChapters, addCourseChapter, deleteCourseChapter, editCourseChapterTitle } =
+  instructor
+const { chapters, course } = storeToRefs(instructor)
+
+onMounted(() => {
+  updateLoading(true)
+  getCourseChapters({ courseId: +route.params.courseId })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
+})
+
+//
 // 章節
-function deleteChapter(chapterIdx: number) {
+//
+function deleteChapter(chapterId: number) {
   Swal.fire({
     icon: 'warning',
     title: '確定刪除嗎？',
     showCancelButton: true
   }).then((result) => {
     if (result.isConfirmed) {
-      chapters.value = chapters.value.filter((_, idx) => idx !== chapterIdx)
+      updateLoading(true)
+      deleteCourseChapter({ courseId: +route.params.courseId, chapterId })
+        .then(() => {})
+        .catch((err) => {
+          showError(err)
+        })
+        .finally(() => {
+          updateLoading(false)
+        })
     }
   })
 }
@@ -192,14 +186,32 @@ function deleteChapter(chapterIdx: number) {
 const edit = ref('')
 
 function showEditChapterTitle(chapterIdx: number) {
+  chapters.value = chapters.value.map((chapter) => ({
+    ...chapter,
+    isEdit: false
+  }))
   edit.value = chapters.value[chapterIdx].title
   chapters.value[chapterIdx].isEdit = true
 }
 
 function editChapterTitle(chapterIdx: number) {
-  chapters.value[chapterIdx].title = edit.value
-  chapters.value[chapterIdx].isEdit = false
-  edit.value = ''
+  updateLoading(true)
+  editCourseChapterTitle({
+    courseId: +route.params.courseId,
+    chapterId: chapters.value[chapterIdx].id,
+    chapterTitle: edit.value
+  })
+    .then(() => {
+      chapters.value[chapterIdx].title = edit.value
+      chapters.value[chapterIdx].isEdit = false
+      edit.value = ''
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
 }
 
 function cancelEditChapterTitle(chapterIdx: number) {
@@ -207,43 +219,46 @@ function cancelEditChapterTitle(chapterIdx: number) {
   edit.value = ''
 }
 
-// 單元
-function addLesson(chapterIdx: number) {
-  router.push(`/instructor/course/11111/chapter/${chapterIdx}/lesson`)
-}
-
-function editLesson(chapterIdx: number, lessonIdx: number) {
-  router.push(`/instructor/course/11111/chapter/${chapterIdx}/lesson/${lessonIdx}`)
-}
-
+//
 // 新增章節 modal
+//
 const showAddChapterModal = ref(false)
 const addChapterForm = ref<FormContext | null>(null)
 
-const chapter = ref('') // 新增章節
+const chapterTitle = ref('') // 新增章節
 
 watch(showAddChapterModal, () => {
-  chapter.value = ''
+  chapterTitle.value = ''
   nextTick(() => {
     addChapterForm.value?.resetForm()
   })
 })
 
 function addChapter() {
-  chapters.value.push({
-    id: chapters.value.length.toString(),
-    title: chapter.value,
-    lessons: [],
-    isEdit: false
-  })
-  showAddChapterModal.value = false
+  updateLoading(false)
+  addCourseChapter({ courseId: +route.params.courseId, chapterTitle: chapterTitle.value })
+    .then(() => {
+      chapterTitle.value = ''
+      showAddChapterModal.value = false
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
 }
 
-onMounted(() => {
-  nextTick(() => {
-    ;(document.querySelector('main') as HTMLElement).style.minHeight = `calc(100vh - ${
-      (document.querySelector('header') as HTMLElement).offsetHeight
-    }px - ${(document.querySelector('footer') as HTMLElement).offsetHeight}px)`
-  })
-})
+//
+// 單元
+//
+function addLesson(chapterId: number) {
+  router.push(`/instructor/course/${+route.params.courseId}/chapter/${chapterId}/lesson`)
+}
+
+function editLesson(chapterId: number, lessonId: number) {
+  router.push(
+    `/instructor/course/${+route.params.courseId}/chapter/${chapterId}/lesson/${lessonId}`
+  )
+}
 </script>
