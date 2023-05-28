@@ -122,13 +122,13 @@
 
 <script setup lang="ts">
 import { nextTick, onMounted, ref } from 'vue'
-import { NavigationFailure, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useInstructorStore } from '@/stores/instructor'
 import { storeToRefs } from 'pinia'
 import useErrorHandler from '@/composables/useErrorHandler'
 import { useStatusStore } from '@/stores/status'
 import Swal from 'sweetalert2'
-import { FormContext } from 'vee-validate'
+import type { FormContext } from 'vee-validate'
 
 const route = useRoute()
 const router = useRouter()

@@ -115,6 +115,7 @@ export const useInstructorStore = defineStore('instructor', () => {
   // 課程單元相關
   //
   function getCourseLesson(payload: { courseId: number; chapterId: number; lessonId: number }) {
+    lesson.value = null
     return CourseLessonRequest(payload).then((res) => {
       lesson.value = res.data.data
     })
