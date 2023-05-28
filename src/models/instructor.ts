@@ -22,6 +22,13 @@ export function CourseRequest(params: { id: number }) {
   })
 }
 
+export function DeleteCourseRequest(params: { id: number }) {
+  return request({
+    url: `/api/courseProvider/course/${params.id}`,
+    method: 'delete'
+  })
+}
+
 export function CourseChaptersRequest(params: { courseId: number }) {
   return request({
     url: `/api/courseProvider/course/${params.courseId}/chapter`,
