@@ -154,6 +154,7 @@ const lessonMediaUrl = ref('')
 
 onMounted(() => {
   updateLoading(true)
+  lesson.value = null
   getCourseChapter({ courseId: +route.params.courseId, chapterId: +route.params.chapterId })
     .then(() => {
       if (route.params.lessonId) {
@@ -178,7 +179,7 @@ onMounted(() => {
 })
 
 function cancel() {
-  router.back()
+  router.push(`/instructor/course/${route.params.courseId}`)
 }
 
 function getLesson() {
