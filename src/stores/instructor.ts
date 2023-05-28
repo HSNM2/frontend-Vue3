@@ -6,6 +6,8 @@ import {
   AddCourseRequest,
   CourseRequest,
   DeleteCourseRequest,
+  PublishCourseRequest,
+  UnpublishCourseRequest,
   CourseChaptersRequest,
   AddCourseChapterRequest,
   DeleteCourseChapterRequest,
@@ -135,6 +137,16 @@ export const useInstructorStore = defineStore('instructor', () => {
     return DeleteCourseLessonRequest(payload)
   }
 
+  //
+  // 課程上下架
+  //
+  function coursePublish(payload: { courseId: number }) {
+    return PublishCourseRequest(payload)
+  }
+  function courseUnpublish(payload: { courseId: number }) {
+    return UnpublishCourseRequest(payload)
+  }
+
   return {
     courses,
     course,
@@ -156,6 +168,9 @@ export const useInstructorStore = defineStore('instructor', () => {
     getCourseLesson,
     addCourseLesson,
     editCourseLesson,
-    deleteCourseLesson
+    deleteCourseLesson,
+
+    coursePublish,
+    courseUnpublish
   }
 })
