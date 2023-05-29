@@ -124,6 +124,108 @@ export function DeleteCourseLessonRequest(params: {
   })
 }
 
+export function CourseFAQsRequest(params: { courseId: number }) {
+  return request({
+    url: `/api/courseProvider/course/${params.courseId}/faq`,
+    method: 'get'
+  })
+}
+
+export function AddCourseFAQCategoryRequest(params: { courseId: number; categoryTitle: string }) {
+  return request({
+    url: `/api/courseProvider/course/${params.courseId}/faq`,
+    method: 'post',
+    data: {
+      title: params.categoryTitle
+    }
+  })
+}
+
+export function editCourseFAQCategoryRequest(params: {
+  courseId: number
+  categoryId: number
+  editedCategoryTitle: string
+}) {
+  return request({
+    url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}`,
+    method: 'patch',
+    data: {
+      title: params.editedCategoryTitle
+    }
+  })
+}
+
+export function deleteCourseFAQCategoryRequest(params: { courseId: number; categoryId: number }) {
+  return request({
+    url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}`,
+    method: 'delete'
+  })
+}
+
+export function AddCourseFAQQuestionRequest(params: {
+  courseId: number
+  categoryId: number
+  questionContent: string
+}) {
+  return request({
+    url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}/question`,
+    method: 'post',
+    data: {
+      title: '',
+      content: params.questionContent
+    }
+  })
+}
+
+export function EditCourseFAQQuestionRequest(params: {
+  courseId: number
+  categoryId: number
+  questionId: number
+  editedQuestionContent: string
+}) {
+  return request({
+    url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}/question/${params.questionId}`,
+    method: 'patch',
+    data: {
+      title: '',
+      content: params.editedQuestionContent
+    }
+  })
+}
+
+export function DeleteCourseFAQQuestionRequest(params: {
+  courseId: number
+  categoryId: number
+  questionId: number
+}) {
+  return request({
+    url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}/question/${params.questionId}`,
+    method: 'delete'
+  })
+}
+
+export function PublishCourseFAQQuestionRequest(params: {
+  courseId: number
+  categoryId: number
+  questionId: number
+}) {
+  return request({
+    url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}/question/${params.questionId}/inStack`,
+    method: 'post'
+  })
+}
+
+export function UnpublishCourseFAQQuestionRequest(params: {
+  courseId: number
+  categoryId: number
+  questionId: number
+}) {
+  return request({
+    url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}/question/${params.questionId}/offStack`,
+    method: 'post'
+  })
+}
+
 export function PublishCourseRequest(params: { courseId: number }) {
   return request({
     url: `api/courseProvider/course/${params.courseId}/inStack`,

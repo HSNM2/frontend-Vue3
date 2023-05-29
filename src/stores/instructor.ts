@@ -6,8 +6,6 @@ import {
   AddCourseRequest,
   CourseRequest,
   DeleteCourseRequest,
-  PublishCourseRequest,
-  UnpublishCourseRequest,
   CourseChaptersRequest,
   AddCourseChapterRequest,
   DeleteCourseChapterRequest,
@@ -15,7 +13,18 @@ import {
   CourseLessonRequest,
   AddCourseLessonRequest,
   EditCourseLessonRequest,
-  DeleteCourseLessonRequest
+  DeleteCourseLessonRequest,
+  CourseFAQsRequest,
+  AddCourseFAQCategoryRequest,
+  editCourseFAQCategoryRequest,
+  deleteCourseFAQCategoryRequest,
+  AddCourseFAQQuestionRequest,
+  EditCourseFAQQuestionRequest,
+  DeleteCourseFAQQuestionRequest,
+  PublishCourseFAQQuestionRequest,
+  UnpublishCourseFAQQuestionRequest,
+  PublishCourseRequest,
+  UnpublishCourseRequest
 } from '@/models/instructor'
 
 interface Course {
@@ -39,6 +48,18 @@ interface CourseLesson {
   videoPath: string
 }
 
+interface CourseFAQs {
+  id: number
+  title: string
+  questions: CourseFAQsQuestions[]
+}
+
+interface CourseFAQsQuestions {
+  id: number
+  content: string
+  isPublish: boolean
+}
+
 export const useInstructorStore = defineStore('instructor', () => {
   const courses = ref<Course[]>([])
   const course = ref<Course | null>(null)
@@ -46,6 +67,8 @@ export const useInstructorStore = defineStore('instructor', () => {
   const chapters = ref<EditCourseChapter[]>([])
   const chapter = ref<CourseChapter | null>(null)
   const lesson = ref<CourseLesson | null>(null)
+  const faqs = ref<CourseFAQs[]>([])
+  const questions = ref<CourseFAQsQuestions[]>([])
 
   //
   // 課程相關
@@ -139,6 +162,73 @@ export const useInstructorStore = defineStore('instructor', () => {
   }
 
   //
+  // 常見問題相關
+  //
+
+  function getCourseFAQs(payload: { courseId: number }) {
+    faqs.value = []
+    return CourseFAQsRequest(payload).then((res) => {
+      faqs.value = res.data.data
+    })
+  }
+
+  function addCourseFAQCategory(payload: { courseId: number; categoryTitle: string }) {
+    return AddCourseFAQCategoryRequest(payload)
+  }
+
+  function editCourseFAQCategory(payload: {
+    courseId: number
+    categoryId: number
+    editedCategoryTitle: string
+  }) {
+    return editCourseFAQCategoryRequest(payload)
+  }
+
+  function deleteCourseFAQCategory(payload: { courseId: number; categoryId: number }) {
+    return deleteCourseFAQCategoryRequest(payload)
+  }
+
+  function addCourseFAQQuestion(payload: {
+    courseId: number
+    categoryId: number
+    questionContent: string
+  }) {
+    return AddCourseFAQQuestionRequest(payload)
+  }
+
+  function editCourseFAQQuestion(payload: {
+    courseId: number
+    categoryId: number
+    questionId: number
+    editedQuestionContent: string
+  }) {
+    return EditCourseFAQQuestionRequest(payload)
+  }
+
+  function deleteCourseFAQQuestion(payload: {
+    courseId: number
+    categoryId: number
+    questionId: number
+  }) {
+    return DeleteCourseFAQQuestionRequest(payload)
+  }
+
+  function FAQQuestionPublish(payload: {
+    courseId: number
+    categoryId: number
+    questionId: number
+  }) {
+    return PublishCourseFAQQuestionRequest(payload)
+  }
+  function FAQQuestionUnpublish(payload: {
+    courseId: number
+    categoryId: number
+    questionId: number
+  }) {
+    return UnpublishCourseFAQQuestionRequest(payload)
+  }
+
+  //
   // 課程上下架
   //
   function coursePublish(payload: { courseId: number }) {
@@ -154,6 +244,8 @@ export const useInstructorStore = defineStore('instructor', () => {
     chapters,
     chapter,
     lesson,
+    faqs,
+    questions,
 
     getCourses,
     addCourse,
@@ -170,6 +262,16 @@ export const useInstructorStore = defineStore('instructor', () => {
     addCourseLesson,
     editCourseLesson,
     deleteCourseLesson,
+
+    getCourseFAQs,
+    addCourseFAQCategory,
+    editCourseFAQCategory,
+    deleteCourseFAQCategory,
+    addCourseFAQQuestion,
+    editCourseFAQQuestion,
+    deleteCourseFAQQuestion,
+    FAQQuestionPublish,
+    FAQQuestionUnpublish,
 
     coursePublish,
     courseUnpublish

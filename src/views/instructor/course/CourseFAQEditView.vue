@@ -1,116 +1,126 @@
 <template>
-  <div v-if="!faqs" class="mb-4 rounded bg-neutral-50 px-12 py-8">
+  <div v-if="!faqs[0]" class="mb-4 rounded bg-neutral-50 px-12 py-8">
     <h2 class="mb-6 text-3xl font-bold text-neutral-900">建立常見問題</h2>
     <p class="mb-6">提供常見問題列表，這將會是提升服務體驗及轉換率的好方法</p>
     <button class="btn-primary" @click="showAddFAQCategoryModal = true">新增問題類別</button>
   </div>
-  <div class="mb-4 flex items-center justify-between rounded bg-neutral-50 p-4">
-    <h1 class="font-bold text-neutral-800">常見問題管理</h1>
-    <button class="btn-primary" @click="showAddFAQCategoryModal = true">新增問題類別</button>
-  </div>
-  <div class="rounded bg-neutral-50 p-6">
-    <draggable
-      class="dragArea"
-      :list="faqs"
-      item-key="id"
-      handle=".js-draggable"
-      :group="{ name: 'g1' }"
-    >
-      <template #item="{ element: faq }">
-        <div class="relative mb-8 rounded border bg-neutral-50">
-          <div class="group flex h-14 items-center pe-12 ps-4">
-            <i class="material-icons js-draggable me-2 cursor-row-resize">sort</i>
-            <template v-if="categoryEditedIdx == faq.id">
-              <input
-                v-model.trim="categoryEditedContent"
-                id="url"
-                class="form-control me-4 max-w-sm"
-                :class="{ invalid: !edit }"
-                @keyup.enter="!!edit && editSubmit()"
-              />
-              <button class="me-4" :disabled="edit === ''" @click="editSubmit()">確定</button>
-              <button @click="categoryEditedIdx = null">取消</button>
-            </template>
-            <template v-else>
-              <span class="me-4">{{ faq.title }}</span>
-              <i
-                class="material-icons me-4 hidden cursor-pointer text-red-400 group-hover:block"
-                @click="deleteFAQCategory(faq.id)"
-                >delete_outline</i
-              >
-              <i
-                class="material-icons hidden cursor-pointer text-neutral-400 group-hover:block"
-                @click="editCategoryInputHandle(faq.id, faq.title)"
-                >edit</i
-              >
-            </template>
+  <div v-else>
+    <div class="mb-4 flex items-center justify-between rounded bg-neutral-50 p-4">
+      <h1 class="font-bold text-neutral-800">常見問題管理</h1>
+      <button class="btn-primary" @click="showAddFAQCategoryModal = true">新增問題類別</button>
+    </div>
+    <div class="rounded bg-neutral-50 p-6">
+      <draggable
+        class="dragArea"
+        :list="faqs"
+        item-key="id"
+        handle=".js-draggable"
+        :group="{ name: 'g1' }"
+      >
+        <template #item="{ element: faq }">
+          <div class="relative mb-8 rounded border bg-neutral-50">
+            <div class="group flex h-14 items-center pe-12 ps-4">
+              <i class="material-icons js-draggable me-2 cursor-row-resize">sort</i>
+              <template v-if="categoryEditedIdx == faq.id">
+                <input
+                  v-model.trim="categoryEditedContent"
+                  id="url"
+                  class="form-control me-4 max-w-sm"
+                  :class="{ invalid: !categoryEditedContent }"
+                  @keyup.enter="!!categoryEditedContent && editCourseFAQCategorySubmit()"
+                />
+                <button
+                  class="me-4"
+                  :disabled="categoryEditedContent === ''"
+                  @click="editCourseFAQCategorySubmit()"
+                >
+                  確定
+                </button>
+                <button @click="categoryEditedIdx = 0">取消</button>
+              </template>
+              <template v-else>
+                <span class="me-4">{{ faq.title }}</span>
+                <i
+                  class="material-icons me-4 hidden cursor-pointer text-red-400 group-hover:block"
+                  @click="deleteCourseFAQCategoryHandle(faq.id)"
+                  >delete_outline</i
+                >
+                <i
+                  class="material-icons hidden cursor-pointer text-neutral-400 group-hover:block"
+                  @click="editCourseFAQCategoryHandle(faq.id, faq.title)"
+                  >edit</i
+                >
+              </template>
 
-            <button class="btn-secondary ms-auto" @click="addQuestionHandle(faq.id, faq.questions)">
-              新增問題內容
-            </button>
+              <button class="btn-secondary ms-auto" @click="addCourseFAQQuestionHandle(faq.id)">
+                新增問題內容
+              </button>
+            </div>
+            <input
+              checked
+              type="checkbox"
+              class="peer absolute right-4 top-4 z-10 h-6 w-6 cursor-pointer opacity-0"
+            />
+            <span
+              class="material-icons absolute right-4 top-4 rotate-0 transition-transform duration-300 peer-checked:rotate-180"
+              >keyboard_arrow_down</span
+            >
+            <draggable
+              :key="faq.class_faq_questions.id"
+              class="max-h-0 overflow-hidden bg-neutral-100 transition-all duration-300 peer-checked:max-h-full"
+              tag="ul"
+              :group="{ name: 'g2' }"
+              :list="faq.class_faq_questions"
+              item-key="id"
+              handle=".js-draggable"
+            >
+              <template #item="{ element: question }">
+                <li class="border">
+                  <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center">
+                      <i class="material-icons js-draggable me-2 cursor-row-resize">sort</i>
+                      <span class="me-3">{{ question.content }}</span
+                      ><span
+                        :class="[question.publish ? 'text-emerald-700' : 'text-neutral-600']"
+                        class="max-h-8 min-w-19 rounded-full border bg-neutral-50 px-4 py-1 text-sm"
+                        >{{ question.publish ? '已發布' : '未發布' }}</span
+                      >
+                    </div>
+                    <div class="flex items-center">
+                      <i
+                        class="material-icons cursor-pointer pr-4 text-neutral-400"
+                        @click="
+                          editCourseFAQQuestionModalHandle(faq.id, question.id, question.content)
+                        "
+                        >edit</i
+                      >
+                      <i
+                        :class="[question.publish ? 'text-emerald-700' : 'text-neutral-600']"
+                        class="material-icons cursor-pointer"
+                        @click="FAQQuestionPublishHandle(faq.id, question.id, question.publish)"
+                        >check_circle_outline</i
+                      >
+                    </div>
+                  </div>
+                </li>
+              </template>
+            </draggable>
           </div>
-          <input
-            checked
-            type="checkbox"
-            class="peer absolute right-4 top-4 z-10 h-6 w-6 cursor-pointer opacity-0"
-          />
-          <span
-            class="material-icons absolute right-4 top-4 rotate-0 transition-transform duration-300 peer-checked:rotate-180"
-            >keyboard_arrow_down</span
-          >
-          <draggable
-            :key="faq.questions.id"
-            class="max-h-0 overflow-hidden bg-neutral-100 transition-all duration-300 peer-checked:max-h-full"
-            tag="ul"
-            :group="{ name: 'g2' }"
-            :list="faq.questions"
-            item-key="id"
-            handle=".js-draggable"
-          >
-            <template #item="{ element: question }">
-              <li class="border">
-                <div class="flex items-center justify-between p-4">
-                  <div class="flex items-center">
-                    <i class="material-icons js-draggable me-2 cursor-row-resize">sort</i>
-                    <span class="me-3">{{ question.content }}</span
-                    ><span
-                      :class="[question.is_publish ? 'text-emerald-700' : 'text-neutral-600']"
-                      class="max-h-8 min-w-19 rounded-full border bg-neutral-50 px-4 py-1 text-sm"
-                      >{{ question.is_publish ? '已發布' : '未發布' }}</span
-                    >
-                  </div>
-                  <div class="flex items-center">
-                    <i
-                      class="material-icons cursor-pointer pr-4 text-neutral-400"
-                      @click="editQuestionModalHandle(question.id, question.content)"
-                      >edit</i
-                    >
-                    <i
-                      :class="[question.is_publish ? 'text-emerald-700' : 'text-neutral-600']"
-                      class="material-icons cursor-pointer"
-                      @click="question.is_publish = !question.is_publish"
-                      >check_circle_outline</i
-                    >
-                  </div>
-                </div>
-              </li>
-            </template>
-          </draggable>
-        </div>
-      </template>
-    </draggable>
+        </template>
+      </draggable>
+    </div>
   </div>
 
   <!--新增問題類別 Modal-->
   <CommonModal v-model="showAddFAQCategoryModal">
     <template v-slot:title>新增問題類別</template>
-    <VForm ref="addFAQCategoryForm" v-slot="{ meta }" @submit="addFAQCategory">
+    <VForm ref="addFAQCategoryForm" v-slot="{ meta }" @submit="addCourseFAQCategoryHandle()">
       <div class="mb-6">
         <VField
           name="FAQCategory"
           type="text"
           rules="required"
-          v-model="FAQCategory"
+          v-model="categoryTitle"
           v-slot="{ field, errors, meta }"
           label="問題類別"
         >
@@ -133,7 +143,7 @@
   <!--新增問題內容 Modal-->
   <CommonModal v-model="showAddQuestionModal">
     <template v-slot:title>新增問題內容</template>
-    <VForm ref="addQuestionForm" v-slot="{ meta }" @submit="addQuestion">
+    <VForm ref="addQuestionForm" v-slot="{ meta }" @submit="addCourseFAQQuestionSubmit">
       <div class="mb-6">
         <VField
           name="question"
@@ -159,9 +169,10 @@
     </VForm>
   </CommonModal>
 
+  <!--編輯問題內容 Modal-->
   <CommonModal v-model="showEditQuestionModal">
     <template v-slot:title>編輯問題內容</template>
-    <VForm ref="editQuestionForm" v-slot="{ meta }" @submit="editQuestion">
+    <VForm ref="editQuestionForm" v-slot="{ meta }" @submit="editCourseFAQQuestionSubmit">
       <div class="mb-6">
         <VField
           name="questionEdited"
@@ -182,97 +193,106 @@
           <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="question" />
         </VField>
       </div>
-      <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
-        編輯
-      </button>
+      <div class="flex justify-between">
+        <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
+          編輯
+        </button>
+        <button class="ms-auto text-red-500" @click="deleteCourseFAQQuestionSubmit">刪除</button>
+      </div>
     </VForm>
   </CommonModal>
 </template>
 
 <script setup lang="ts">
 import { nextTick, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import Swal from 'sweetalert2'
 import type { FormContext } from 'vee-validate'
+import { storeToRefs } from 'pinia'
+import { useInstructorStore } from '@/stores/instructor'
 import draggable from 'vuedraggable'
 import CommonModal from '../../../components/CommonModal.vue'
 
-const faqs = ref([
-  {
-    id: '1',
-    title: '課程相關',
-    questions: [
-      {
-        id: '1-1',
-        content: '請問這個課程價值 10,000 元，但是網路上評價兩極，請問我該買嗎？',
-        is_publish: true
-      },
-      {
-        id: '1-2',
-        content: '我剛上小學只有 6 歲，請問我適合來上課嗎？',
-        is_publish: false
-      },
-      {
-        id: '1-3',
-        content: '假如我家網路不好，只有 3G，影片還能流暢播放嗎？',
-        is_publish: false
-      }
-    ]
-  },
-  {
-    id: '2',
-    title: '退貨機制',
-    questions: [
-      {
-        id: '2-1',
-        content: '如果不小心下單錯誤，請問該如何退款？',
-        is_publish: true
-      },
-      {
-        id: '2-2',
-        content: '信用卡多扣 1,200 元，請問該怎麼辦？',
-        is_publish: false
-      }
-    ]
-  }
-])
+const route = useRoute()
+const courseId = ref<number>(0)
 
-const edit = ref('')
-const isEdit = ref(false)
+const instructor = useInstructorStore()
+const { faqs } = storeToRefs(instructor)
+const {
+  getCourseFAQs,
+  addCourseFAQCategory,
+  editCourseFAQCategory,
+  deleteCourseFAQCategory,
+  addCourseFAQQuestion,
+  editCourseFAQQuestion,
+  deleteCourseFAQQuestion,
+  FAQQuestionPublish,
+  FAQQuestionUnpublish
+} = instructor
 
 // 新增類別 modal
 const showAddFAQCategoryModal = ref(false)
 const addFAQCategoryForm = ref<FormContext | null>(null)
 
-const FAQCategory = ref('') // 新增類別
+const categoryTitle = ref<string>('') // 新增類別
 
 watch(showAddFAQCategoryModal, () => {
-  FAQCategory.value = ''
+  categoryTitle.value = ''
   nextTick(() => {
     addFAQCategoryForm.value?.resetForm()
   })
 })
 
-function addFAQCategory() {
-  faqs.value.push({
-    id: FAQCategory.value.length.toString(),
-    title: FAQCategory.value,
-    questions: []
+function addCourseFAQCategoryHandle() {
+  addCourseFAQCategory({ courseId: courseId.value, categoryTitle: categoryTitle.value }).then(
+    () => {
+      getCourseFAQs({ courseId: courseId.value })
+      showAddFAQCategoryModal.value = false
+    }
+  )
+}
+
+//編輯類別功能
+
+const categoryIdx = ref<number>(0)
+const categoryEditedIdx = ref<number>(0)
+const categoryEditedContent = ref<string>('')
+
+function editCourseFAQCategoryHandle(idx: string | any, content: string | any) {
+  categoryEditedContent.value = content
+  categoryEditedIdx.value = idx
+}
+function editCourseFAQCategorySubmit() {
+  editCourseFAQCategory({
+    courseId: courseId.value,
+    categoryId: categoryEditedIdx.value,
+    editedCategoryTitle: categoryEditedContent.value
+  }).then(() => {
+    categoryEditedIdx.value = 0
+    categoryEditedContent.value = ''
+    getCourseFAQs({ courseId: courseId.value })
   })
-  showAddFAQCategoryModal.value = false
 }
 
-function editSubmit() {
-  console.log('edit success')
-  isEdit.value = false
+//刪除類型功能
+function deleteCourseFAQCategoryHandle(idx: number) {
+  Swal.fire({
+    icon: 'warning',
+    title: '確定刪除嗎？',
+    showCancelButton: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteCourseFAQCategory({ courseId: courseId.value, categoryId: idx }).then(() => {
+        getCourseFAQs({ courseId: courseId.value })
+      })
+    }
+  })
 }
 
-// 新增類別 modal
+// 新增問題 modal
 const showAddQuestionModal = ref(false)
 const addQuestionForm = ref<FormContext | null>(null)
-
-const question = ref('') // 新增問題
-const questionList = ref<any | null>(null)
-const questionListId = ref<any | null>(null)
+const question = ref<string>('') // 新增問題
 
 watch(showAddQuestionModal, () => {
   question.value = ''
@@ -281,74 +301,103 @@ watch(showAddQuestionModal, () => {
   })
 })
 
-function addQuestionHandle(id: any, list: any) {
-  questionListId.value = id
-  questionList.value = list
+function addCourseFAQQuestionHandle(id: number) {
+  categoryIdx.value = id
   showAddQuestionModal.value = true
 }
 
-function addQuestion() {
-  questionList.value.push({
-    id: `${questionListId.value}-${questionList.value.length + 1}`,
-    content: question.value,
-    is_publish: false
+function addCourseFAQQuestionSubmit() {
+  addCourseFAQQuestion({
+    courseId: courseId.value,
+    categoryId: categoryIdx.value,
+    questionContent: question.value
+  }).then(() => {
+    getCourseFAQs({ courseId: courseId.value })
+    categoryEditedIdx.value = 0
+    showAddQuestionModal.value = false
   })
-  showAddQuestionModal.value = false
-}
-
-//編輯標題功能
-const categoryEditedIdx = ref(null)
-const categoryEditedContent = ref(null)
-
-function editCategoryInputHandle(idx: string | any, content: string | any) {
-  categoryEditedContent.value = content
-  categoryEditedIdx.value = idx
 }
 
 //編輯內容 modal
 const showEditQuestionModal = ref(false)
-const questionEditedIdx = ref(null)
-const questionEditedContent = ref(null)
+const questionEditedIdx = ref<number>(0)
+const questionEditedContent = ref<string>('')
 
-function editQuestionModalHandle(idx: string | any, content: string | any) {
-  showEditQuestionModal.value = true
+function editCourseFAQQuestionModalHandle(categoryId: number, questionId: number, content: string) {
+  categoryIdx.value = categoryId
+  questionEditedIdx.value = questionId
   questionEditedContent.value = content
-  questionEditedIdx.value = idx
+  showEditQuestionModal.value = true
 }
 
-function editQuestion() {
-  faqs.value.forEach((x) => {
-    x.questions.forEach((item: any) => {
-      if (item.id == questionEditedIdx.value) {
-        item.content = questionEditedContent.value
+function editCourseFAQQuestionSubmit() {
+  editCourseFAQQuestion({
+    courseId: courseId.value,
+    categoryId: categoryIdx.value,
+    questionId: questionEditedIdx.value,
+    editedQuestionContent: questionEditedContent.value
+  }).then(() => {
+    getCourseFAQs({ courseId: courseId.value })
+    categoryIdx.value = 0
+    questionEditedIdx.value = 0
+    questionEditedContent.value = ''
+    showEditQuestionModal.value = false
+  })
+}
+
+//刪除內容功能
+function deleteCourseFAQQuestionSubmit() {
+  deleteCourseFAQQuestion({
+    courseId: courseId.value,
+    categoryId: categoryIdx.value,
+    questionId: questionEditedIdx.value
+  }).then(() => {
+    getCourseFAQs({ courseId: courseId.value })
+    categoryIdx.value = 0
+    questionEditedIdx.value = 0
+    showEditQuestionModal.value = false
+  })
+}
+
+//問題發佈功能
+const questionPublishState = ref<boolean>(false)
+
+function FAQQuestionPublishHandle(categoryId: number, questionId: number, publishState: boolean) {
+  questionPublishState.value = publishState
+  if (questionPublishState.value) {
+    FAQQuestionUnpublish({
+      courseId: courseId.value,
+      categoryId: categoryId,
+      questionId: questionId
+    }).then((res) => {
+      if (res.data.status == true) {
+        getCourseFAQs({ courseId: courseId.value })
+        Swal.fire({
+          icon: 'success',
+          title: res.data.message
+        })
       }
     })
-  })
-  questionEditedContent.value = null
-  questionEditedIdx.value = null
-  showEditQuestionModal.value = false
-}
-
-//類型刪除功能
-function deleteFAQCategory(idx: string) {
-  Swal.fire({
-    icon: 'warning',
-    title: '確定刪除嗎？',
-    showCancelButton: true
-  }).then((result) => {
-    if (result.isConfirmed) {
-      faqs.value.forEach((item, id) => {
-        if (item.id == idx) {
-          faqs.value.splice(id, 1)
-        } else {
-          return
-        }
-      })
-    }
-  })
+  } else {
+    FAQQuestionPublish({
+      courseId: courseId.value,
+      categoryId: categoryId,
+      questionId: questionId
+    }).then((res) => {
+      if (res.data.status == true) {
+        getCourseFAQs({ courseId: courseId.value })
+        Swal.fire({
+          icon: 'success',
+          title: res.data.message
+        })
+      }
+    })
+  }
 }
 
 onMounted(() => {
+  courseId.value = +route.params.courseId
+  getCourseFAQs({ courseId: courseId.value })
   nextTick(() => {
     ;(document.querySelector('main') as HTMLElement).style.minHeight = `calc(100vh - ${
       (document.querySelector('header') as HTMLElement).offsetHeight
