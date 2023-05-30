@@ -18,7 +18,6 @@ import {
   DeleteCourseLessonRequest,
   PublishCourseLessonRequest,
   UnPublishCourseLessonRequest,
-  DeleteCourseLessonRequest,
   CourseFAQsRequest,
   AddCourseFAQCategoryRequest,
   editCourseFAQCategoryRequest,
@@ -27,7 +26,7 @@ import {
   EditCourseFAQQuestionRequest,
   DeleteCourseFAQQuestionRequest,
   PublishCourseFAQQuestionRequest,
-  UnpublishCourseFAQQuestionRequest,
+  UnpublishCourseFAQQuestionRequest
 } from '@/models/instructor'
 
 interface Course {
@@ -95,6 +94,14 @@ export const useInstructorStore = defineStore('instructor', () => {
 
   function deleteCourse(payload: { id: number }) {
     return DeleteCourseRequest(payload)
+  }
+
+  function coursePublish(payload: { courseId: number }) {
+    return PublishCourseRequest(payload)
+  }
+
+  function courseUnpublish(payload: { courseId: number }) {
+    return UnpublishCourseRequest(payload)
   }
 
   //
@@ -245,16 +252,6 @@ export const useInstructorStore = defineStore('instructor', () => {
     return UnpublishCourseFAQQuestionRequest(payload)
   }
 
-  //
-  // 課程上下架
-  //
-  function coursePublish(payload: { courseId: number }) {
-    return PublishCourseRequest(payload)
-  }
-  function courseUnpublish(payload: { courseId: number }) {
-    return UnpublishCourseRequest(payload)
-  }
-
   return {
     courses,
     course,
@@ -268,6 +265,8 @@ export const useInstructorStore = defineStore('instructor', () => {
     addCourse,
     getCourse,
     deleteCourse,
+    coursePublish,
+    courseUnpublish,
 
     getCourseChapters,
     getCourseChapter,
@@ -290,9 +289,6 @@ export const useInstructorStore = defineStore('instructor', () => {
     editCourseFAQQuestion,
     deleteCourseFAQQuestion,
     FAQQuestionPublish,
-    FAQQuestionUnpublish,
-
-    coursePublish,
-    courseUnpublish
+    FAQQuestionUnpublish
   }
 })
