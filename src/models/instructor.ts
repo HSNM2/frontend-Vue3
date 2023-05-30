@@ -124,6 +124,28 @@ export function DeleteCourseLessonRequest(params: {
   })
 }
 
+export function PublishCourseLessonRequest(params: {
+  courseId: number
+  chapterId: number
+  lessonId: number
+}) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/chapter/${params.chapterId}/lesson/${params.lessonId}/inStack`,
+    method: 'post'
+  })
+}
+
+export function UnPublishCourseLessonRequest(params: {
+  courseId: number
+  chapterId: number
+  lessonId: number
+}) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/chapter/${params.chapterId}/lesson/${params.lessonId}/offStack`,
+    method: 'post'
+  })
+}
+
 export function PublishCourseRequest(params: { courseId: number }) {
   return request({
     url: `api/courseProvider/course/${params.courseId}/inStack`,

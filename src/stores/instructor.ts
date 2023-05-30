@@ -15,7 +15,9 @@ import {
   CourseLessonRequest,
   AddCourseLessonRequest,
   EditCourseLessonRequest,
-  DeleteCourseLessonRequest
+  DeleteCourseLessonRequest,
+  PublishCourseLessonRequest,
+  UnPublishCourseLessonRequest
 } from '@/models/instructor'
 
 interface Course {
@@ -138,6 +140,18 @@ export const useInstructorStore = defineStore('instructor', () => {
     return DeleteCourseLessonRequest(payload)
   }
 
+  function publishCourseLesson(payload: { courseId: number; chapterId: number; lessonId: number }) {
+    return PublishCourseLessonRequest(payload)
+  }
+
+  function unPublishCourseLesson(payload: {
+    courseId: number
+    chapterId: number
+    lessonId: number
+  }) {
+    return UnPublishCourseLessonRequest(payload)
+  }
+
   //
   // 課程上下架
   //
@@ -170,6 +184,8 @@ export const useInstructorStore = defineStore('instructor', () => {
     addCourseLesson,
     editCourseLesson,
     deleteCourseLesson,
+    publishCourseLesson,
+    unPublishCourseLesson,
 
     coursePublish,
     courseUnpublish
