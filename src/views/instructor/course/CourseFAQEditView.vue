@@ -342,6 +342,7 @@ const questionTitle = ref<string>('')
 const questionContent = ref<string>('') // 新增問題
 
 watch(showQuestionInputModal, () => {
+  questionTitle.value = ''
   questionContent.value = ''
   nextTick(() => {
     questionForm.value?.resetForm()
