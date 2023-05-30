@@ -1,6 +1,11 @@
 <template>
   <div class="px-3 pb-16">
-    <h4 class="mb-3 text-xl font-bold">課程大綱</h4>
+    <h4 class="relative mb-4 ps-3 text-xl font-bold">
+      <span
+        class="absolute left-0 top-1 before:block before:h-7 before:w-1 before:bg-neutral-900 before:content-['']"
+      ></span>
+      課程大綱
+    </h4>
     <ul>
       <li>
         <div class="mb-4">

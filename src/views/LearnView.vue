@@ -2,15 +2,23 @@
   <main>
     <div class="container">
       <div class="mt-6 md:mt-[52px]">
-        <div class="flex items-center justify-between">
+        <div class="flex justify-between gap-x-4 md:items-center">
           <div>
             <p class="text-base text-neutral-800">王小明</p>
             <h2 class="text-heading-3xl text-primary-6">法式馬卡龍的製作與口感掌控</h2>
           </div>
-          <button type="button" class="btn-back-round md:hidden">
-            <span class="material-icons"> undo </span>
-          </button>
-          <button type="button" class="btn-back hidden md:block">返回</button>
+          <div class="md:hidden">
+            <button class="btn-back-round">
+              <img class="m-auto block" src="/image/undo.png" alt="" />
+            </button>
+          </div>
+
+          <div class="hidden md:block">
+            <button class="btn-back flex items-center gap-x-2">
+              <img class="" src="/image/undo.png" alt="" />
+              返回
+            </button>
+          </div>
         </div>
 
         <div class="my-6 grid grid-cols-12 gap-6">

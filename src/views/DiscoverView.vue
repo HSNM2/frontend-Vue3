@@ -80,8 +80,13 @@
         <button class="btn-secondary">btn-secondary</button>
       </div>
       <div>
-        <button class="btn-back mr-2">btn-back</button>
-        <button class="btn-back-round mr-2"><span class="material-icons"> undo </span></button>
+        <button class="btn-back flex items-center gap-x-2">
+          <img class="" src="/image/undo.png" alt="" />
+          btn-back
+        </button>
+        <button class="btn-back-round mt-2">
+          <img class="m-auto block" src="/image/undo.png" alt="" />
+        </button>
       </div>
     </div>
     <div class="mb-6">
