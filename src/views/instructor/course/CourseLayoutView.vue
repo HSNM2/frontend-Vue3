@@ -96,7 +96,7 @@ onMounted(() => {
 })
 
 function publishStateHandle() {
-  courseRouteParamsId.value = parseInt(<string>route.params.courseId)
+  courseRouteParamsId.value = parseInt(route.params.courseId as string)
   getCourses().then(() => {
     courses.value.forEach((item) => {
       if (item.id == courseRouteParamsId.value) {
