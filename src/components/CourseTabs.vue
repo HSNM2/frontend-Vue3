@@ -3,7 +3,7 @@
     <div :class="item.style">
       <button
         type="button"
-        class="flex items-center px-2 text-base font-bold text-primary-4 md:px-8"
+        class="flex items-center px-2 text-base font-bold text-primary-4 md:px-8 md:text-[18px]"
         :class="activeStyle(item.name)"
         @click="changeTabAction(item.name)"
       >
@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const emit = defineEmits(['changeTabView'])
@@ -45,6 +45,23 @@ const activeStyle = computed(() => {
   }
 })
 
+const windowWidth = ref(window.innerWidth)
+
+onMounted(() => {
+  window.addEventListener('resize', function () {
+    windowWidth.value = window.innerWidth
+  })
+})
+
+watch(windowWidth, () => {
+  if (windowWidth.value > 1296) {
+    if (route.name === 'learn' && tabName.value === '課程內容') {
+      tabName.value = '課程討論'
+    }
+    emit('changeTabView', tabName.value)
+  }
+})
+
 defineExpose({
   changeTabAction
 })
@@ -53,6 +70,7 @@ defineExpose({
 <style lang="scss" scoped>
 .active {
   position: relative;
+  color: #4b3828;
   &::after {
     content: '';
     background-color: #f3da82;

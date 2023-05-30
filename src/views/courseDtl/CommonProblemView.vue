@@ -1,7 +1,12 @@
 <template>
   <div class="px-3 pb-16">
     <div class="mb-16">
-      <h4 class="mb-3 text-xl font-bold">課程相關</h4>
+      <h4 class="relative mb-4 ps-3 text-xl font-bold">
+        <span
+          class="absolute left-0 top-1 before:block before:h-7 before:w-1 before:bg-neutral-900 before:content-['']"
+        ></span>
+        課程相關
+      </h4>
       <ul class="flex flex-col gap-y-3">
         <li>
           <div class="flex items-center justify-between gap-x-1 bg-primary-3/50 p-2">
@@ -29,7 +34,12 @@
       </ul>
     </div>
     <div>
-      <h4 class="mb-3 text-xl font-bold">退貨機制</h4>
+      <h4 class="relative mb-4 ps-3 text-xl font-bold">
+        <span
+          class="absolute left-0 top-1 before:block before:h-7 before:w-1 before:bg-neutral-900 before:content-['']"
+        ></span>
+        退貨機制
+      </h4>
       <ul class="flex flex-col gap-y-3">
         <li>
           <div class="flex items-center justify-between gap-x-1 bg-primary-3/50 p-2">

@@ -108,7 +108,7 @@
         <div class="flex justify-end py-3">
           <button type="button" class="btn-secondary w-[112px] px-0">
             <div class="flex justify-center">
-              <span class="material-icons text-neutral-900"> undo </span>
+              <span class="material-icons text-neutral-900"> reply </span>
               <span class="text-neutral-900">回覆</span>
             </div>
           </button>
