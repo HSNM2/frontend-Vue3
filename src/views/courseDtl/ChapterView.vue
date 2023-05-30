@@ -4,7 +4,7 @@
       <div
         class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
       >
-        <p>第一章 - 瞭解法式馬卡龍</p>
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
         <span class="material-icons"> expand_less </span>
       </div>
       <ul class="flex flex-col gap-y-6 px-2 py-3">
@@ -31,15 +31,14 @@
       <div
         class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
       >
-        <p>第一章 - 瞭解法式馬卡龍</p>
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
         <span class="material-icons"> expand_less </span>
       </div>
       <ul class="flex flex-col gap-y-6 px-2 py-3">
         <li>
           <div class="flex justify-between">
             <div class="flex gap-x-2">
-              <span class="material-icons text-primary-5"> play_arrow </span>
-              <p class="font-bold text-primary-5">介紹法式馬卡龍的歷史和起源</p>
+              <p class="text-primary-5">介紹法式馬卡龍的歷史和起源</p>
             </div>
             <p class="text-primary-5">5:30</p>
           </div>
@@ -58,15 +57,14 @@
       <div
         class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
       >
-        <p>第一章 - 瞭解法式馬卡龍</p>
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
         <span class="material-icons"> expand_less </span>
       </div>
       <ul class="flex flex-col gap-y-6 px-2 py-3">
         <li>
           <div class="flex justify-between">
             <div class="flex gap-x-2">
-              <span class="material-icons text-primary-5"> play_arrow </span>
-              <p class="font-bold text-primary-5">介紹法式馬卡龍的歷史和起源</p>
+              <p class="text-primary-5">介紹法式馬卡龍的歷史和起源</p>
             </div>
             <p class="text-primary-5">5:30</p>
           </div>
@@ -85,15 +83,14 @@
       <div
         class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
       >
-        <p>第一章 - 瞭解法式馬卡龍</p>
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
         <span class="material-icons"> expand_less </span>
       </div>
       <ul class="flex flex-col gap-y-6 px-2 py-3">
         <li>
           <div class="flex justify-between">
             <div class="flex gap-x-2">
-              <span class="material-icons text-primary-5"> play_arrow </span>
-              <p class="font-bold text-primary-5">介紹法式馬卡龍的歷史和起源</p>
+              <p class="text-primary-5">介紹法式馬卡龍的歷史和起源</p>
             </div>
             <p class="text-primary-5">5:30</p>
           </div>
@@ -112,15 +109,14 @@
       <div
         class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
       >
-        <p>第一章 - 瞭解法式馬卡龍</p>
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
         <span class="material-icons"> expand_less </span>
       </div>
       <ul class="flex flex-col gap-y-6 px-2 py-3">
         <li>
           <div class="flex justify-between">
             <div class="flex gap-x-2">
-              <span class="material-icons text-primary-5"> play_arrow </span>
-              <p class="font-bold text-primary-5">介紹法式馬卡龍的歷史和起源</p>
+              <p class="text-primary-5">介紹法式馬卡龍的歷史和起源</p>
             </div>
             <p class="text-primary-5">5:30</p>
           </div>
@@ -139,15 +135,144 @@
       <div
         class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
       >
-        <p>第一章 - 瞭解法式馬卡龍</p>
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
         <span class="material-icons"> expand_less </span>
       </div>
       <ul class="flex flex-col gap-y-6 px-2 py-3">
         <li>
           <div class="flex justify-between">
             <div class="flex gap-x-2">
-              <span class="material-icons text-primary-5"> play_arrow </span>
-              <p class="font-bold text-primary-5">介紹法式馬卡龍的歷史和起源</p>
+              <p class="text-primary-5">介紹法式馬卡龍的歷史和起源</p>
+            </div>
+            <p class="text-primary-5">5:30</p>
+          </div>
+        </li>
+        <li>
+          <div class="flex justify-between">
+            <div class="flex gap-x-2">
+              <p class="text-primary-5">認識馬卡龍的外觀、口感和成分</p>
+            </div>
+            <p class="text-primary-5">5:30</p>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <div
+        class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
+      >
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
+        <span class="material-icons"> expand_less </span>
+      </div>
+      <ul class="flex flex-col gap-y-6 px-2 py-3">
+        <li>
+          <div class="flex justify-between">
+            <div class="flex gap-x-2">
+              <p class="text-primary-5">介紹法式馬卡龍的歷史和起源</p>
+            </div>
+            <p class="text-primary-5">5:30</p>
+          </div>
+        </li>
+        <li>
+          <div class="flex justify-between">
+            <div class="flex gap-x-2">
+              <p class="text-primary-5">認識馬卡龍的外觀、口感和成分</p>
+            </div>
+            <p class="text-primary-5">5:30</p>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <div
+        class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
+      >
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
+        <span class="material-icons"> expand_less </span>
+      </div>
+      <ul class="flex flex-col gap-y-6 px-2 py-3">
+        <li>
+          <div class="flex justify-between">
+            <div class="flex gap-x-2">
+              <p class="text-primary-5">介紹法式馬卡龍的歷史和起源</p>
+            </div>
+            <p class="text-primary-5">5:30</p>
+          </div>
+        </li>
+        <li>
+          <div class="flex justify-between">
+            <div class="flex gap-x-2">
+              <p class="text-primary-5">認識馬卡龍的外觀、口感和成分</p>
+            </div>
+            <p class="text-primary-5">5:30</p>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <div
+        class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
+      >
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
+        <span class="material-icons"> expand_less </span>
+      </div>
+      <ul class="flex flex-col gap-y-6 px-2 py-3">
+        <li>
+          <div class="flex justify-between">
+            <div class="flex gap-x-2">
+              <p class="text-primary-5">介紹法式馬卡龍的歷史和起源</p>
+            </div>
+            <p class="text-primary-5">5:30</p>
+          </div>
+        </li>
+        <li>
+          <div class="flex justify-between">
+            <div class="flex gap-x-2">
+              <p class="text-primary-5">認識馬卡龍的外觀、口感和成分</p>
+            </div>
+            <p class="text-primary-5">5:30</p>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <div
+        class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
+      >
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
+        <span class="material-icons"> expand_less </span>
+      </div>
+      <ul class="flex flex-col gap-y-6 px-2 py-3">
+        <li>
+          <div class="flex justify-between">
+            <div class="flex gap-x-2">
+              <p class="text-primary-5">介紹法式馬卡龍的歷史和起源</p>
+            </div>
+            <p class="text-primary-5">5:30</p>
+          </div>
+        </li>
+        <li>
+          <div class="flex justify-between">
+            <div class="flex gap-x-2">
+              <p class="text-primary-5">認識馬卡龍的外觀、口感和成分</p>
+            </div>
+            <p class="text-primary-5">5:30</p>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <div
+        class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
+      >
+        <h6 class="font-bold">第一章 - 瞭解法式馬卡龍</h6>
+        <span class="material-icons"> expand_less </span>
+      </div>
+      <ul class="flex flex-col gap-y-6 px-2 py-3">
+        <li>
+          <div class="flex justify-between">
+            <div class="flex gap-x-2">
+              <p class="text-primary-5">介紹法式馬卡龍的歷史和起源</p>
             </div>
             <p class="text-primary-5">5:30</p>
           </div>

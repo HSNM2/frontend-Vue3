@@ -14,8 +14,11 @@
     <select class="col-span-6 h-10 rounded-2.5xl border border-neutral-200 px-4 py-2 lg:col-span-2">
       <option value="">日期最新</option>
     </select>
-    <div class="col-span-12 lg:col-span-3">
-      <div v-if="isLogin === false" class="flex items-center justify-between px-[33.5px] lg:hidden">
+    <div class="col-span-12 md:mx-0 lg:col-span-3">
+      <div
+        v-if="isLogin === false"
+        class="-mx-3 flex items-center justify-between bg-primary-1 px-[33.5px] py-3 lg:hidden"
+      >
         <p class="text-primary-6">對課程有些許問題？</p>
         <button class="btn-primary">開始提問</button>
       </div>
@@ -44,9 +47,7 @@
             ></textarea>
           </div>
           <div class="mt-2 flex justify-end">
-            <button type="button" class="rounded bg-neutral-200 px-5 py-2 font-bold text-white">
-              送出
-            </button>
+            <button type="button" class="btn-primary w-[112px]">送出</button>
           </div>
         </div>
       </template>
@@ -110,9 +111,7 @@
             ></textarea>
           </div>
           <div class="mt-2 flex justify-end">
-            <button type="button" class="rounded bg-neutral-200 px-5 py-2 font-bold text-white">
-              送出
-            </button>
+            <button type="button" class="btn-primary w-[112px]">送出</button>
           </div>
         </template>
       </div>
@@ -131,24 +130,42 @@
         </div>
         <div v-if="isLogin === true" class="cursor-pointer p-1">
           <div class="flex items-center justify-end">
-            <span class="material-icons text-base text-neutral-800"> undo </span>
-            <span class="text-sm font-bold text-neutral-800">回覆</span>
+            <button type="button" class="btn-secondary w-[112px] px-0">
+              <div class="flex justify-center">
+                <span class="material-icons text-neutral-900"> reply </span>
+                <span class="text-neutral-900">回覆</span>
+              </div>
+            </button>
           </div>
         </div>
       </div>
     </div>
     <div v-if="isLogin === false" class="-mt-14 hidden lg:col-span-3 lg:block">
-      <div class="flex flex-col items-center gap-y-4 rounded-2.5xl border border-neutral-200 py-8">
+      <div
+        class="flex flex-col items-center gap-y-4 rounded-2.5xl border border-neutral-200 bg-primary-1 py-8"
+      >
         <img src="/image/icon-rolling-pin.png" class="h-[7px] w-[65px]" alt="" />
         <p class="text-base text-primary-6">對課程有些許問題？</p>
-        <button class="btn-primary">開始提問</button>
+        <button class="btn-primary" @click="openAuthModal('login')">開始提問</button>
       </div>
     </div>
   </div>
+  <AuthModal />
 </template>
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '@/stores/auth'
+import AuthModal from '@/components/AuthModal.vue'
+
 const props = defineProps({
   isLogin: { type: Boolean, required: true }
 })
+const auth = useAuthStore()
+const { authModal, authModalType } = storeToRefs(auth)
+
+function openAuthModal(type = 'login') {
+  authModal.value = true
+  authModalType.value = type
+}
 </script>
 <style lang=""></style>

@@ -25,10 +25,12 @@
             <p class="hidden pb-5 text-2xl font-bold text-primary-4 md:block">NT$23,000</p>
             <div class="flex items-center gap-x-5 pb-6">
               <button type="button" class="btn-primary hidden md:block">立即購買</button>
-              <span class="material-icons hidden text-primary-6 md:block"> shopping_cart </span>
-              <span class="material-icons text-primary-6"> share </span>
-              <span class="material-icons text-primary-6"> bookmark_border </span>
-              <!-- <span class="material-icons text-primary-6"> bookmark </span> -->
+              <span class="material-icons hidden cursor-pointer text-primary-6 md:block">
+                shopping_cart
+              </span>
+              <span class="material-icons cursor-pointer text-primary-6"> share </span>
+              <span class="material-icons cursor-pointer text-primary-6"> bookmark_border </span>
+              <!-- <span class="material-icons text-primary-6 cursor-pointer"> bookmark </span> -->
             </div>
           </div>
 
@@ -61,7 +63,7 @@
     <div class="sticky bottom-0 z-10 w-full md:hidden">
       <div class="flex items-center justify-between gap-x-5 bg-secondary-1 px-3 py-[15px]">
         <p class="text-2xl font-bold text-primary-4">NT$23,000</p>
-        <span class="material-icons text-primary-6"> shopping_cart </span>
+        <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
         <button type="button" class="btn-primary w-full px-2">立即購買</button>
       </div>
     </div>

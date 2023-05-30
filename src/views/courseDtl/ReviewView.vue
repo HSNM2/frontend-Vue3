@@ -87,7 +87,12 @@
             ></ProgressBar>
           </div>
         </div>
-        <button type="button" class="btn-primary mx-auto block px-4" @click="reviewAction()">
+        <button
+          v-if="isLogin === true"
+          type="button"
+          class="btn-primary mx-auto block px-4"
+          @click="reviewAction()"
+        >
           對課程有心得？ 開始評價
         </button>
       </div>

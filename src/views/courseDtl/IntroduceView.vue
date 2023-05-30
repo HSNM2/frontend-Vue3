@@ -1,7 +1,12 @@
 <template>
   <div class="px-3 pb-16">
     <div class="mb-7">
-      <h4 class="mb-4 text-xl font-bold">關於課程</h4>
+      <h4 class="relative mb-4 ps-3 text-xl font-bold">
+        <span
+          class="absolute left-0 top-1 before:block before:h-7 before:w-1 before:bg-neutral-900 before:content-['']"
+        ></span>
+        關於課程
+      </h4>
       <div>
         <div class="mb-2 flex items-center">
           <span class="material-icons text-lg"> watch_later </span>
@@ -21,7 +26,12 @@
       </div>
     </div>
     <div>
-      <h4 class="mb-4 text-xl font-bold">關於簡介</h4>
+      <h4 class="relative mb-4 ps-3 text-xl font-bold">
+        <span
+          class="absolute left-0 top-1 before:block before:h-7 before:w-1 before:bg-neutral-900 before:content-['']"
+        ></span>
+        關於簡介
+      </h4>
       <p class="mb-3 text-lg font-bold">// 你可以學習到</p>
       <p>
         本課程旨在讓學生學會製作口感完美的法式馬卡龍，並掌握調配配方、掌握烘焙技巧和控制馬卡龍的口感。
