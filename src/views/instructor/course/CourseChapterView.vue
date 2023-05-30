@@ -67,26 +67,33 @@
           >
             <template #item="{ element: lesson }">
               <li class="border">
-                <div
-                  @click="editLesson(chapter.id, lesson.id)"
+                <router-link
+                  :to="`/instructor/course/${+route.params.courseId}/chapter/${chapter.id}/lesson/${
+                    lesson.id
+                  }`"
                   class="flex cursor-pointer items-center p-4"
                 >
                   <i class="material-icons js-draggable me-2 cursor-row-resize">sort</i>
                   <span class="me-3">{{ lesson.title }}</span>
                   <span
-                    :class="[lesson.is_publish ? 'text-emerald-700' : 'text-neutral-600']"
+                    :class="[lesson.isPublish ? 'text-emerald-700' : 'text-neutral-600']"
                     class="rounded-full border bg-neutral-50 px-4 py-1 text-sm"
-                    >{{ lesson.is_publish ? '已發布' : '未發布' }}</span
+                    >{{ lesson.isPublish ? '已發布' : '未發布' }}</span
                   >
                   <i class="material-icons me-4 ms-auto cursor-pointer text-neutral-800"
                     >visibility</i
                   >
                   <i
-                    :class="[lesson.is_publish ? 'text-emerald-700' : 'text-neutral-600']"
+                    :class="[lesson.isPublish ? 'text-emerald-700' : 'text-neutral-600']"
                     class="material-icons cursor-pointer"
+                    @click.prevent="
+                      lesson.isPublish
+                        ? unPublishLesson(chapter.id, lesson.id)
+                        : publishLesson(chapter.id, lesson.id)
+                    "
                     >check_circle_outline</i
                   >
-                </div>
+                </router-link>
               </li>
             </template>
           </draggable>
@@ -145,11 +152,25 @@ const { updateLoading } = useStatusStore()
 const { showError } = useErrorHandler()
 
 const instructor = useInstructorStore()
-const { getCourseChapters, addCourseChapter, deleteCourseChapter, editCourseChapterTitle } =
-  instructor
+const {
+  getCourseChapters,
+  addCourseChapter,
+  deleteCourseChapter,
+  editCourseChapterTitle,
+  publishCourseLesson,
+  unPublishCourseLesson
+} = instructor
 const { chapters, course } = storeToRefs(instructor)
 
 onMounted(() => {
+  getChapter()
+})
+
+//
+// 章節
+//
+
+function getChapter() {
   updateLoading(true)
   getCourseChapters({ courseId: +route.params.courseId })
     .catch((err) => {
@@ -158,11 +179,8 @@ onMounted(() => {
     .finally(() => {
       updateLoading(false)
     })
-})
+}
 
-//
-// 章節
-//
 function deleteChapter(chapterId: number) {
   Swal.fire({
     icon: 'warning',
@@ -256,9 +274,39 @@ function addLesson(chapterId: number) {
   router.push(`/instructor/course/${+route.params.courseId}/chapter/${chapterId}/lesson`)
 }
 
-function editLesson(chapterId: number, lessonId: number) {
-  router.push(
-    `/instructor/course/${+route.params.courseId}/chapter/${chapterId}/lesson/${lessonId}`
-  )
+function publishLesson(chapterId: number, lessonId: number) {
+  updateLoading(true)
+  publishCourseLesson({ courseId: +route.params.courseId, chapterId, lessonId })
+    .then(() => {
+      const chapterIdx = chapters.value.findIndex((chapter) => chapter.id === chapterId)
+      const lessonIdx = chapters.value[chapterIdx].lessons.findIndex(
+        (lesson) => lesson.id === lessonId
+      )
+      chapters.value[chapterIdx].lessons[lessonIdx].isPublish = true
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
+}
+
+function unPublishLesson(chapterId: number, lessonId: number) {
+  updateLoading(true)
+  unPublishCourseLesson({ courseId: +route.params.courseId, chapterId, lessonId })
+    .then(() => {
+      const chapterIdx = chapters.value.findIndex((chapter) => chapter.id === chapterId)
+      const lessonIdx = chapters.value[chapterIdx].lessons.findIndex(
+        (lesson) => lesson.id === lessonId
+      )
+      chapters.value[chapterIdx].lessons[lessonIdx].isPublish = false
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
 }
 </script>

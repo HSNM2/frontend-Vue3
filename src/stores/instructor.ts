@@ -6,6 +6,8 @@ import {
   AddCourseRequest,
   CourseRequest,
   DeleteCourseRequest,
+  PublishCourseRequest,
+  UnpublishCourseRequest,
   CourseChaptersRequest,
   AddCourseChapterRequest,
   DeleteCourseChapterRequest,
@@ -14,6 +16,8 @@ import {
   AddCourseLessonRequest,
   EditCourseLessonRequest,
   DeleteCourseLessonRequest,
+  PublishCourseLessonRequest,
+  UnPublishCourseLessonRequest,
   CourseFAQsRequest,
   AddCourseFAQCategoryRequest,
   editCourseFAQCategoryRequest,
@@ -22,9 +26,7 @@ import {
   EditCourseFAQQuestionRequest,
   DeleteCourseFAQQuestionRequest,
   PublishCourseFAQQuestionRequest,
-  UnpublishCourseFAQQuestionRequest,
-  PublishCourseRequest,
-  UnpublishCourseRequest
+  UnpublishCourseFAQQuestionRequest
 } from '@/models/instructor'
 
 interface Course {
@@ -94,6 +96,14 @@ export const useInstructorStore = defineStore('instructor', () => {
     return DeleteCourseRequest(payload)
   }
 
+  function coursePublish(payload: { courseId: number }) {
+    return PublishCourseRequest(payload)
+  }
+
+  function courseUnpublish(payload: { courseId: number }) {
+    return UnpublishCourseRequest(payload)
+  }
+
   //
   // 課程章節相關
   //
@@ -159,6 +169,18 @@ export const useInstructorStore = defineStore('instructor', () => {
 
   function deleteCourseLesson(payload: { courseId: number; chapterId: number; lessonId: number }) {
     return DeleteCourseLessonRequest(payload)
+  }
+
+  function publishCourseLesson(payload: { courseId: number; chapterId: number; lessonId: number }) {
+    return PublishCourseLessonRequest(payload)
+  }
+
+  function unPublishCourseLesson(payload: {
+    courseId: number
+    chapterId: number
+    lessonId: number
+  }) {
+    return UnPublishCourseLessonRequest(payload)
   }
 
   //
@@ -230,16 +252,6 @@ export const useInstructorStore = defineStore('instructor', () => {
     return UnpublishCourseFAQQuestionRequest(payload)
   }
 
-  //
-  // 課程上下架
-  //
-  function coursePublish(payload: { courseId: number }) {
-    return PublishCourseRequest(payload)
-  }
-  function courseUnpublish(payload: { courseId: number }) {
-    return UnpublishCourseRequest(payload)
-  }
-
   return {
     courses,
     course,
@@ -253,6 +265,8 @@ export const useInstructorStore = defineStore('instructor', () => {
     addCourse,
     getCourse,
     deleteCourse,
+    coursePublish,
+    courseUnpublish,
 
     getCourseChapters,
     getCourseChapter,
@@ -264,6 +278,8 @@ export const useInstructorStore = defineStore('instructor', () => {
     addCourseLesson,
     editCourseLesson,
     deleteCourseLesson,
+    publishCourseLesson,
+    unPublishCourseLesson,
 
     getCourseFAQs,
     addCourseFAQCategory,
@@ -273,9 +289,6 @@ export const useInstructorStore = defineStore('instructor', () => {
     editCourseFAQQuestion,
     deleteCourseFAQQuestion,
     FAQQuestionPublish,
-    FAQQuestionUnpublish,
-
-    coursePublish,
-    courseUnpublish
+    FAQQuestionUnpublish
   }
 })

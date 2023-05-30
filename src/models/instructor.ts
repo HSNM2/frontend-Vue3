@@ -29,6 +29,20 @@ export function DeleteCourseRequest(params: { id: number }) {
   })
 }
 
+export function PublishCourseRequest(params: { courseId: number }) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/inStack`,
+    method: 'post'
+  })
+}
+
+export function UnpublishCourseRequest(params: { courseId: number }) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/offStack`,
+    method: 'post'
+  })
+}
+
 export function CourseChaptersRequest(params: { courseId: number }) {
   return request({
     url: `/api/courseProvider/course/${params.courseId}/chapter`,
@@ -121,6 +135,28 @@ export function DeleteCourseLessonRequest(params: {
   return request({
     url: `api/courseProvider/course/${params.courseId}/chapter/${params.chapterId}/lesson/${params.lessonId}`,
     method: 'delete'
+  })
+}
+
+export function PublishCourseLessonRequest(params: {
+  courseId: number
+  chapterId: number
+  lessonId: number
+}) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/chapter/${params.chapterId}/lesson/${params.lessonId}/inStack`,
+    method: 'post'
+  })
+}
+
+export function UnPublishCourseLessonRequest(params: {
+  courseId: number
+  chapterId: number
+  lessonId: number
+}) {
+  return request({
+    url: `api/courseProvider/course/${params.courseId}/chapter/${params.chapterId}/lesson/${params.lessonId}/offStack`,
+    method: 'post'
   })
 }
 
@@ -224,20 +260,6 @@ export function UnpublishCourseFAQQuestionRequest(params: {
 }) {
   return request({
     url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}/question/${params.questionId}/offStack`,
-    method: 'post'
-  })
-}
-
-export function PublishCourseRequest(params: { courseId: number }) {
-  return request({
-    url: `api/courseProvider/course/${params.courseId}/inStack`,
-    method: 'post'
-  })
-}
-
-export function UnpublishCourseRequest(params: { courseId: number }) {
-  return request({
-    url: `api/courseProvider/course/${params.courseId}/offStack`,
     method: 'post'
   })
 }
