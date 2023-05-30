@@ -172,14 +172,14 @@ export const useInstructorStore = defineStore('instructor', () => {
     })
   }
 
-  function addCourseFAQCategory(payload: { courseId: number; categoryTitle: string }) {
+  function addCourseFAQCategory(payload: { courseId: number; category: string }) {
     return AddCourseFAQCategoryRequest(payload)
   }
 
   function editCourseFAQCategory(payload: {
     courseId: number
     categoryId: number
-    editedCategoryTitle: string
+    editedCategory: string
   }) {
     return editCourseFAQCategoryRequest(payload)
   }
@@ -191,6 +191,7 @@ export const useInstructorStore = defineStore('instructor', () => {
   function addCourseFAQQuestion(payload: {
     courseId: number
     categoryId: number
+    questionTitle: string
     questionContent: string
   }) {
     return AddCourseFAQQuestionRequest(payload)
@@ -200,6 +201,7 @@ export const useInstructorStore = defineStore('instructor', () => {
     courseId: number
     categoryId: number
     questionId: number
+    editedQuestionTitle: string
     editedQuestionContent: string
   }) {
     return EditCourseFAQQuestionRequest(payload)

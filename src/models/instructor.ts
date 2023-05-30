@@ -131,12 +131,12 @@ export function CourseFAQsRequest(params: { courseId: number }) {
   })
 }
 
-export function AddCourseFAQCategoryRequest(params: { courseId: number; categoryTitle: string }) {
+export function AddCourseFAQCategoryRequest(params: { courseId: number; category: string }) {
   return request({
     url: `/api/courseProvider/course/${params.courseId}/faq`,
     method: 'post',
     data: {
-      title: params.categoryTitle
+      title: params.category
     }
   })
 }
@@ -144,13 +144,13 @@ export function AddCourseFAQCategoryRequest(params: { courseId: number; category
 export function editCourseFAQCategoryRequest(params: {
   courseId: number
   categoryId: number
-  editedCategoryTitle: string
+  editedCategory: string
 }) {
   return request({
     url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}`,
     method: 'patch',
     data: {
-      title: params.editedCategoryTitle
+      title: params.editedCategory
     }
   })
 }
@@ -165,13 +165,14 @@ export function deleteCourseFAQCategoryRequest(params: { courseId: number; categ
 export function AddCourseFAQQuestionRequest(params: {
   courseId: number
   categoryId: number
+  questionTitle: string
   questionContent: string
 }) {
   return request({
     url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}/question`,
     method: 'post',
     data: {
-      title: '',
+      title: params.questionTitle,
       content: params.questionContent
     }
   })
@@ -181,13 +182,14 @@ export function EditCourseFAQQuestionRequest(params: {
   courseId: number
   categoryId: number
   questionId: number
+  editedQuestionTitle: string
   editedQuestionContent: string
 }) {
   return request({
     url: `/api/courseProvider/course/${params.courseId}/faq/${params.categoryId}/question/${params.questionId}`,
     method: 'patch',
     data: {
-      title: '',
+      title: params.editedQuestionTitle,
       content: params.editedQuestionContent
     }
   })

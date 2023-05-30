@@ -79,7 +79,7 @@
                   <div class="flex items-center justify-between p-4">
                     <div class="flex items-center">
                       <i class="material-icons js-draggable me-2 cursor-row-resize">sort</i>
-                      <span class="me-3">{{ question.content }}</span
+                      <span class="me-3">{{ question.title }}</span
                       ><span
                         :class="[question.publish ? 'text-emerald-700' : 'text-neutral-600']"
                         class="max-h-8 min-w-19 rounded-full border bg-neutral-50 px-4 py-1 text-sm"
@@ -90,7 +90,12 @@
                       <i
                         class="material-icons cursor-pointer pr-4 text-neutral-400"
                         @click="
-                          editCourseFAQQuestionModalHandle(faq.id, question.id, question.content)
+                          editCourseFAQQuestionModalHandle(
+                            faq.id,
+                            question.id,
+                            question.title,
+                            question.content
+                          )
                         "
                         >edit</i
                       >
@@ -140,64 +145,106 @@
     </VForm>
   </CommonModal>
 
-  <!--新增問題內容 Modal-->
-  <CommonModal v-model="showAddQuestionModal">
-    <template v-slot:title>新增問題內容</template>
-    <VForm ref="addQuestionForm" v-slot="{ meta }" @submit="addCourseFAQQuestionSubmit">
-      <div class="mb-6">
-        <VField
-          name="question"
-          type="text"
-          rules="required"
-          v-model="question"
-          v-slot="{ field, errors, meta }"
-          label="問題內容"
-        >
-          <textarea
-            id="question"
-            class="form-control"
-            placeholder="輸入問題內容"
-            v-bind="field"
-            :class="{ invalid: meta.validated && !!errors.length }"
-          ></textarea>
-          <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="question" />
-        </VField>
+  <!--問題內容 Modal-->
+  <CommonModal v-model="showQuestionInputModal">
+    <template v-slot:title>{{ isQuestionAdded ? '新增問題' : '編輯問題' }}</template>
+    <VForm ref="questionInputForm" v-slot="{ meta }" @submit="questionSubmitHandle">
+      <div v-if="isQuestionAdded">
+        <div class="mb-2">
+          <VField
+            name="questionTitle"
+            type="text"
+            rules="required"
+            v-model="questionTitle"
+            v-slot="{ field, errors, meta }"
+            label="問題標題"
+          >
+            <label for="questionTitle">標題</label>
+            <input
+              id="questionTitle"
+              class="form-control"
+              placeholder="輸入問題標題"
+              v-bind="field"
+              :class="{ invalid: meta.validated && !!errors.length }"
+            />
+            <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="title" />
+          </VField>
+        </div>
+        <div class="mb-6">
+          <VField
+            name="questionContent"
+            type="text"
+            rules="required"
+            v-model="questionContent"
+            v-slot="{ field, errors, meta }"
+            label="問題內容"
+          >
+            <label for="questionContent">內容</label>
+            <textarea
+              id="questionContent"
+              class="form-control"
+              placeholder="輸入問題內容"
+              v-bind="field"
+              :class="{ invalid: meta.validated && !!errors.length }"
+            ></textarea>
+            <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="question" />
+          </VField>
+        </div>
       </div>
-      <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
-        新增
-      </button>
-    </VForm>
-  </CommonModal>
+      <div v-else>
+        <div class="mb-2">
+          <VField
+            name="questionEditedTitle"
+            type="text"
+            rules="required"
+            v-model="questionEditedTitle"
+            v-slot="{ field, errors, meta }"
+            label="問題標題"
+          >
+            <label for="questionEditedTitle">標題</label>
+            <input
+              id="questionEditedTitle"
+              class="form-control"
+              placeholder="輸入問題標題"
+              v-bind="field"
+              :class="{ invalid: meta.validated && !!errors.length }"
+            />
+            <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="title" />
+          </VField>
+        </div>
+        <div class="mb-6">
+          <VField
+            name="questionEditedContent"
+            type="text"
+            rules="required"
+            v-model="questionEditedContent"
+            v-slot="{ field, errors, meta }"
+            label="編輯問題內容"
+          >
+            <label for="questionEditedContent">內容</label>
+            <textarea
+              id="questionEditedContent"
+              class="form-control"
+              placeholder="輸入問題內容"
+              v-bind="field"
+              :class="{ invalid: meta.validated && !!errors.length }"
+            ></textarea>
 
-  <!--編輯問題內容 Modal-->
-  <CommonModal v-model="showEditQuestionModal">
-    <template v-slot:title>編輯問題內容</template>
-    <VForm ref="editQuestionForm" v-slot="{ meta }" @submit="editCourseFAQQuestionSubmit">
-      <div class="mb-6">
-        <VField
-          name="questionEdited"
-          type="text"
-          rules="required"
-          v-model="questionEditedContent"
-          v-slot="{ field, errors, meta }"
-          label="編輯問題內容"
-        >
-          <textarea
-            id="questionEdited"
-            class="form-control"
-            placeholder="輸入問題內容"
-            v-bind="field"
-            :class="{ invalid: meta.validated && !!errors.length }"
-          ></textarea>
-
-          <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="question" />
-        </VField>
+            <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="question" />
+          </VField>
+        </div>
       </div>
-      <div class="flex justify-between">
+      <div class="flex">
         <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
-          編輯
+          {{ isQuestionAdded ? '新增' : '編輯' }}
         </button>
-        <button class="ms-auto text-red-500" @click="deleteCourseFAQQuestionSubmit">刪除</button>
+        <button
+          v-if="!isQuestionAdded"
+          class="ms-auto text-red-500"
+          @click="deleteCourseFAQQuestionSubmit"
+        >
+          刪除
+        </button>
       </div>
     </VForm>
   </CommonModal>
@@ -244,16 +291,13 @@ watch(showAddFAQCategoryModal, () => {
 })
 
 function addCourseFAQCategoryHandle() {
-  addCourseFAQCategory({ courseId: courseId.value, categoryTitle: categoryTitle.value }).then(
-    () => {
-      getCourseFAQs({ courseId: courseId.value })
-      showAddFAQCategoryModal.value = false
-    }
-  )
+  addCourseFAQCategory({ courseId: courseId.value, category: categoryTitle.value }).then(() => {
+    getCourseFAQs({ courseId: courseId.value })
+    showAddFAQCategoryModal.value = false
+  })
 }
 
 //編輯類別功能
-
 const categoryIdx = ref<number>(0)
 const categoryEditedIdx = ref<number>(0)
 const categoryEditedContent = ref<string>('')
@@ -266,7 +310,7 @@ function editCourseFAQCategorySubmit() {
   editCourseFAQCategory({
     courseId: courseId.value,
     categoryId: categoryEditedIdx.value,
-    editedCategoryTitle: categoryEditedContent.value
+    editedCategory: categoryEditedContent.value
   }).then(() => {
     categoryEditedIdx.value = 0
     categoryEditedContent.value = ''
@@ -289,45 +333,65 @@ function deleteCourseFAQCategoryHandle(idx: number) {
   })
 }
 
-// 新增問題 modal
-const showAddQuestionModal = ref(false)
-const addQuestionForm = ref<FormContext | null>(null)
-const question = ref<string>('') // 新增問題
+const isQuestionAdded = ref<boolean>(true)
 
-watch(showAddQuestionModal, () => {
-  question.value = ''
+// 新增問題 modal
+const showQuestionInputModal = ref(false)
+const questionForm = ref<FormContext | null>(null)
+const questionTitle = ref<string>('')
+const questionContent = ref<string>('') // 新增問題
+
+watch(showQuestionInputModal, () => {
+  questionContent.value = ''
   nextTick(() => {
-    addQuestionForm.value?.resetForm()
+    questionForm.value?.resetForm()
   })
 })
 
+function questionSubmitHandle() {
+  if (isQuestionAdded.value) {
+    addCourseFAQQuestionSubmit()
+  } else {
+    editCourseFAQQuestionSubmit()
+  }
+}
+
 function addCourseFAQQuestionHandle(id: number) {
+  isQuestionAdded.value = true
   categoryIdx.value = id
-  showAddQuestionModal.value = true
+  showQuestionInputModal.value = true
 }
 
 function addCourseFAQQuestionSubmit() {
   addCourseFAQQuestion({
     courseId: courseId.value,
     categoryId: categoryIdx.value,
-    questionContent: question.value
+    questionTitle: questionTitle.value,
+    questionContent: questionContent.value
   }).then(() => {
     getCourseFAQs({ courseId: courseId.value })
     categoryEditedIdx.value = 0
-    showAddQuestionModal.value = false
+    showQuestionInputModal.value = false
   })
 }
 
 //編輯內容 modal
-const showEditQuestionModal = ref(false)
 const questionEditedIdx = ref<number>(0)
+const questionEditedTitle = ref<string>('')
 const questionEditedContent = ref<string>('')
 
-function editCourseFAQQuestionModalHandle(categoryId: number, questionId: number, content: string) {
+function editCourseFAQQuestionModalHandle(
+  categoryId: number,
+  questionId: number,
+  title: string,
+  content: string
+) {
+  isQuestionAdded.value = false
   categoryIdx.value = categoryId
   questionEditedIdx.value = questionId
+  questionEditedTitle.value = title
   questionEditedContent.value = content
-  showEditQuestionModal.value = true
+  showQuestionInputModal.value = true
 }
 
 function editCourseFAQQuestionSubmit() {
@@ -335,13 +399,14 @@ function editCourseFAQQuestionSubmit() {
     courseId: courseId.value,
     categoryId: categoryIdx.value,
     questionId: questionEditedIdx.value,
+    editedQuestionTitle: questionEditedTitle.value,
     editedQuestionContent: questionEditedContent.value
   }).then(() => {
     getCourseFAQs({ courseId: courseId.value })
     categoryIdx.value = 0
     questionEditedIdx.value = 0
     questionEditedContent.value = ''
-    showEditQuestionModal.value = false
+    showQuestionInputModal.value = false
   })
 }
 
@@ -355,7 +420,7 @@ function deleteCourseFAQQuestionSubmit() {
     getCourseFAQs({ courseId: courseId.value })
     categoryIdx.value = 0
     questionEditedIdx.value = 0
-    showEditQuestionModal.value = false
+    showQuestionInputModal.value = false
   })
 }
 
