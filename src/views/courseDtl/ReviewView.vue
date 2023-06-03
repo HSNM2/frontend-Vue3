@@ -161,7 +161,15 @@ import { ref } from 'vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ReviewModal from '@/components/ReviewModal.vue'
 const props = defineProps({
-  isLogin: { type: Boolean }
+  isLogin: { type: Boolean },
+  user: {
+    type: Object,
+    required: true
+  },
+  courseDetail: {
+    type: Object,
+    required: true
+  }
 })
 
 const minVal = ref(0)

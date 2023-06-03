@@ -7,6 +7,29 @@ export function GetCoursesListRequest(query: string) {
   })
 }
 
+export function GetCourseRequest(courseID: number) {
+  return request({
+    url: `/api/course/${courseID}`,
+    method: 'get'
+  })
+}
+
+export function InquiryRequest(courseID: number, data: object) {
+  return request({
+    url: `/api/course/${courseID}/preClassInquiry`,
+    method: 'post',
+    data: data
+  })
+}
+
+export function InquiryResponseRequest(courseID: number, inquiryID: number, data: object) {
+  return request({
+    url: `/api/course/${courseID}/preClassInquiry/${inquiryID}`,
+    method: 'post',
+    data: data
+  })
+}
+
 export function GetCourseTagRequest() {
   return request({
     url: `/api/user/tag/userFavorite`,

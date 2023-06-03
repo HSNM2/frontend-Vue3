@@ -32,114 +32,125 @@
           <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
-                <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
-                <p class="">漂亮阿姨</p>
+                <img
+                  class="rounded-full"
+                  :src="
+                    user?.avatarImagePath
+                      ? user?.avatarImagePath
+                      : 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
+                  "
+                  alt=""
+                />
+                <p class="">{{ user.nickName ?? user.name }}</p>
               </div>
-              <p class="text-sm text-primary-4">2023/02/07 10:04</p>
             </div>
           </div>
           <div>
             <textarea
-              name=""
-              id=""
+              v-model="inquiryValue"
               class="w-full rounded-2.5xl border border-neutral-100 px-4 py-4 md:px-5"
               placeholder="對本課程有疑問？請盡情發問吧！"
             ></textarea>
           </div>
           <div class="mt-2 flex justify-end">
-            <button type="button" class="btn-primary w-[112px]">送出</button>
+            <button
+              type="button"
+              class="btn-primary w-[112px]"
+              :disabled="inquiryValue === ''"
+              @click="sendInquiryAction(inquiryValue)"
+            >
+              送出
+            </button>
           </div>
         </div>
       </template>
 
-      <div class="mt-4 rounded-2.5xl border border-neutral-200 p-2 md:p-4">
-        <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-x-4">
-              <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
-              <p class="">漂亮阿姨</p>
-            </div>
-            <p class="text-sm text-primary-4">2023/02/07 10:04</p>
-          </div>
-          <div class="ml-14 mt-4">
-            <p>老師好，請問馬卡龍算是餅乾？</p>
-          </div>
-        </div>
-        <div class="rounded-2.5xl bg-secondary-2/50 px-4 py-4 md:px-5 md:py-6">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-x-4">
-              <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
-              <p class="">王小明</p>
-              <p class="rounded-[15px] bg-neutral-50 px-2 text-xs text-primary-5">講師</p>
-            </div>
-            <p class="text-sm text-primary-4">2023/02/07 10:04</p>
-          </div>
-          <div class="ml-14 mt-4">
-            <p>
-              杏仁餅乾是以杏仁粉和糖粉為主要原料，而馬卡龍則是在加入杏仁粉和糖粉之外，還加入了蛋白和糖漿，因此馬卡龍比起杏仁餅乾更具有嚼勁和口感。
-            </p>
-          </div>
-        </div>
-        <div class="rounded-2.5xl bg-neutral-100 px-4 py-4 md:px-5 md:py-6">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-x-4">
-              <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
-              <p class="">漂亮阿姨</p>
-            </div>
-            <p class="text-sm text-primary-4">2023/02/07 10:04</p>
-          </div>
-          <div class="ml-14 mt-4">
-            <p>謝謝回覆</p>
-          </div>
-        </div>
-        <template v-if="isLogin">
-          <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-x-4">
-                <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
-                <p class="">漂亮阿姨</p>
-              </div>
-              <p class="text-sm text-primary-4">2023/02/07 10:04</p>
-            </div>
-          </div>
+      <template v-for="inquirie in courseDetail.data.inquiries" :key="inquirie.id">
+        <div class="mt-4 rounded-2.5xl border border-neutral-200 p-2 md:p-4">
           <div>
-            <textarea
-              name=""
-              id=""
-              class="w-full rounded-2.5xl border border-neutral-100 px-4 py-4 md:px-5"
-              placeholder="輸入內容..."
-            ></textarea>
-          </div>
-          <div class="mt-2 flex justify-end">
-            <button type="button" class="btn-primary w-[112px]">送出</button>
-          </div>
-        </template>
-      </div>
-      <div class="mt-4 rounded-2.5xl border border-neutral-200 p-2 md:p-4">
-        <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-x-4">
-              <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
-              <p class="">漂亮阿姨</p>
-            </div>
-            <p class="text-sm text-primary-4">2023/02/07 10:04</p>
-          </div>
-          <div class="ml-14 mt-4">
-            <p>老師好，請問馬卡龍算是餅乾？</p>
-          </div>
-        </div>
-        <div v-if="isLogin === true" class="cursor-pointer p-1">
-          <div class="flex items-center justify-end">
-            <button type="button" class="btn-secondary w-[112px] px-0">
-              <div class="flex justify-center">
-                <span class="material-icons text-neutral-900"> reply </span>
-                <span class="text-neutral-900">回覆</span>
+            <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-x-4">
+                  <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
+                  <p class="">{{ inquirie.name }}</p>
+                </div>
+                <p class="text-sm text-primary-4">沒有時間</p>
               </div>
-            </button>
+              <div class="ml-14 mt-4">
+                <p>{{ inquirie.content }}</p>
+              </div>
+            </div>
+            <template v-for="(response, index) in inquirie.responses" :key="response.id">
+              <div
+                class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6"
+                :class="Number.isInteger(index / 2) ? 'bg-secondary-2/50' : 'bg-neutral-100'"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-x-4">
+                    <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
+                    <p class="">{{ response.name }}</p>
+                    <p class="rounded-[15px] bg-neutral-50 px-2 text-xs text-primary-5">沒有身分</p>
+                  </div>
+                  <p class="text-sm text-primary-4">{{ response.date.slice(0, 10) }}</p>
+                </div>
+                <div class="ml-14 mt-4">
+                  <p>
+                    {{ response.content }}
+                  </p>
+                </div>
+              </div>
+            </template>
+            <div v-if="inquirie.isResponse === false" class="mt-4 flex items-center justify-end">
+              <button
+                type="button"
+                class="btn-secondary w-[112px] px-0"
+                @click="replyAction(inquirie.id)"
+              >
+                <div class="flex justify-center">
+                  <span class="material-icons text-neutral-900"> reply </span>
+                  <span class="text-neutral-900">回覆</span>
+                </div>
+              </button>
+            </div>
+            <template v-else>
+              <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-x-4">
+                    <img
+                      class="rounded-full"
+                      :src="
+                        user?.avatarImagePath
+                          ? user?.avatarImagePath
+                          : 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
+                      "
+                    />
+                    <p class="">{{ user.nickName ?? user.name }}</p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <textarea
+                  v-model="inquirie.responseValue"
+                  class="w-full rounded-2.5xl border border-neutral-100 px-4 py-4 md:px-5"
+                  placeholder="輸入內容..."
+                ></textarea>
+              </div>
+              <div class="mt-2 flex justify-end">
+                <button
+                  type="button"
+                  class="btn-primary w-[112px]"
+                  :disabled="inquirie.responseValue === ''"
+                  @click="sendResponseAction(inquirie.id, inquirie.responseValue)"
+                >
+                  送出
+                </button>
+              </div>
+            </template>
           </div>
         </div>
-      </div>
+      </template>
     </div>
+
     <div v-if="isLogin === false" class="-mt-14 hidden lg:col-span-3 lg:block">
       <div
         class="flex flex-col items-center gap-y-4 rounded-2.5xl border border-neutral-200 bg-primary-1 py-8"
@@ -153,19 +164,73 @@
   <AuthModal />
 </template>
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
+
 import { useAuthStore } from '@/stores/auth'
 import AuthModal from '@/components/AuthModal.vue'
+import { InquiryRequest, InquiryResponseRequest } from '@/models/course'
+import useErrorHandler from '@/composables/useErrorHandler'
 
+const route = useRoute()
+
+const emit = defineEmits(['update-is-response', 'get-data'])
 const props = defineProps({
-  isLogin: { type: Boolean, required: true }
+  isLogin: {
+    type: Boolean,
+    required: true
+  },
+  user: {
+    type: Object,
+    required: true
+  },
+  courseDetail: {
+    type: Object,
+    required: true
+  }
 })
+
+const { showError } = useErrorHandler()
+
 const auth = useAuthStore()
 const { authModal, authModalType } = storeToRefs(auth)
 
-function openAuthModal(type = 'login') {
+const inquiryValue = ref('')
+
+const replyAction = (id: string) => {
+  if (props.isLogin === false) openAuthModal()
+  else emit('update-is-response', id)
+}
+
+const openAuthModal = (type = 'login') => {
   authModal.value = true
   authModalType.value = type
+}
+
+const sendInquiryAction = (content: string) => {
+  let courseID = Number(route.params.id)
+  let data = { content }
+  InquiryRequest(courseID, data)
+    .then((res) => {
+      inquiryValue.value = ''
+      emit('get-data')
+    })
+    .catch((err) => {
+      showError(err)
+    })
+}
+
+const sendResponseAction = (inquiryID: number, content: string) => {
+  let courseID = Number(route.params.id)
+  let data = { content }
+  InquiryResponseRequest(courseID, inquiryID, data)
+    .then((res) => {
+      emit('get-data')
+    })
+    .catch((err) => {
+      showError(err)
+    })
 }
 </script>
 <style lang=""></style>

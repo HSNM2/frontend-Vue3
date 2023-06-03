@@ -7,92 +7,34 @@
       課程大綱
     </h4>
     <ul>
-      <li>
+      <li v-for="chapter in courseDetail.data.chapters" :key="chapter.id">
         <div class="mb-4">
           <div class="flex items-center justify-between gap-x-1 bg-primary-3/50 px-2">
             <div class="flex items-center">
               <span class="material-icons text-2xl"> list </span>
-              <p class="text-lg font-bold">第一章 - 瞭解法式馬卡龍</p>
+              <p class="text-lg font-bold">{{ chapter.title }}</p>
             </div>
             <span class="material-icons"> expand_less </span>
           </div>
           <div class="px-2 py-4">
-            <div class="flex items-center py-2">
-              <span class="material-icons text-lg"> play_arrow </span>
-              <p>介紹法式馬卡龍的歷史和起源</p>
-            </div>
-            <div class="flex items-center py-2">
-              <span class="material-icons text-lg"> play_arrow </span>
-              <p>認識馬卡龍的外觀、口感和成分</p>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="mb-4">
-          <div class="flex items-center justify-between gap-x-1 bg-primary-3/50 px-2">
-            <div class="flex items-center">
-              <span class="material-icons text-2xl"> list </span>
-              <p class="text-lg font-bold">第一章 - 瞭解法式馬卡龍</p>
-            </div>
-            <span class="material-icons"> expand_less </span>
-          </div>
-          <div class="px-2 py-4">
-            <div class="flex items-center py-2">
-              <span class="material-icons text-lg"> play_arrow </span>
-              <p>介紹法式馬卡龍的歷史和起源</p>
-            </div>
-            <div class="flex items-center py-2">
-              <span class="material-icons text-lg"> play_arrow </span>
-              <p>認識馬卡龍的外觀、口感和成分</p>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="mb-4">
-          <div class="flex items-center justify-between gap-x-1 bg-primary-3/50 px-2">
-            <div class="flex items-center">
-              <span class="material-icons text-2xl"> list </span>
-              <p class="text-lg font-bold">第一章 - 瞭解法式馬卡龍</p>
-            </div>
-            <span class="material-icons"> expand_less </span>
-          </div>
-          <div class="px-2 py-4">
-            <div class="flex items-center py-2">
-              <span class="material-icons text-lg"> play_arrow </span>
-              <p>介紹法式馬卡龍的歷史和起源</p>
-            </div>
-            <div class="flex items-center py-2">
-              <span class="material-icons text-lg"> play_arrow </span>
-              <p>認識馬卡龍的外觀、口感和成分</p>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="mb-4">
-          <div class="flex items-center justify-between gap-x-1 bg-primary-3/50 px-2">
-            <div class="flex items-center">
-              <span class="material-icons text-2xl"> list </span>
-              <p class="text-lg font-bold">第一章 - 瞭解法式馬卡龍</p>
-            </div>
-            <span class="material-icons"> expand_less </span>
-          </div>
-          <div class="px-2 py-4">
-            <div class="flex items-center py-2">
-              <span class="material-icons text-lg"> play_arrow </span>
-              <p>介紹法式馬卡龍的歷史和起源</p>
-            </div>
-            <div class="flex items-center py-2">
-              <span class="material-icons text-lg"> play_arrow </span>
-              <p>認識馬卡龍的外觀、口感和成分</p>
-            </div>
+            <template v-for="lesson in chapter.lessons" :key="lesson.id">
+              <div class="flex items-center py-2">
+                <span class="material-icons text-lg"> play_arrow </span>
+                <p>{{ lesson.title }}</p>
+              </div>
+            </template>
           </div>
         </div>
       </li>
     </ul>
   </div>
 </template>
-
+<script setup lang="ts">
+const props = defineProps({
+  courseDetail: {
+    type: Object,
+    required: true
+  }
+})
+</script>
 <style lang=""></style>

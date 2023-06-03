@@ -91,8 +91,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 
+import { useAuthStore } from '@/stores/auth'
 import { GetCoursesListRequest, GetCourseTagRequest, UseCourseTagRequest } from '@/models/course'
 import useErrorHandler from '@/composables/useErrorHandler'
 
@@ -126,6 +128,10 @@ interface Course {
 
 const { showError } = useErrorHandler()
 
+const auth = useAuthStore()
+const { authModal, authModalType, user } = storeToRefs(auth)
+const isLogin = ref(user.value !== null)
+
 const selectCoursesList = [
   { value: '', label: '全部課程' },
   { value: 'rate', label: '最高評價' },
@@ -134,7 +140,6 @@ const selectCoursesList = [
 ]
 
 const courseList = ref<CourseList>({ page: 1, totalPages: 1, success: false, data: [] })
-const tagList = ref([])
 const currentPage = ref(1)
 
 const getDataList = () => {
@@ -150,6 +155,13 @@ const getDataList = () => {
     })
 }
 
+//#region tag需整理
+const openAuthModal = (type = 'login') => {
+  authModal.value = true
+  authModalType.value = type
+}
+
+const tagList = ref([])
 const getTagList = () => {
   GetCourseTagRequest()
     .then((res) => {
@@ -163,26 +175,26 @@ const getTagList = () => {
 }
 
 const handleCourseTag = (courseID: number) => {
-  let method = judgeTags(courseID) ? 'delete' : 'post'
-  UseCourseTagRequest(method, courseID)
-    .then((res) => {
-      getTagList()
-    })
-    .catch((err) => {
-      showError(err)
-    })
-}
-
-const setPage = (page: number) => {
-  if (page <= 0 || page >= courseList.value.totalPages) return
-  currentPage.value = page
-  getDataList()
+  if (isLogin.value === false) {
+    openAuthModal()
+  } else {
+    let method = judgeTags(courseID) ? 'delete' : 'post'
+    UseCourseTagRequest(method, courseID)
+      .then((res) => {
+        getTagList()
+      })
+      .catch((err) => {
+        showError(err)
+      })
+  }
 }
 
 const judgeTags = (courseID: number) => {
   return tagList.value.some((tag) => Number(tag) === courseID)
 }
+//#endregion
 
+//#region 星星
 const getStar = (score: number, index: number) => {
   if (index + 1 <= score) {
     return 'star'
@@ -190,9 +202,27 @@ const getStar = (score: number, index: number) => {
     return 'star_border'
   }
 }
+//#endregion
+
+const setPage = (page: number) => {
+  if (page <= 0 || page >= courseList.value.totalPages) return
+  currentPage.value = page
+  getDataList()
+}
+
+const checkLogin = () => {
+  if (user.value !== null) {
+    isLogin.value = true
+    getTagList()
+  } else isLogin.value = false
+}
+
+watch(user, () => {
+  checkLogin()
+})
 
 onMounted(() => {
   getDataList()
-  getTagList()
+  checkLogin()
 })
 </script>
