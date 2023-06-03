@@ -14,9 +14,14 @@
               {{ courseDetail.data.course.subTitle }}
             </p>
             <div class="flex gap-x-2 pb-3">
-              <!-- tag ?? -->
-              <p class="rounded-[15px] bg-secondary-2 px-3 py-1 text-sm">＃擠花技巧</p>
-              <p class="rounded-[15px] bg-secondary-2 px-3 py-1 text-sm">＃烤製方法</p>
+              <template
+                v-for="(tag, index) in getcourseTags(courseDetail.data.course.tag)"
+                :key="index"
+              >
+                <p class="rounded-[15px] bg-secondary-2 px-3 py-1 text-sm">
+                  {{ `#${tag}` }}
+                </p>
+              </template>
             </div>
             <div class="flex items-center lg:pb-3">
               <template v-for="(star, starIndex) in 5" :key="starIndex">
@@ -30,13 +35,21 @@
             </div>
 
             <p class="hidden pb-5 text-2xl font-bold text-primary-4 md:block">
-              NT${{ courseDetail.data.course.price || 0 }}
+              NT${{ courseDetail.data.course.originPrice }}
             </p>
             <div class="flex items-center gap-x-5 pb-6">
-              <button type="button" class="btn-primary hidden md:block">立即購買</button>
-              <span class="material-icons hidden cursor-pointer text-primary-6 md:block">
-                shopping_cart
-              </span>
+              <template v-if="hasAddCart === false">
+                <button type="button" class="btn-primary hidden md:block">立即購買</button>
+                <span
+                  class="material-icons hidden cursor-pointer text-primary-6 md:block"
+                  @click="handleCartAction()"
+                >
+                  shopping_cart
+                </span>
+              </template>
+              <button v-else type="button" class="btn-secondary hidden md:block">
+                已加入購物車
+              </button>
               <span class="material-icons cursor-pointer text-primary-6"> share </span>
               <span
                 class="material-icons cursor-pointer text-2xl text-primary-6"
@@ -84,15 +97,18 @@
     <div class="sticky bottom-0 z-10 w-full md:hidden">
       <div class="flex items-center justify-between gap-x-5 bg-secondary-1 px-3 py-[15px]">
         <p class="text-2xl font-bold text-primary-4">NT$23,000</p>
-        <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
-        <button type="button" class="btn-primary w-full px-2">立即購買</button>
+        <template v-if="hasAddCart === false">
+          <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
+          <button type="button" class="btn-primary w-full px-2">立即購買</button>
+        </template>
+        <button v-else type="button" class="btn-primary w-full px-2">已加入購物車</button>
       </div>
     </div>
   </teleport>
 </template>
 
 <script setup lang="ts">
-import { shallowRef, ref, watch, onMounted } from 'vue'
+import { shallowRef, ref, watch, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
@@ -131,8 +147,8 @@ interface Course {
   link: string
   subTitle: string
   description: string
-  courseStatus: string // 待確認
-  type: string // 待確認
+  courseStatus: string // 1: 公開 / 2: 非公開
+  type: string
   category: string // 待確認
   provider: string
   buyers: number
@@ -207,9 +223,9 @@ const { authModal, authModalType, user } = storeToRefs(auth)
 const isLogin = ref(user.value !== null)
 
 const courseDetail = ref<CourseDetail | null>(null)
+const courseID = Number(route.params.id)
 
 const getData = () => {
-  let courseID = Number(route.params.id)
   GetCourseRequest(courseID)
     .then((res) => {
       courseDetail.value = res.data
@@ -225,7 +241,7 @@ const getData = () => {
     })
 }
 
-//#region tag需整理
+//#region 書籤 需整理
 const openAuthModal = (type = 'login') => {
   authModal.value = true
   authModalType.value = type
@@ -275,6 +291,41 @@ const getStar = (score: string, index: number) => {
 }
 //#endregion
 
+// #region Cart
+const hasAddCart = ref(false)
+const handleCartAction = () => {
+  if (isLogin.value === false) {
+    openAuthModal()
+  } else {
+    let courseCart = localStorage.getItem('sweetTimeCart')
+    if (courseCart !== null && hasAddCart.value === false) {
+      let cartList = JSON.parse(courseCart)
+      storageCart(cartList)
+    } else {
+      let cartList: number[] = []
+      storageCart(cartList)
+    }
+  }
+}
+
+const storageCart = (cartList: number[]) => {
+  cartList.push(courseID)
+  let cartListString = JSON.stringify(cartList)
+  localStorage.setItem('sweetTimeCart', cartListString)
+  getCartInfo()
+}
+
+const getCartInfo = () => {
+  let courseCart = localStorage.getItem('sweetTimeCart')
+  if (isLogin.value === true) {
+    if (courseCart !== null) {
+      let cartList = JSON.parse(courseCart)
+      hasAddCart.value = cartList.some((id: number) => id === courseID)
+    }
+  }
+}
+
+// #endregion
 const tabs = [
   { name: '課程介紹', comp: IntroduceView, style: '' },
   { name: '課程大綱', comp: OutlineView, style: '' },
@@ -308,13 +359,21 @@ const checkLogin = () => {
   } else isLogin.value = false
 }
 
+const getcourseTags = computed(() => {
+  return (tags: string) => {
+    return tags.split(',')
+  }
+})
+
 watch(user, () => {
   checkLogin()
+  getCartInfo()
 })
 
 onMounted(() => {
   getData()
   checkLogin()
+  getCartInfo()
 })
 </script>
 

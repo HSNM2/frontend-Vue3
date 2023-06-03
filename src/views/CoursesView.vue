@@ -57,7 +57,9 @@
                           `(${item.rating.countRating})`
                         }}</span>
                       </div>
-                      <span class="text-lg font-bold text-primary-4">NT${{ item.price || 0 }}</span>
+                      <span class="text-lg font-bold text-primary-4"
+                        >NT${{ item.originPrice }}</span
+                      >
                     </div>
                   </div>
                 </div>
