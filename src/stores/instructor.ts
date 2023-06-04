@@ -5,6 +5,7 @@ import {
   CoursesRequest,
   AddCourseRequest,
   CourseRequest,
+  CourseInfoEditRequest,
   DeleteCourseRequest,
   PublishCourseRequest,
   UnpublishCourseRequest,
@@ -29,10 +30,25 @@ import {
   UnpublishCourseFAQQuestionRequest
 } from '@/models/instructor'
 
-interface Course {
+interface Courses {
   id: number
   title: string
   isPublish: boolean
+}
+
+interface Course {
+  id: number
+  price: number
+  originPrice: number
+  title: string
+  tag: string | string[]
+  image_path: string
+  link: string
+  subTitle: string
+  description: string
+  courseStatus: string
+  type: string
+  category: string
 }
 
 interface CourseChapter {
@@ -63,7 +79,7 @@ interface CourseFAQsQuestions {
 }
 
 export const useInstructorStore = defineStore('instructor', () => {
-  const courses = ref<Course[]>([])
+  const courses = ref<Courses[]>([])
   const course = ref<Course | null>(null)
 
   const chapters = ref<EditCourseChapter[]>([])
@@ -86,6 +102,10 @@ export const useInstructorStore = defineStore('instructor', () => {
     return CourseRequest(payload).then((res) => {
       course.value = res.data.data
     })
+  }
+
+  function editCourseInfo(payload: { id: number; data: object }) {
+    return CourseInfoEditRequest(payload)
   }
 
   function addCourse(payload: { title: string }) {
@@ -263,6 +283,7 @@ export const useInstructorStore = defineStore('instructor', () => {
 
     getCourses,
     addCourse,
+    editCourseInfo,
     getCourse,
     deleteCourse,
     coursePublish,

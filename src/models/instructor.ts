@@ -22,6 +22,14 @@ export function CourseRequest(params: { id: number }) {
   })
 }
 
+export function CourseInfoEditRequest(params: { id: number; data: object }) {
+  return request({
+    url: `/api/courseProvider/course/${params.id}`,
+    method: 'patch',
+    data: params.data
+  })
+}
+
 export function DeleteCourseRequest(params: { id: number }) {
   return request({
     url: `/api/courseProvider/course/${params.id}`,

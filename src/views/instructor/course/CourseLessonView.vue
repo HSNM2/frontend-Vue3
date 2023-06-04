@@ -62,7 +62,7 @@
                     @dragleave.prevent="isDragging = false"
                     @drop.prevent="onChangeFile"
                   >
-                    <span class="block flex h-full flex-col items-center justify-center">
+                    <span class="flex h-full flex-col items-center justify-center">
                       <i class="material-icons text-4xl">file_upload</i>
                       <span class="mb-2 block text-2xl">將檔案拖曳至此或點擊此處選擇檔案</span>
                       <span class="block text-neutral-600">
@@ -208,7 +208,7 @@ function deleteLesson() {
         chapterId: +route.params.chapterId,
         lessonId: +route.params.lessonId
       })
-        .then((res) => {
+        .then(() => {
           updateLoading(false)
           router.push(`/instructor/course/${route.params.courseId}`)
         })

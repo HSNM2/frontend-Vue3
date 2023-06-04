@@ -9,8 +9,29 @@
         <label for="link" class="form-label">封面圖片</label>
         <div class="h-96 rounded border border-dashed">
           <div class="flex h-full flex-col items-center justify-center">
-            <i class="material-icons text-4xl">file_upload</i>
-            <div class="mb-2 text-2xl">將檔案拖曳至此或點擊此處選擇檔案</div>
+            <VField rules="required|ext:jpg,png" name="file" v-slot="{ handleBlur }">
+              <label for="coverImageFile" class="w-full">
+                <span
+                  class="block h-96 rounded border border-dashed hover:border-primary-4"
+                  :class="[isDragging ? 'border-primary-4' : '']"
+                  @dragover.prevent="isDragging = true"
+                  @dragleave.prevent="isDragging = false"
+                  @drop.prevent="onChangeFile"
+                >
+                  <span class="flex h-full flex-col items-center justify-center">
+                    <i class="material-icons text-4xl">file_upload</i>
+                    <span class="mb-2 block text-2xl">將檔案拖曳至此或點擊此處選擇檔案</span>
+                  </span>
+                </span>
+                <input
+                  id="coverImageFile"
+                  type="file"
+                  class="absolute hidden"
+                  @change="handleChange"
+                  @blur="handleBlur"
+                />
+              </label>
+            </VField>
           </div>
         </div>
       </div>
@@ -21,7 +42,7 @@
           name="link"
           rules="required"
           label="介紹影片"
-          v-model="link"
+          v-model="course!.link"
           v-slot="{ field, errors, meta }"
         >
           <input
@@ -44,11 +65,11 @@
           name="name"
           rules="required"
           label="課程名稱"
-          v-model="name"
+          v-model="course!.title"
           v-slot="{ field, errors, meta }"
         >
           <input
-            id="name"
+            id="title"
             type="text"
             class="form-control"
             v-bind="field"
@@ -67,7 +88,7 @@
           name="subTitle"
           rules="required"
           label="課程副標題"
-          v-model="subTitle"
+          v-model="course!.subTitle"
           v-slot="{ field, errors, meta }"
         >
           <input
@@ -112,9 +133,104 @@
       <!--課程簡介-->
       <div class="mb-6">
         <label for="description" class="form-label">課程簡介</label>
-        <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+        <ckeditor :editor="editor" v-model="course!.description" :config="editorConfig"></ckeditor>
         <span class="form-text">列出本課程的學習重點</span>
       </div>
+      <!--課程分類-->
+      <label class="form-label mb-2 font-bold">課程分類</label>
+      <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:gap-6">
+        <div class="flex-1">
+          <label for="category" class="form-label">課程類型</label>
+          <VField
+            name="category"
+            rules="required"
+            label="課程類型"
+            v-model="course!.category"
+            v-slot="{ field, errors, meta }"
+          >
+            <div class="flex">
+              <select
+                id="category"
+                class="form-control rounded-s-none pe-7 text-right"
+                v-bind="field"
+                :class="{ invalid: meta.validated && !!errors.length }"
+              >
+                <option value="麵包" selected>麵包</option>
+              </select>
+            </div>
+            <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="price" />
+          </VField>
+        </div>
+        <div class="flex-1">
+          <label for="type" class="form-label">細節種類</label>
+          <VField
+            name="type"
+            rules="required"
+            label="細節種類"
+            v-model="course!.type"
+            v-slot="{ field, errors, meta }"
+          >
+            <div class="flex">
+              <select
+                id="type"
+                class="form-control rounded-s-none pe-7 text-right"
+                v-bind="field"
+                :class="{ invalid: meta.validated && !!errors.length }"
+              >
+                <option value="法國麵包" selected>法國麵包</option>
+              </select>
+            </div>
+          </VField>
+        </div>
+      </div>
+      <!--課程公開模式-->
+      <label class="form-label mb-2 font-bold">課程公開模式</label>
+      <VField
+        name="courseStatus"
+        rules="required"
+        label="課程公開模式"
+        v-model="course!.courseStatus"
+        v-slot="{ field, errors, meta }"
+      >
+        <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:gap-6">
+          <div class="flex flex-1 gap-x-6">
+            <div class="border-1 flex w-1/2 rounded border p-3" @click="course!.courseStatus = '1'">
+              <div class="p-1">
+                <input
+                  id="courseStatus"
+                  type="radio"
+                  value="false"
+                  class="form-control h-4 w-4"
+                  v-bind="field"
+                  :class="{ invalid: meta.validated && !!errors.length }"
+                  :checked="course!.courseStatus == '1'"
+                />
+              </div>
+              <div>
+                <span class="block font-bold">付費課程</span>
+                <span class="text-sm">可設定售價與優惠條件的付費型內容。</span>
+              </div>
+            </div>
+            <div class="border-1 flex w-1/2 rounded border p-3" @click="course!.courseStatus = '2'">
+              <div class="p-1">
+                <input
+                  id="courseStatus"
+                  type="radio"
+                  value="false"
+                  class="form-control h-4 w-4"
+                  v-bind="field"
+                  :class="{ invalid: meta.validated && !!errors.length }"
+                  :checked="course!.courseStatus == '2'"
+                />
+              </div>
+              <div>
+                <span class="block font-bold">公開課程</span>
+                <span class="text-sm">任何人無需登入即可觀看完整內容，內容全部免費。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </VField>
       <!--價格-->
       <label class="form-label mb-2 font-bold">價格</label>
       <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:gap-6">
@@ -124,7 +240,7 @@
             name="price"
             rules="required|integer"
             label="銷售價格"
-            v-model="price"
+            v-model="course!.price"
             v-slot="{ field, errors, meta }"
           >
             <div class="flex">
@@ -151,7 +267,7 @@
             name="originPrice"
             rules="required|integer"
             label="原價"
-            v-model="originPrice"
+            v-model="course!.originPrice"
             v-slot="{ field, errors, meta }"
           >
             <div class="flex">
@@ -177,19 +293,23 @@
         </div>
       </div>
 
-      <button type="submit" class="me-3 inline-block" :disabled="!meta.valid">更新</button>
+      <button type="button" class="me-3 inline-block" @click="onSubmit">更新</button>
+      <!-- :disabled="!meta.valid" -->
       <button class="inline-block">取消</button>
     </VForm>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useInstructorStore } from '@/stores/instructor'
+import Swal from 'sweetalert2'
 
 import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic'
 import { Essentials } from '@ckeditor/ckeditor5-essentials'
 import { Bold, Code, Italic, Strikethrough, Underline } from '@ckeditor/ckeditor5-basic-styles'
-import { Link, LinkImage } from '@ckeditor/ckeditor5-link'
+import { Link } from '@ckeditor/ckeditor5-link'
 import { Paragraph } from '@ckeditor/ckeditor5-paragraph'
 import { Alignment } from '@ckeditor/ckeditor5-alignment'
 import { Font } from '@ckeditor/ckeditor5-font'
@@ -199,16 +319,16 @@ import { List } from '@ckeditor/ckeditor5-list'
 import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line'
 import { BlockQuote } from '@ckeditor/ckeditor5-block-quote'
 
-const tag = ref('') // 標籤 input
+const instructor = useInstructorStore()
+const route = useRoute()
 
-const name = ref('') // 課程名稱
-const subTitle = ref('') // 課程副標題
-const description = ref('') // 課程簡介
-const price = ref(0) // 銷售價格
-const originPrice = ref(0) // 原價
-const tags = ref(['擠花技巧', '烤製方式']) // 標籤
-const image_path = ref('') // 封面圖片
-const link = ref('') // 介紹影片
+const { course, getCourse, editCourseInfo } = instructor
+
+const isDragging = ref(false)
+
+const tag = ref<string>('')
+const tags = ref<string[]>([]) // 標籤
+const coverImageFile = ref<File | undefined>(undefined)
 
 const editor = ClassicEditor
 const editorConfig = {
@@ -250,7 +370,38 @@ const editorConfig = {
     ]
   }
 }
-const editorData = ref('')
+
+function courseInfoProcess() {
+  getCourse({ id: +route.params.courseId }).then(() => {
+    tagHandle()
+    if (course?.description == null) {
+      course!.description = ''
+    }
+  })
+}
+
+// 檔案上傳
+function onChangeFile(e: DragEvent) {
+  isDragging.value = false
+  if (e.dataTransfer && e.dataTransfer.files[0]) {
+    coverImageFile.value = e.dataTransfer.files[0]
+  }
+}
+
+function handleChange(e: Event) {
+  const files: FileList | null = (e.target as HTMLInputElement).files
+  if (files && files.length !== 0) {
+    coverImageFile.value = files[0]
+  }
+}
+
+function tagHandle() {
+  if (typeof course!.tag == 'string') {
+    tags.value = course!.tag.split(',')
+  } else {
+    return
+  }
+}
 
 function removeTag(idx: number) {
   tags.value = tags.value.filter((_, tagIdx) => tagIdx !== idx)
@@ -263,5 +414,20 @@ function addTag() {
   }
 }
 
-function onSubmit() {}
+function onSubmit() {
+  course!.tag = tags.value
+  editCourseInfo({ id: +route.params.courseId, data: course! }).then((res) => {
+    if (res.data.status == true) {
+      Swal.fire({
+        icon: 'success',
+        title: res.data.message
+      })
+      courseInfoProcess()
+    }
+  })
+}
+
+onMounted(() => {
+  courseInfoProcess()
+})
 </script>
