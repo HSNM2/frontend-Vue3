@@ -44,43 +44,54 @@
           </nav>
           <div class="p-6">
             <div v-if="selectedLessonType === 'file'">
-              <div v-if="lessonFile" class="flex items-center">
-                <span>{{ lessonFile.name }}</span>
-                <span
-                  class="ms-auto flex cursor-pointer items-center text-red-400"
-                  @click="removeLessonFile"
-                >
-                  <i class="material-icons me-1">delete_forever</i>移除</span
-                >
+              <div v-if="lessonVideoUrl" class="h-96 w-full">
+                <VideoPlayer
+                  :src="lessonVideoUrl"
+                  controls
+                  class="h-full max-w-full"
+                  :playbackRates="[0.5, 1, 1.5, 2]"
+                  preload="auto"
+                ></VideoPlayer>
               </div>
-              <VField v-else rules="required|ext:mp4,mov" name="file" v-slot="{ handleBlur }">
-                <label for="lessonFile">
+              <template v-else>
+                <div v-if="lessonFile" class="flex items-center">
+                  <span>{{ lessonFile.name }}</span>
                   <span
-                    class="block h-96 rounded border border-dashed hover:border-primary-4"
-                    :class="[isDragging ? 'border-primary-4' : '']"
-                    @dragover.prevent="isDragging = true"
-                    @dragleave.prevent="isDragging = false"
-                    @drop.prevent="onChangeFile"
+                    class="ms-auto flex cursor-pointer items-center text-red-400"
+                    @click="removeLessonFile"
                   >
-                    <span class="flex h-full flex-col items-center justify-center">
-                      <i class="material-icons text-4xl">file_upload</i>
-                      <span class="mb-2 block text-2xl">將檔案拖曳至此或點擊此處選擇檔案</span>
-                      <span class="block text-neutral-600">
-                        檔案格式限定為
-                        .JPG、.PNG、MP4、MP3、AVI、DOC、DOCX、XLSX、XLS、PPT、PPTX、PDF, RAR 以及
-                        ZIP
+                    <i class="material-icons me-1">delete_forever</i>移除</span
+                  >
+                </div>
+                <VField v-else rules="required|ext:mp4,mov" name="file" v-slot="{ handleBlur }">
+                  <label for="lessonFile">
+                    <span
+                      class="block h-96 rounded border border-dashed hover:border-primary-4"
+                      :class="[isDragging ? 'border-primary-4' : '']"
+                      @dragover.prevent="isDragging = true"
+                      @dragleave.prevent="isDragging = false"
+                      @drop.prevent="onChangeFile"
+                    >
+                      <span class="flex h-full flex-col items-center justify-center">
+                        <i class="material-icons text-4xl">file_upload</i>
+                        <span class="mb-2 block text-2xl">將檔案拖曳至此或點擊此處選擇檔案</span>
+                        <span class="block text-neutral-600">
+                          檔案格式限定為
+                          .JPG、.PNG、MP4、MP3、AVI、DOC、DOCX、XLSX、XLS、PPT、PPTX、PDF, RAR 以及
+                          ZIP
+                        </span>
                       </span>
                     </span>
-                  </span>
-                  <input
-                    id="lessonFile"
-                    type="file"
-                    class="absolute hidden"
-                    @change="handleChange"
-                    @blur="handleBlur"
-                  />
-                </label>
-              </VField>
+                    <input
+                      id="lessonFile"
+                      type="file"
+                      class="absolute hidden"
+                      @change="handleChange"
+                      @blur="handleBlur"
+                    />
+                  </label>
+                </VField>
+              </template>
             </div>
             <div v-if="selectedLessonType === 'mediaUrl'">
               <div class="mb-6 border-b pb-6">
@@ -129,6 +140,7 @@ import useErrorHandler from '@/composables/useErrorHandler'
 import { useStatusStore } from '@/stores/status'
 import Swal from 'sweetalert2'
 import type { FormContext } from 'vee-validate'
+import { VideoPlayer } from '@videojs-player/vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -146,7 +158,7 @@ const lessonForm = ref<FormContext | null>(null)
 const isDragging = ref(false)
 
 const lessonTitle = ref('')
-const lessonVideoUrl = ref('')
+const lessonVideoUrl = ref<string>('')
 
 const selectedLessonType = ref('file') // file, mediaUrl
 const lessonFile = ref<File | null>(null)

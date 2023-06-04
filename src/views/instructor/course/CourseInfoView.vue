@@ -243,7 +243,7 @@
             v-model="course!.price"
             v-slot="{ field, errors, meta }"
           >
-            <div class="flex">
+            <div class="relative flex">
               <span
                 class="m-auto h-full w-10 rounded-l border border-r-0 border-neutral-400 bg-neutral-200 py-1.5 text-center"
               >
@@ -270,7 +270,7 @@
             v-model="course!.originPrice"
             v-slot="{ field, errors, meta }"
           >
-            <div class="flex">
+            <div class="relative flex">
               <span
                 class="m-auto h-full w-10 rounded-l border border-r-0 border-neutral-400 bg-neutral-200 py-1.5 text-center"
               >

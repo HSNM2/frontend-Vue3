@@ -9,6 +9,8 @@ import veeValidate from './plugins/vee-validate'
 import vueLoadingOverlay from './plugins/vue-loading-overlay'
 import vCalendar from './plugins/v-calendar'
 import CKEditor from '@ckeditor/ckeditor5-vue'
+import VueVideoPlayer from '@videojs-player/vue'
+import 'video.js/dist/video-js.css'
 
 import './assets/main.scss'
 
@@ -21,5 +23,6 @@ app.use(veeValidate)
 app.use(vueLoadingOverlay)
 app.use(vCalendar)
 app.use(CKEditor)
+app.use(VueVideoPlayer)
 
 app.mount('#app')
