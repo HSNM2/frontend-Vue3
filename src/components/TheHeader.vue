@@ -1,5 +1,5 @@
 <template>
-  <header class="h-auto">
+  <header class="relative h-auto">
     <div class="container mx-auto flex h-full items-center justify-between py-2 lg:py-3">
       <RouterLink to="/">
         <div class="h-11 w-25 bg-logo bg-contain bg-center bg-no-repeat lg:h-12 lg:w-27"></div>
@@ -23,7 +23,7 @@
             </template>
             <template v-else>
               <button class="btn-primary">我的學習</button>
-              <div class="group">
+              <div class="group relative">
                 <span class="material-icons cursor-pointer pr-1 text-3xl text-neutral-600">
                   shopping_cart
                 </span>
@@ -154,18 +154,7 @@
             </template>
           </div>
         </div>
-        <!-- <RouterLink to="/course">探索</RouterLink> -->
       </nav>
-      <!-- <div v-if="user">
-        <span class="material-icons ms-auto"> search </span>
-        <button class="p-3">我的學習</button>
-        <span class="primary-2 material-icons"> shopping_cart </span>
-      </div>
-      <div v-else>
-        <span class="primary-2 material-icons ms-auto"> shopping_cart </span>
-        <button class="p-3" @click="loginModal = true">登入</button>
-        <button class="p-3" @click="registerModal = true">註冊</button>
-      </div> -->
     </div>
     <!-- side pop-up menu -->
     <div class="absolute top-0 z-10 hidden h-screen w-full bg-neutral-600 pl-24">
