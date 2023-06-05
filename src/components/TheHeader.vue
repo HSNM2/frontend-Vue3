@@ -27,16 +27,27 @@
                 <span class="material-icons cursor-pointer pr-1 text-3xl text-neutral-600">
                   shopping_cart
                 </span>
+                <span
+                  class="absolute bottom-1 right-0 h-5 w-5 rounded-full bg-red-500 text-center leading-tight text-neutral-50"
+                  v-if="cart.cartItem.length != 0"
+                  >{{ cart.cartItem.length }}</span
+                >
                 <div
                   class="absolute right-0 top-full z-10 hidden w-72 pt-2 hover:block group-hover:block"
                 >
                   <div class="rounded border bg-neutral-50">
                     <div class="flex items-center justify-between px-4 py-3 pb-1">
                       <p class="text-lg font-bold">購物車</p>
-                      <button v-if="!cart.isEmpty" class="btn-secondary">清空購物車</button>
+                      <button
+                        v-if="cart.cartItem.length != 0"
+                        class="btn-secondary"
+                        @click="emptyCartHandle"
+                      >
+                        清空購物車
+                      </button>
                     </div>
                     <hr class="my-2" />
-                    <div v-if="!cart.isEmpty">
+                    <div v-if="cart.cartItem.length != 0">
                       <div class="" v-for="item in cart.cartItem" :key="item.id">
                         <div class="flex p-2 pt-0">
                           <!-- <img
@@ -58,11 +69,13 @@
                                 <span class="text-lg text-primary-5"
                                   >{{ `$${item.price} `
                                   }}<span class="text-sm text-neutral-900 line-through">{{
-                                    `$${item.origin_price}`
+                                    `$${item.originPrice}`
                                   }}</span></span
                                 >
                               </div>
-                              <i class="material-icons cursor-pointer text-red-400"
+                              <i
+                                class="material-icons cursor-pointer text-red-400"
+                                @click="cartItemDeleteHandle(item.id)"
                                 >delete_outline</i
                               >
                             </div>
@@ -70,13 +83,16 @@
                         </div>
                       </div>
                     </div>
-                    <p v-if="cart.isEmpty" class="mb-2 text-center">
+                    <p v-if="cart.cartItem.length == 0" class="mb-2 text-center">
                       購物車還是空的<br />快來探索一下課程吧
                     </p>
 
-                    <hr v-if="!cart.isEmpty" class="mb-2" />
+                    <hr v-if="cart.cartItem.length != 0" class="mb-2" />
 
-                    <div v-if="!cart.isEmpty" class="flex items-center justify-between p-2 pt-0">
+                    <div
+                      v-if="cart.cartItem.length != 0"
+                      class="flex items-center justify-between p-2 pt-0"
+                    >
                       <span class="text-lg">{{ `總價：${cart.totalPrice}` }}</span>
                       <router-link to="/shoppingCart/orderConfirmation" class="btn-primary"
                         >結帳</router-link
@@ -224,7 +240,7 @@ const { showError } = useErrorHandler()
 
 const { updateLoading } = useStatusStore()
 const auth = useAuthStore()
-const { cart, cartHandle } = useCartStore()
+const { cart, cartHandle, emptyCartHandle, cartItemDeleteHandle } = useCartStore()
 const { logout } = auth
 const { authModal, authModalType, courseProviderAllowModal, user } = storeToRefs(auth)
 
