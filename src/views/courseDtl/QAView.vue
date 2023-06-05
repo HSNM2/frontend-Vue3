@@ -71,10 +71,18 @@
             <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-x-4">
-                  <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
+                  <img
+                    class="rounded-full"
+                    :src="
+                      inquirie.imagePath
+                        ? inquirie.imagePath
+                        : 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
+                    "
+                    alt=""
+                  />
                   <p class="">{{ inquirie.name }}</p>
                 </div>
-                <p class="text-sm text-primary-4">沒有時間</p>
+                <p class="text-sm text-primary-4">{{ inquirie.date.slice(0, 10) }}</p>
               </div>
               <div class="ml-14 mt-4">
                 <p>{{ inquirie.content }}</p>
@@ -87,9 +95,17 @@
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-x-4">
-                    <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
+                    <img
+                      class="rounded-full"
+                      :src="
+                        response.imagePath
+                          ? response.imagePath
+                          : 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
+                      "
+                      alt=""
+                    />
                     <p class="">{{ response.name }}</p>
-                    <p class="rounded-[15px] bg-neutral-50 px-2 text-xs text-primary-5">沒有身分</p>
+                    <!-- <p class="rounded-[15px] bg-neutral-50 px-2 text-xs text-primary-5">講師</p> -->
                   </div>
                   <p class="text-sm text-primary-4">{{ response.date.slice(0, 10) }}</p>
                 </div>
@@ -116,14 +132,7 @@
               <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-x-4">
-                    <img
-                      class="rounded-full"
-                      :src="
-                        user?.avatarImagePath
-                          ? user?.avatarImagePath
-                          : 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
-                      "
-                    />
+                    <img class="rounded-full" :src="user?.avatarImagePath" alt="" />
                     <p class="">{{ user.nickName ?? user.name }}</p>
                   </div>
                 </div>
