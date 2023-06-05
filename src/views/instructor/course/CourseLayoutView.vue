@@ -49,7 +49,7 @@
         </ul>
       </aside>
       <!--主內容-->
-      <div class="flex-1 bg-neutral-100 p-8">
+      <div class="main-content flex-1 bg-neutral-100 p-8">
         <RouterView></RouterView>
       </div>
     </template>
@@ -132,3 +132,9 @@ function publishHandle() {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.main-content {
+  width: calc(100vw - 288px);
+}
+</style>

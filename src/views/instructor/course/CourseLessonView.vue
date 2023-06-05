@@ -3,7 +3,12 @@
     <h1 class="font-bold text-neutral-800">{{ chapter && chapter.title }}</h1>
   </div>
   <div class="rounded bg-neutral-50 p-6">
-    <VForm ref="lessonForm" v-slot="{ meta }" @submit="onSubmit">
+    <VForm
+      :validateOnMount="!!route.params.lessonId"
+      ref="lessonForm"
+      v-slot="{ meta }"
+      @submit="onSubmit"
+    >
       <div class="mb-6">
         <label for="lesson" class="form-label">單元名稱</label>
         <VField
@@ -48,7 +53,7 @@
                 <VideoPlayer
                   :src="lessonVideoUrl"
                   controls
-                  class="h-full max-w-full"
+                  class="h-full w-full"
                   :playbackRates="[0.5, 1, 1.5, 2]"
                   preload="auto"
                 ></VideoPlayer>
@@ -121,11 +126,13 @@
         </div>
       </div>
       <div class="flex items-center">
-        <button class="me-5" :disabled="!meta.valid">
+        <button class="me-5" type="submit" :disabled="!meta.valid">
           {{ lesson ? '更新' : '新增' }}
         </button>
-        <button class="text-neutral-500" @click="cancel()">取消</button>
-        <button v-if="lesson" class="ms-auto text-red-500" @click="deleteLesson">刪除</button>
+        <button class="text-neutral-500" @click.prevent="cancel()">取消</button>
+        <button v-if="lesson" class="ms-auto text-red-500" @click.prevent="deleteLesson">
+          刪除
+        </button>
       </div>
     </VForm>
   </div>
@@ -173,15 +180,6 @@ onMounted(() => {
         return getLesson()
       }
     })
-    .then(() => {
-      nextTick(() => {
-        lessonForm.value?.resetForm({
-          values: {
-            lessonTitle: lessonTitle.value
-          }
-        })
-      })
-    })
     .catch((err) => {
       showError(err)
     })
@@ -203,6 +201,15 @@ function getLesson() {
     if (lesson.value) {
       lessonTitle.value = lesson.value.title
       lessonVideoUrl.value = lesson.value.videoPath
+
+      nextTick(() => {
+        lessonForm.value?.resetForm({
+          values: {
+            lessonTitle: lessonTitle.value
+          }
+        })
+        lessonForm.value?.validateField('lessonTitle')
+      })
     }
   })
 }
