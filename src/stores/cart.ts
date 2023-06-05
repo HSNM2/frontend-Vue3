@@ -5,24 +5,23 @@ import axios from 'axios'
 
 interface Cart {
   cartId: string
-  cartItem: Array<any>
+  cartItem: CartItem[]
   usedCoupon: string
   totalOriginPrice: number
   totalPrice: number
   offPercent: number
-  isEmpty: boolean
 }
 
-// interface CartItem {
-//   id: string
-//   title: string
-//   provider: string
-//   category: string
-//   type: string
-//   avgRating: number
-//   originPrice: number
-//   price: number
-// }
+interface CartItem {
+  id: string
+  title: string
+  provider: string
+  category: string
+  type: string
+  avgRating: number
+  originPrice: number
+  price: number
+}
 
 import { GetCartRequest } from '@/models/cart'
 
@@ -37,16 +36,15 @@ export const useCartStore = defineStore('cart', () => {
         provider: 'course_provider',
         category: 'course_category',
         type: 'course_type',
-        avg_rating: 4,
-        origin_price: 1500,
+        avgRating: 4,
+        originPrice: 1500,
         price: 1000
       }
     ],
     usedCoupon: '',
     totalOriginPrice: 0,
     totalPrice: 0,
-    offPercent: 0,
-    isEmpty: false
+    offPercent: 0
   })
 
   const remoteCart = ref(null)
@@ -54,8 +52,8 @@ export const useCartStore = defineStore('cart', () => {
   const { user } = useAuthStore()
 
   function getLocalCart() {
-    if (localStorage.getItem('cart')) {
-      return JSON.parse(localStorage.getItem('cart') || '')
+    if (localStorage.getItem('sweetTimeCart')) {
+      return JSON.parse(localStorage.getItem('sweetTimeCart') || '')
     } else {
       return null
     }
@@ -69,10 +67,12 @@ export const useCartStore = defineStore('cart', () => {
   // }
 
   function cartHandle() {
+    cart.value.totalPrice = 0
+    cart.value.totalOriginPrice = 0
     cart.value.cartItem.forEach((item) => {
       cart.value.totalPrice = cart.value.totalPrice += item.price
-      if (item.origin_price != 0) {
-        cart.value.totalOriginPrice = cart.value.totalOriginPrice += item.origin_price
+      if (item.originPrice != 0) {
+        cart.value.totalOriginPrice = cart.value.totalOriginPrice += item.originPrice
       } else {
         cart.value.totalOriginPrice = cart.value.totalOriginPrice += item.price
       }
@@ -86,11 +86,30 @@ export const useCartStore = defineStore('cart', () => {
     //   cart.value = await getRemoteCart()
     // }
   }
+
+  function emptyCartHandle() {
+    cart.value.cartItem = []
+    cartHandle()
+  }
+
+  function addCartItem(item: CartItem) {
+    cart.value.cartItem.push(item)
+    cartHandle()
+  }
+
+  function cartItemDeleteHandle(courseId: string) {
+    cart.value.cartItem = cart.value.cartItem.filter((item) => item.id != courseId)
+    cartHandle()
+  }
+
   return {
     cart,
 
     getLocalCart,
     // getRemoteCart,
-    cartHandle
+    cartHandle,
+    emptyCartHandle,
+    cartItemDeleteHandle,
+    addCartItem
   }
 })

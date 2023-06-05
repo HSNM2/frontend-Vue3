@@ -39,7 +39,24 @@
             </p>
             <div class="flex items-center gap-x-5 pb-6">
               <template v-if="hasAddCart === false">
-                <button type="button" class="btn-primary hidden md:block">立即購買</button>
+                <button
+                  type="button"
+                  class="btn-primary hidden md:block"
+                  @click="
+                    addCartItem({
+                      id: courseDetail.data.course.id.toString(),
+                      title: courseDetail.data.course.title,
+                      provider: courseDetail.data.course.provider,
+                      category: courseDetail.data.course.category,
+                      type: courseDetail.data.course.type,
+                      avgRating: +courseDetail.data.rating.avgRating,
+                      originPrice: courseDetail.data.course.originPrice,
+                      price: courseDetail.data.course.price
+                    })
+                  "
+                >
+                  立即購買
+                </button>
                 <span
                   class="material-icons hidden cursor-pointer text-primary-6 md:block"
                   @click="handleCartAction()"
@@ -113,6 +130,8 @@ import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/cart'
+
 import CourseTabs from '@/components/CourseTabs.vue'
 import IntroduceView from '@/views/courseDtl/IntroduceView.vue'
 import OutlineView from '@/views/courseDtl/OutlineView.vue'
@@ -217,7 +236,7 @@ interface RatingItem {
 const route = useRoute()
 
 const { showError } = useErrorHandler()
-
+const { addCartItem } = useCartStore()
 const auth = useAuthStore()
 const { authModal, authModalType, user } = storeToRefs(auth)
 const isLogin = ref(user.value !== null)
@@ -361,7 +380,7 @@ const checkLogin = () => {
 
 const getcourseTags = computed(() => {
   return (tags: string) => {
-    return tags.split(',')
+    return tags?.split(',')
   }
 })
 
