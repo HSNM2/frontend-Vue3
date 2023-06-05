@@ -76,7 +76,7 @@
       <div class="py-6 lg:py-[52px]">
         <div class="relative mx-[12.5px] py-3">
           <div
-            class="flex justify-around gap-x-[19px] pb-2 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-primary-3 after:content-[''] lg:justify-start"
+            class="flex justify-around gap-x-[19px] after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-primary-3 after:content-[''] lg:justify-start"
           >
             <CourseTabs :tabs="tabs" @changeTabView="changeTabView"> </CourseTabs>
           </div>
