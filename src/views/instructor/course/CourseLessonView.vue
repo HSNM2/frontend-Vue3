@@ -76,9 +76,7 @@
                         <i class="material-icons text-4xl">file_upload</i>
                         <span class="mb-2 block text-2xl">將檔案拖曳至此或點擊此處選擇檔案</span>
                         <span class="block text-neutral-600">
-                          檔案格式限定為
-                          .JPG、.PNG、MP4、MP3、AVI、DOC、DOCX、XLSX、XLS、PPT、PPTX、PDF, RAR 以及
-                          ZIP
+                          檔案格式限定為 mp4、avi、mov、wmv、flv、mkv、webm
                         </span>
                       </span>
                     </span>
@@ -88,6 +86,7 @@
                       class="absolute hidden"
                       @change="handleChange"
                       @blur="handleBlur"
+                      accept=".mp4,.avi,.mov,.wmv,.flv,.mkv,.webm"
                     />
                   </label>
                 </VField>
@@ -176,7 +175,9 @@ onMounted(() => {
       }
     })
     .catch((err) => {
-      showError(err)
+      showError(err).then(() => {
+        router.push(`/instructor/course/${route.params.courseId}`)
+      })
     })
     .finally(() => {
       updateLoading(false)
@@ -222,8 +223,14 @@ function deleteLesson() {
         chapterId: +route.params.chapterId,
         lessonId: +route.params.lessonId
       })
-        .then(() => {
+        .then((res) => {
           updateLoading(false)
+          return Swal.fire({
+            icon: 'success',
+            title: res.data.data.message
+          })
+        })
+        .then(() => {
           router.push(`/instructor/course/${route.params.courseId}`)
         })
         .finally(() => {
@@ -288,11 +295,13 @@ function onSubmit() {
       data: formData
     })
       .then((res) => {
-        Swal.fire({
+        updateLoading(false)
+        return Swal.fire({
           icon: 'success',
           title: res.data.data.message
         })
-        updateLoading(false)
+      })
+      .then(() => {
         router.push(`/instructor/course/${route.params.courseId}`)
       })
       .catch((err) => {
