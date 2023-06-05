@@ -3,12 +3,7 @@
     <h1 class="font-bold text-neutral-800">{{ chapter && chapter.title }}</h1>
   </div>
   <div class="rounded bg-neutral-50 p-6">
-    <VForm
-      :validateOnMount="!!route.params.lessonId"
-      ref="lessonForm"
-      v-slot="{ meta }"
-      @submit="onSubmit"
-    >
+    <VForm ref="lessonForm" v-slot="{ meta }" @submit="onSubmit">
       <div class="mb-6">
         <label for="lesson" class="form-label">單元名稱</label>
         <VField
