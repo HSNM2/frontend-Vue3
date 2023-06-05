@@ -77,7 +77,7 @@ defineExpose({
     width: 100%;
     height: 4px;
     position: absolute;
-    bottom: -7px;
+    bottom: -12px;
     left: 0;
   }
 }
