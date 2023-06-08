@@ -164,6 +164,10 @@ import { storeToRefs } from 'pinia'
 import type { FormContext } from 'vee-validate'
 import { useStatusStore } from '@/stores/status'
 import { useAuthStore } from '@/stores/auth'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
 
 const { showError } = useErrorHandler()
 const { updateLoading } = useStatusStore()
@@ -206,13 +210,17 @@ function onLoginSubmit() {
   })
     .then(() => {
       reset()
+      updateLoading(false)
       authModal.value = false
     })
-    .catch((err) => {
-      showError(err)
+    .then(() => {
+      if (route.query.target && route.query.target !== route.path) {
+        router.push(route.query.target.toString())
+      }
     })
-    .finally(() => {
+    .catch((err) => {
       updateLoading(false)
+      showError(err)
     })
 }
 
