@@ -70,7 +70,7 @@
               <input type="checkbox" id="keep-login" class="mr-2" />
               <label for="keep-login">維持登入狀態</label>
             </div>
-            <button disabled class="text-neutral-600 underline">忘記密碼?</button>
+            <button type="button" disabled class="text-neutral-600 underline">忘記密碼?</button>
           </div>
           <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
             確認
