@@ -43,3 +43,10 @@ export function UseCourseTagRequest(method: string, courseID: number) {
     method: method
   })
 }
+
+export function GetUserCourseRequest(courseID: number) {
+  return request({
+    url: `/api/user/course/${courseID}`,
+    method: 'get'
+  })
+}

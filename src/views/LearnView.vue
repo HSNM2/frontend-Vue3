@@ -22,47 +22,28 @@
         </div>
 
         <div class="my-6 grid grid-cols-12 gap-6">
-          <div class="col-span-12 lg:col-span-8" v-if="isPlayerReady">
-            <video-player
-              class="video-player"
-              poster="https://picsum.photos/856/472"
-              crossorigin="anonymous"
-              playsinline
-              controls
-              :volume="0.6"
-              :playback-rates="[0.7, 1.0, 1.5, 2.0]"
-              :fluid="true"
-              :durationDisplay="true"
-              :options="playerOptions"
-              @mounted="handleMounted"
-              @ready="handleEvent($event, 'ready')"
-              @play="handleEvent($event, 'play')"
-              @pause="handleEvent($event, 'pause')"
-              @ended="handleEvent($event, 'ended')"
-              @loadeddata="handleEvent($event, 'loadeddata')"
-              @waiting="handleEvent($event, 'waiting')"
-              @playing="handleEvent($event, 'playing')"
-              @canplay="handleEvent($event, 'canplay')"
-              @canplaythrough="handleEvent($event, 'canplaythrough')"
-              @timeupdate="handleEvent(player?.currentTime(), 'timeupdate')"
-            />
-            <!-- <video-player
-              ref="videoPlayer"
-              class="video-player"
-              :options="playerOptions"
-              :playsinline="true"
-              @mounted="handleMounted"
-              @ready="handleEvent($event, 'ready')"
-              @play="handleEvent($event, 'play')"
-              @pause="handleEvent($event, 'pause')"
-              @ended="handleEvent($event, 'ended')"
-              @loadeddata="handleEvent($event, 'loadeddata')"
-              @waiting="handleEvent($event, 'waiting')"
-              @playing="handleEvent($event, 'playing')"
-              @canplay="handleEvent($event, 'canplay')"
-              @canplaythrough="handleEvent($event, 'canplaythrough')"
-              @timeupdate="handleEvent(player?.currentTime(), 'timeupdate')"
-            /> -->
+          <div class="relative col-span-12 lg:col-span-8" v-if="isPlayerReady">
+            <div class="relative">
+              <VLoading v-model:active="isLoading" :is-full-page="false" />
+              <video-player
+                ref="videoPlayer"
+                class="video-player"
+                :options="playerOptions"
+                :playsinline="true"
+                crossorigin="anonymous"
+                @mounted="handleMounted"
+                @ready="handleEvent($event, 'ready')"
+                @play="handleEvent($event, 'play')"
+                @pause="handlePause($event, 'pause')"
+                @ended="handleEvent($event, 'ended')"
+                @loadeddata="handleEvent($event, 'loadeddata')"
+                @waiting="handleEvent($event, 'waiting')"
+                @playing="handleEvent($event, 'playing')"
+                @canplay="handleEvent($event, 'canplay')"
+                @canplaythrough="handleEvent($event, 'canplaythrough')"
+                @timeupdate="handleTime(player?.currentTime(), player?.currentSrc(), 'timeupdate')"
+              />
+            </div>
 
             <div class="mt-6 border border-neutral-200 p-3">
               <div class="flex items-center gap-x-4">
@@ -110,14 +91,18 @@
 
               <component
                 :is="currentTab"
-                :courseDetail="courseDetail?.data"
+                :courseDetail="courseDetail?.data[0]"
                 @update-video-path="updateVideoPath"
               ></component>
             </div>
           </div>
 
           <div class="hidden lg:col-start-9 lg:col-end-13 lg:block">
-            <ChapterView v-if="courseDetail" :courseDetail="courseDetail?.data"></ChapterView>
+            <ChapterView
+              v-if="courseDetail"
+              :courseDetail="courseDetail?.data[0]"
+              @update-video-path="updateVideoPath"
+            ></ChapterView>
           </div>
         </div>
       </div>
@@ -126,7 +111,7 @@
 </template>
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { shallowRef, ref, onMounted, watch } from 'vue'
+import { shallowRef, ref, triggerRef, onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { VideoPlayer } from '@videojs-player/vue'
 import 'video.js/dist/video-js.css'
@@ -138,42 +123,17 @@ import DiscussView from '@/views/courseDtl/DiscussView.vue'
 import ReviewView from '@/views/courseDtl/ReviewView.vue'
 import useErrorHandler from '@/composables/useErrorHandler'
 
-import { GetCourseRequest } from '@/models/course'
+import { GetUserCourseRequest } from '@/models/course'
 
 interface CourseDetail {
   status: boolean
-  message: string
-  data: CourseData
+  data: CourseData[]
 }
 
 interface CourseData {
-  course: Course
-  chapters: Chapter[]
-  inquiries: Inquiry[]
-  faqs: Faq[]
-  rating: Rating
-}
-
-interface Course {
   id: number
-  price: number
-  originPrice: number
   title: string
-  tag: string
-  image_path: string
-  link: string
-  subTitle: string
-  description: string
-  courseStatus: string // 1: 公開 / 2: 非公開
-  type: string
-  category: string // 待確認
-  provider: string
-  buyers: number
-  totalTime: number // 待確認
-  isPublish: boolean
-  teacherId: string
-  createdAt: string
-  updatedAt: string
+  chapters: Chapter[]
 }
 
 interface Chapter {
@@ -188,58 +148,19 @@ interface Lesson {
   videoPath: string
 }
 
-interface Inquiry {
-  id: string
-  name: string
-  date: string
-  content: string
-  responses: Response[]
-  isResponse: boolean
-  responseValue: string
-}
-
-interface Response {
-  id: number
-  name: string
-  date: string
-  content: string
-}
-
-interface Faq {
-  id: string
-  title: string
-  questions: Question[]
-}
-
-interface Question {
-  id: number
-  title: string
-  content: string
-  publish: boolean
-}
-
-interface Rating {
-  avgRating: string
-  countRating: number
-  ratings: RatingItem[]
-}
-
-interface RatingItem {
-  name: string
-  number: string
-  date: string
-  content: string
-}
-
 const route = useRoute()
 
 const { showError } = useErrorHandler()
 
 const courseDetail = ref<CourseDetail | null>(null)
 const courseID = Number(route.params.id)
+const minVal = ref(0)
+const maxVal = ref(100)
+const progressVal = ref(15)
+const progressBarStyle = { bg: 'bg-neutral-100', progress: 'bg-secondary-2', height: 'h-2' }
 
 const getData = () => {
-  GetCourseRequest(courseID)
+  GetUserCourseRequest(courseID)
     .then((res) => {
       courseDetail.value = res.data
       console.log('courseDetail', courseDetail.value)
@@ -259,40 +180,69 @@ const handleMounted = (payload: any) => {
 }
 
 const handleEvent = (log: object, action: string) => {
-  console.log(`Basic player event  ${action}`, log)
+  //console.log(`Basic player event  ${action}`, log)
 }
 
-const playerOptions = ref({
+const handlePause = (log: object, action: string) => {
+  console.log(log)
+  //console.log(`Basic player event  ${action}`, log)
+}
+
+const handleTime = (time: object, src: object, action: string) => {
+  // player?.currentSrc()
+  // console.log(` ${action}`, time, src)
+}
+
+const playerOptions = shallowRef({
+  crossorigin: 'anonymous',
   sources: [
     {
+      duration: 24,
       type: 'video/mp4',
       src: ''
     }
   ],
   fluid: true,
   controls: true
+  //poster: 'https://picsum.photos/856/472'
+  // controlBar: {
+  //   timeDivider: true, // 当前时间和持续时间的分隔符
+  //   durationDisplay: true, // 显示持续时间
+  //   remainingTimeDisplay: true, // 是否显示剩余时间功能
+  //   fullscreenToggle: true // 是否显示全屏按钮
+  // }
 })
+const isLoading = ref(false)
 
-const updateVideoPath = (videoPath: string) => {
-  playerOptions.value.sources[0].src = videoPath
-  console.log(playerOptions.value.sources[0].src)
+const updateVideoPath = (videoPath: string, chapterID: number, lessonID: number) => {
+  // console.log(courseDetail.value?.data[0].title)
+  isPlayerReady.value = false
+  isLoading.value = true
+  playerOptions.value.sources[0].src = `http://localhost:3002/static/video/${videoPath}`
+  triggerRef(playerOptions)
 }
 
 watch(courseDetail, (newValue) => {
-  if (newValue?.data.chapters[0].lessons[0].videoPath) {
+  console.log('watch', newValue)
+  if (newValue?.data[0].chapters[0].lessons[0].videoPath) {
     isPlayerReady.value = true
-    playerOptions.value.sources[0].src = newValue?.data.chapters[0].lessons[0].videoPath
+    const videoPath = newValue?.data[0].chapters[0].lessons[0].videoPath
+    playerOptions.value.sources[0].src = `http://localhost:3002/static/video/${videoPath}`
   }
 })
 
-//#endregion
+watch(playerOptions, (newValue) => {
+  nextTick(() => {
+    isPlayerReady.value = true
+    setTimeout(() => {
+      isLoading.value = false
+    }, 1000)
+  })
+})
 
-const minVal = ref(0)
-const maxVal = ref(100)
-const progressVal = ref(15)
-const progressBarStyle = { bg: 'bg-neutral-100', progress: 'bg-secondary-2', height: 'h-2' }
+//#endregion 影片
 
-//#region
+//#region tabs
 const tabs = [
   { name: '課程內容', comp: ChapterView, style: 'lg:hidden' },
   { name: '課程討論', comp: DiscussView, style: '' },
@@ -315,7 +265,7 @@ const changeTabView = (name: string) => {
     }
   })
 }
-//#endregion
+//#endregion tabs
 
 onMounted(() => {
   changeTabView('課程討論')
