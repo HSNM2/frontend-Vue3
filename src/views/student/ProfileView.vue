@@ -144,8 +144,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
-import axios from 'axios'
+import { onMounted, ref } from 'vue'
 import Swal from 'sweetalert2'
 import { useStatusStore } from '@/stores/status'
 import { useAuthStore } from '@/stores/auth'
@@ -177,7 +176,7 @@ const address = ref('')
 function reset() {
   name.value = user.value?.name || ''
   nickName.value = user.value?.nickName || ''
-  gender.value = user.value?.gender || ''
+  gender.value = user.value?.gender || 'M'
   birthday.value = new Date(
     user.value?.birthday ||
       (new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate())

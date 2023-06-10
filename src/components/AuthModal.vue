@@ -70,7 +70,7 @@
               <input type="checkbox" id="keep-login" class="mr-2" />
               <label for="keep-login">維持登入狀態</label>
             </div>
-            <button disabled class="text-neutral-600 underline">忘記密碼?</button>
+            <button type="button" disabled class="text-neutral-600 underline">忘記密碼?</button>
           </div>
           <button type="submit" class="btn-primary mx-auto block w-fit" :disabled="!meta.valid">
             確認
@@ -164,6 +164,10 @@ import { storeToRefs } from 'pinia'
 import type { FormContext } from 'vee-validate'
 import { useStatusStore } from '@/stores/status'
 import { useAuthStore } from '@/stores/auth'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
 
 const { showError } = useErrorHandler()
 const { updateLoading } = useStatusStore()
@@ -206,13 +210,17 @@ function onLoginSubmit() {
   })
     .then(() => {
       reset()
+      updateLoading(false)
       authModal.value = false
     })
-    .catch((err) => {
-      showError(err)
+    .then(() => {
+      if (route.query.target && route.query.target !== route.path) {
+        router.push(route.query.target.toString())
+      }
     })
-    .finally(() => {
+    .catch((err) => {
       updateLoading(false)
+      showError(err)
     })
 }
 
