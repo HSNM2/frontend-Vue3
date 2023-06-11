@@ -44,14 +44,30 @@
           </nav>
           <div class="p-6">
             <div v-if="selectedLessonType === 'file'">
-              <div v-if="lessonVideoUrl" class="h-96 w-full">
-                <VideoPlayer
-                  :src="lessonVideoUrl"
-                  controls
-                  class="h-full w-full"
-                  :playbackRates="[0.5, 1, 1.5, 2]"
-                  preload="auto"
-                ></VideoPlayer>
+              <div v-if="lessonVideoUrl">
+                <div class="h-96 w-full">
+                  <VideoPlayer
+                    :src="lessonVideoUrl"
+                    controls
+                    class="h-full w-full"
+                    :class="{ loading: !videoPlayerState }"
+                    :playbackRates="[0.5, 1, 1.5, 2]"
+                    preload="auto"
+                    @mounted="videoPlayerMounted"
+                    :control-bar="{
+                      skipButtons: {
+                        forward: videoPlayerSkipSecond,
+                        backward: videoPlayerSkipSecond
+                      }
+                    }"
+                    :user-actions="{ hotkeys: userActionsHotKeys }"
+                  ></VideoPlayer>
+                </div>
+                <span
+                  v-if="false && videoPlayerState && videoPlayerState.duration"
+                  class="block pt-1 text-end"
+                  >共 {{ (videoPlayerState && videoPlayerState.duration) || 1 }} 秒</span
+                >
               </div>
               <template v-else>
                 <div v-if="lessonFile" class="flex items-center">
@@ -133,7 +149,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useInstructorStore } from '@/stores/instructor'
 import { storeToRefs } from 'pinia'
@@ -142,6 +158,7 @@ import { useStatusStore } from '@/stores/status'
 import Swal from 'sweetalert2'
 import type { FormContext } from 'vee-validate'
 import { VideoPlayer } from '@videojs-player/vue'
+import type { VideoPlayerState } from '@videojs-player/vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -164,6 +181,42 @@ const lessonVideoUrl = ref<string>('')
 const selectedLessonType = ref('file') // file, mediaUrl
 const lessonFile = ref<File | null>(null)
 const lessonMediaUrl = ref('')
+
+// video player 相關
+const videoPlayer = ref()
+const videoPlayerSkipSecond = ref(10) // 快轉&倒退秒數
+const videoPlayerState = ref<VideoPlayerState>()
+
+function videoPlayerMounted(event: any) {
+  videoPlayerState.value = event.state
+  videoPlayer.value = event.player
+}
+
+function userActionsHotKeys(event: KeyboardEvent) {
+  if (videoPlayer.value) {
+    switch (event.which) {
+      case 32:
+        // pause
+        event.preventDefault()
+        if (!videoPlayerState.value?.playing) {
+          videoPlayer.value.play()
+        } else {
+          videoPlayer.value.pause()
+        }
+        break
+      case 39:
+        // right arrow
+        videoPlayer.value.currentTime(videoPlayer.value.currentTime() + videoPlayerSkipSecond.value)
+        break
+      case 37:
+        // left arrow
+        videoPlayer.value.currentTime(videoPlayer.value.currentTime() - videoPlayerSkipSecond.value)
+        break
+      default:
+        break
+    }
+  }
+}
 
 onMounted(() => {
   updateLoading(true)
