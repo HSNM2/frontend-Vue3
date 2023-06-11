@@ -2,6 +2,7 @@
   <form
     action="https://ccore.newebpay.com/MPG/mpg_gateway"
     method="post"
+    name="toPaymentSite"
     id="toPaymentSite"
     class="hidden"
   >
@@ -21,10 +22,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
+// import { useAuthStore } from '@/stores/auth'
 import { useOrderStore } from '@/stores/order'
 import { useCartStore } from '@/stores/cart'
 const { orderCreate } = useOrderStore()
 const { paymentInfo } = storeToRefs(useOrderStore())
+// const { user } = storeToRefs(useAuthStore())
 const { cartCourseIDAry } = storeToRefs(useCartStore())
 const version = import.meta.env.VITE_Version
 const merchantID = import.meta.env.VITE_MerchantID
@@ -36,6 +39,8 @@ onMounted(() => {
     email: paymentInfo.value.order.Email,
     merchantOrderNo: paymentInfo.value.order.MerchantOrderNo
   })
-  document.getElementById('toPaymentSite')?.submit()
+  localStorage.removeItem('sweetTimeCart')
+  const toPaymentSiteForm = document.getElementById('toPaymentSite') as HTMLFormElement
+  toPaymentSiteForm.submit()
 })
 </script>

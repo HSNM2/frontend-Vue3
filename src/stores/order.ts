@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import { GetOrderInfoRequest, OrderCreateRequest } from '@/models/order'
+import { GetOrderInfoRequest, OrderCreateRequest, OrderCheckoutRequest } from '@/models/order'
 
 interface OrderInfo {
   id: number[] //訂單中課程ID
@@ -42,11 +42,16 @@ export const useOrderStore = defineStore('order', () => {
     return OrderCreateRequest(payload)
   }
 
+  function orderCheckout(payload: { userID: string; courseID: number }) {
+    return OrderCheckoutRequest(payload)
+  }
+
   return {
     orderInfo,
     paymentInfo,
 
     orderInfoGenerate,
-    orderCreate
+    orderCreate,
+    orderCheckout
   }
 })
