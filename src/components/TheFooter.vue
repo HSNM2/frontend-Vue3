@@ -58,9 +58,16 @@
       </div>
     </div>
     <div class="bg-primary-4 py-3">
-      <p class="text-center text-sm text-neutral-50">Tiramisu © 2023-2053 All Rights Reserved</p>
+      <p class="text-center text-sm text-neutral-50">
+        Tiramisu © 2023-2053 All Rights Reserved
+        <span class="ps-5">version: {{ version }}</span>
+      </p>
     </div>
   </footer>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const version = ref(VITE_APP_VERSION)
+</script>

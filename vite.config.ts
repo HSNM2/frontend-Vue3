@@ -11,5 +11,8 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  define: {
+    VITE_APP_VERSION: JSON.stringify(require('./package.json').version)
   }
 })
