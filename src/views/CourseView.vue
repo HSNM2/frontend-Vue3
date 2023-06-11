@@ -183,6 +183,7 @@ interface Chapter {
   id: number
   title: string
   lessons: Lesson[]
+  isShow: boolean
 }
 
 interface Lesson {
@@ -212,6 +213,7 @@ interface Faq {
   id: string
   title: string
   questions: Question[]
+  isShow: boolean
 }
 
 interface Question {
@@ -254,6 +256,14 @@ const getData = () => {
       courseDetail.value?.data.inquiries.forEach((item) => {
         item.isResponse = false
         item.responseValue = ''
+      })
+
+      courseDetail.value?.data.chapters.forEach((item) => {
+        item.isShow = false
+      })
+
+      courseDetail.value?.data.faqs.forEach((item) => {
+        item.isShow = false
       })
 
       const isPublish = courseDetail.value?.data.course.isPublish
