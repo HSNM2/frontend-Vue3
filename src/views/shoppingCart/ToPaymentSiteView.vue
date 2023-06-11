@@ -39,6 +39,7 @@ onMounted(() => {
     email: paymentInfo.value.order.Email,
     merchantOrderNo: paymentInfo.value.order.MerchantOrderNo
   })
+  localStorage.removeItem('sweetTimeCart')
   const toPaymentSiteForm = document.getElementById('toPaymentSite') as HTMLFormElement
   toPaymentSiteForm.submit()
 })
