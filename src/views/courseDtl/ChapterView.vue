@@ -2,27 +2,38 @@
   <ul class="mb-10 flex flex-col gap-y-2">
     <li v-for="chapter in courseDetail.chapters" :key="chapter.id">
       <div
-        class="flex justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
+        class="flex cursor-pointer justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
+        @click="chapter.isShow = !chapter.isShow"
       >
         <h6 class="font-bold">{{ chapter.title }}</h6>
-        <span class="material-icons"> expand_less </span>
+        <span class="material-icons" :class="chapter.isShow ? '' : 'rotate-180'">
+          expand_more
+        </span>
       </div>
-      <ul class="flex flex-col gap-y-6 px-2 py-3">
-        <li v-for="lesson in chapter.lessons" :key="lesson.id">
-          <div class="flex justify-between">
-            <div class="flex gap-x-2">
-              <!-- <span class="material-icons text-primary-5"> play_arrow </span> -->
-              <p
-                class="font-bold text-primary-5"
-                @click="videoPlayerHandler(lesson.videoPath, chapter.id, lesson.id)"
-              >
-                {{ lesson.title }}
-              </p>
-            </div>
-            <p class="text-primary-5">5:30</p>
-          </div>
-        </li>
-      </ul>
+
+      <transition name="slide">
+        <template v-if="chapter.isShow">
+          <ul class="flex flex-col gap-y-6 px-2 py-3">
+            <li v-for="lesson in chapter.lessons" :key="lesson.id">
+              <div class="flex justify-between">
+                <div class="flex cursor-pointer gap-x-2">
+                  <span class="material-icons text-primary-5" v-show="lesson.isPlay === true">
+                    play_arrow
+                  </span>
+                  <p
+                    class="text-primary-5"
+                    :class="lesson.isPlay === true ? 'font-bold' : ''"
+                    @click="videoPlayerHandler(lesson.videoPath, chapter.id, lesson.id)"
+                  >
+                    {{ lesson.title }}
+                  </p>
+                </div>
+                <!-- <p class="text-primary-5">5:30</p> -->
+              </div>
+            </li>
+          </ul>
+        </template>
+      </transition>
     </li>
   </ul>
 </template>
@@ -39,4 +50,27 @@ const videoPlayerHandler = (videoPath: string, chapterID: number, lessonID: numb
   emit('update-video-path', videoPath, chapterID, lessonID)
 }
 </script>
-<style lang=""></style>
+<style lang="scss" scoped>
+.slide-leave-active,
+.slide-enter-active {
+  transition: all 0.2s ease;
+}
+
+.slide-enter-from {
+  transform: translateY(-10%);
+}
+
+.slide-leave-to {
+  transform: translateY(-10%);
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-to,
+.slide-leave-from {
+  opacity: 1;
+}
+</style>

@@ -32,7 +32,7 @@
                 :playsinline="true"
                 crossorigin="anonymous"
                 @mounted="handleMounted"
-                @ready="handleEvent($event, 'ready')"
+                @ready="playerReadied"
                 @play="handleEvent($event, 'play')"
                 @pause="handlePause($event, 'pause')"
                 @ended="handleEvent($event, 'ended')"
@@ -140,18 +140,21 @@ interface Chapter {
   id: number
   title: string
   lessons: Lesson[]
+  isShow: boolean
 }
 
 interface Lesson {
   id: number
   title: string
   videoPath: string
+  isPlay: boolean
 }
 
 const route = useRoute()
 
 const { showError } = useErrorHandler()
 
+const isLoading = ref(false)
 const courseDetail = ref<CourseDetail | null>(null)
 const courseID = Number(route.params.id)
 const minVal = ref(0)
@@ -163,6 +166,12 @@ const getData = () => {
   GetUserCourseRequest(courseID)
     .then((res) => {
       courseDetail.value = res.data
+      courseDetail.value?.data[0].chapters.forEach((chapter) => {
+        chapter.isShow = false
+        chapter.lessons.forEach((lesson) => {
+          lesson.isPlay = false
+        })
+      })
       console.log('courseDetail', courseDetail.value)
     })
     .catch((err) => {
@@ -173,6 +182,7 @@ const getData = () => {
 //#region 影片
 const isPlayerReady = ref(false)
 const player = shallowRef()
+const durations = ref(0)
 
 const handleMounted = (payload: any) => {
   player.value = payload.player
@@ -188,9 +198,15 @@ const handlePause = (log: object, action: string) => {
   //console.log(`Basic player event  ${action}`, log)
 }
 
-const handleTime = (time: object, src: object, action: string) => {
+const handleTime = (time: number, src: string, action: string) => {
+  durations.value = time
   // player?.currentSrc()
-  // console.log(` ${action}`, time, src)
+  console.log(` ${action}`, time, src)
+}
+
+const playerReadied = (player: object) => {
+  console.log(player)
+  //player.currentTime(durations.value)
 }
 
 const playerOptions = shallowRef({
@@ -212,18 +228,30 @@ const playerOptions = shallowRef({
   //   fullscreenToggle: true // 是否显示全屏按钮
   // }
 })
-const isLoading = ref(false)
 
 const updateVideoPath = (videoPath: string, chapterID: number, lessonID: number) => {
-  // console.log(courseDetail.value?.data[0].title)
   isPlayerReady.value = false
   isLoading.value = true
   playerOptions.value.sources[0].src = `http://localhost:3002/static/video/${videoPath}`
   triggerRef(playerOptions)
+  courseDetail.value?.data[0].chapters.forEach((chapter) => {
+    if (chapter.id === chapterID) {
+      chapter.lessons.forEach((lesson) => {
+        if (lesson.id === lessonID) {
+          lesson.isPlay = true
+        } else {
+          lesson.isPlay = false
+        }
+      })
+    } else {
+      chapter.lessons.forEach((lesson) => {
+        lesson.isPlay = false
+      })
+    }
+  })
 }
 
 watch(courseDetail, (newValue) => {
-  console.log('watch', newValue)
   if (newValue?.data[0].chapters[0].lessons[0].videoPath) {
     isPlayerReady.value = true
     const videoPath = newValue?.data[0].chapters[0].lessons[0].videoPath
