@@ -63,11 +63,9 @@
                     :user-actions="{ hotkeys: userActionsHotKeys }"
                   ></VideoPlayer>
                 </div>
-                <span
-                  v-if="false && videoPlayerState && videoPlayerState.duration"
-                  class="block pt-1 text-end"
-                  >共 {{ (videoPlayerState && videoPlayerState.duration) || 1 }} 秒</span
-                >
+                <!--                <span v-if="videoPlayerState" class="block pt-1 text-end"-->
+                <!--                  >共 {{ videoPlayerState.duration || 1 }} 秒</span-->
+                <!--                >-->
               </div>
               <template v-else>
                 <div v-if="lessonFile" class="flex items-center">
