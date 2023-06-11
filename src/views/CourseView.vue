@@ -42,18 +42,7 @@
                 <button
                   type="button"
                   class="btn-primary hidden md:block"
-                  @click="
-                    addCartItem({
-                      id: courseDetail.data.course.id.toString(),
-                      title: courseDetail.data.course.title,
-                      provider: courseDetail.data.course.provider,
-                      category: courseDetail.data.course.category,
-                      type: courseDetail.data.course.type,
-                      avgRating: +courseDetail.data.rating.avgRating,
-                      originPrice: courseDetail.data.course.originPrice,
-                      price: courseDetail.data.course.price
-                    })
-                  "
+                  @click="addCartItem(courseCartItem)"
                 >
                   立即購買
                 </button>
@@ -63,6 +52,7 @@
                 >
                   shopping_cart
                 </span>
+                <!-- @click="handleCartAction()" -->
               </template>
               <button v-else type="button" class="btn-secondary hidden md:block">
                 已加入購物車
@@ -155,6 +145,16 @@ interface CourseData {
   faqs: Faq[]
   rating: Rating
 }
+interface CourseCartItem {
+  id: string
+  title: string
+  provider: string
+  category: string
+  type: string
+  avgRating: number
+  originPrice: number
+  price: number
+}
 
 interface Course {
   id: number
@@ -236,12 +236,14 @@ interface RatingItem {
 const route = useRoute()
 
 const { showError } = useErrorHandler()
-const { addCartItem } = useCartStore()
+const { addCartItem, courseAddedCheck } = useCartStore()
+const { cart, hasAddCart } = storeToRefs(useCartStore())
 const auth = useAuthStore()
 const { authModal, authModalType, user } = storeToRefs(auth)
 const isLogin = ref(user.value !== null)
 
 const courseDetail = ref<CourseDetail | null>(null)
+const courseCartItem = ref<CourseCartItem | any>({})
 const courseID = Number(route.params.id)
 
 const getData = () => {
@@ -254,6 +256,18 @@ const getData = () => {
         item.isResponse = false
         item.responseValue = ''
       })
+      if (courseDetail.value?.data.course != undefined) {
+        courseCartItem.value = {
+          id: courseDetail.value?.data.course.id.toString(),
+          title: courseDetail.value?.data.course.title,
+          provider: courseDetail.value?.data.course.provider,
+          category: courseDetail.value?.data.course.category,
+          type: courseDetail.value?.data.course.type,
+          avgRating: +courseDetail.value!.data.rating.avgRating,
+          originPrice: courseDetail.value?.data.course.originPrice,
+          price: courseDetail.value?.data.course.price
+        }
+      }
     })
     .catch((err) => {
       showError(err)
@@ -311,35 +325,40 @@ const getStar = (score: string, index: number) => {
 //#endregion
 
 // #region Cart
-const hasAddCart = ref(false)
+// const hasAddCart = ref(false)
 const handleCartAction = () => {
   if (isLogin.value === false) {
     openAuthModal()
   } else {
-    let courseCart = localStorage.getItem('sweetTimeCart')
-    if (courseCart !== null && hasAddCart.value === false) {
-      let cartList = JSON.parse(courseCart)
-      storageCart(cartList)
-    } else {
-      let cartList: number[] = []
-      storageCart(cartList)
-    }
+    addCartItem(courseCartItem.value)
+    // localStorage.setItem('sweetTimeCart', JSON.stringify(cart.value))
+    getCartInfo()
+    // let courseCart = localStorage.getItem('sweetTimeCart')
+    // if (courseCart !== null && hasAddCart.value === false) {
+    //   let cartList = JSON.parse(courseCart)
+    //   storageCart(cartList)
+    // } else {
+    //   let cartList: number[] = []
+    //   storageCart(cartList)
+    // }
   }
 }
 
-const storageCart = (cartList: number[]) => {
-  cartList.push(courseID)
-  let cartListString = JSON.stringify(cartList)
-  localStorage.setItem('sweetTimeCart', cartListString)
-  getCartInfo()
-}
+// const storageCart = (cartList: number[]) => {
+//   cartList.push(courseID)
+//   let cartListString = JSON.stringify(cartList)
+//   localStorage.setItem('sweetTimeCart', JSON.stringify(cart.value))
+//   getCartInfo()
+// }
 
 const getCartInfo = () => {
   let courseCart = localStorage.getItem('sweetTimeCart')
   if (isLogin.value === true) {
     if (courseCart !== null) {
-      let cartList = JSON.parse(courseCart)
-      hasAddCart.value = cartList.some((id: number) => id === courseID)
+      // let cartList = JSON.parse(courseCart)
+      cart.value = JSON.parse(courseCart)
+      // hasAddCart.value = cartList.some((id: number) => id === courseID)
+      courseAddedCheck(courseID.toString())
     }
   }
 }

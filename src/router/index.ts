@@ -52,6 +52,11 @@ const router = createRouter({
           path: 'orderConfirmation',
           name: 'orderConfirmation',
           component: () => import('../views/shoppingCart/OrderConfirmationView.vue')
+        },
+        {
+          path: 'PaymentSelection',
+          name: 'orderCoPaymentSelection',
+          component: () => import('../views/shoppingCart/PaymentSelectionView.vue')
         }
       ]
     },
@@ -126,6 +131,11 @@ const router = createRouter({
           ]
         }
       ]
+    },
+    {
+      path: '/toPaymentSite',
+      name: 'toPaymentSite',
+      component: () => import('../views/shoppingCart/ToPaymentSiteView.vue')
     },
     {
       // not found page
