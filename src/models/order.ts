@@ -15,3 +15,11 @@ export function OrderCreateRequest(data: object) {
     data
   })
 }
+
+export function OrderCheckoutRequest(data: object) {
+  return request({
+    url: '/api/checkout',
+    method: 'post',
+    data
+  })
+}
