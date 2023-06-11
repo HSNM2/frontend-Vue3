@@ -35,7 +35,4 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { useCartStore } from '@/stores/cart'
-const { cart, cartHandle } = useCartStore()
-</script>
+<script setup lang="ts"></script>

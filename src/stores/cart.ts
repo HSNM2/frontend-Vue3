@@ -1,7 +1,5 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-import axios from 'axios'
 
 interface Cart {
   cartId: string
@@ -23,53 +21,32 @@ interface CartItem {
   price: number
 }
 
-import { GetCartRequest } from '@/models/cart'
-
 export const useCartStore = defineStore('cart', () => {
-  // const cart = ref<any | null>(null)
-  const cart = ref<Cart>({
-    cartId: '1',
-    cartItem: [
-      {
-        id: '1-1',
-        title: '手工法式馬卡龍：一個完整的步驟指...',
-        provider: 'course_provider',
-        category: 'course_category',
-        type: 'course_type',
-        avgRating: 4,
-        originPrice: 1500,
-        price: 1000
-      }
-    ],
-    usedCoupon: '',
-    totalOriginPrice: 0,
-    totalPrice: 0,
-    offPercent: 0
-  })
+  const cart = ref<Cart | any>({})
 
-  const remoteCart = ref(null)
+  const hasAddCart = ref<boolean>(false)
 
-  const { user } = useAuthStore()
+  const cartCourseIDAry = ref<number[]>([])
 
   function getLocalCart() {
-    if (localStorage.getItem('sweetTimeCart')) {
-      return JSON.parse(localStorage.getItem('sweetTimeCart') || '')
+    const localCart = localStorage.getItem('sweetTimeCart')
+    if (localCart != null) {
+      cart.value = JSON.parse(localCart)
     } else {
-      return null
+      cart.value = {
+        cartItem: [],
+        usedCoupon: '',
+        totalOriginPrice: 0,
+        totalPrice: 0,
+        offPercent: 0
+      }
     }
   }
-  // function getRemoteCart(payload: { id: Array<string> }) {
-  //   GetCartRequest({
-  //     payload
-  //   }).then((res) => {
-  //     return res
-  //   })
-  // }
 
   function cartHandle() {
     cart.value.totalPrice = 0
     cart.value.totalOriginPrice = 0
-    cart.value.cartItem.forEach((item) => {
+    cart.value.cartItem.forEach((item: any) => {
       cart.value.totalPrice = cart.value.totalPrice += item.price
       if (item.originPrice != 0) {
         cart.value.totalOriginPrice = cart.value.totalOriginPrice += item.originPrice
@@ -80,15 +57,12 @@ export const useCartStore = defineStore('cart', () => {
     cart.value.offPercent = Math.round(
       ((cart.value.totalOriginPrice - cart.value.totalPrice) / cart.value.totalOriginPrice) * 100
     )
-    // if (getLocalCart() && !remoteCart.value) {
-    //   cart.value = getLocalCart()
-    // } else if (!getLocalCart() && user) {
-    //   cart.value = await getRemoteCart()
-    // }
+    localStorage.setItem('sweetTimeCart', JSON.stringify(cart.value))
   }
 
   function emptyCartHandle() {
     cart.value.cartItem = []
+    hasAddCart.value = false
     cartHandle()
   }
 
@@ -98,16 +72,30 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   function cartItemDeleteHandle(courseId: string) {
-    cart.value.cartItem = cart.value.cartItem.filter((item) => item.id != courseId)
+    cart.value.cartItem = cart.value.cartItem.filter((item: any) => item.id != courseId)
+    courseAddedCheck(courseId)
     cartHandle()
+  }
+
+  function courseAddedCheck(courseId: string) {
+    hasAddCart.value = false
+    if (cart.value.cartItem.length != 0) {
+      cart.value.cartItem.forEach((item: any) => {
+        if (item.id == courseId) {
+          hasAddCart.value = true
+        }
+      })
+    }
   }
 
   return {
     cart,
+    hasAddCart,
+    cartCourseIDAry,
 
     getLocalCart,
-    // getRemoteCart,
     cartHandle,
+    courseAddedCheck,
     emptyCartHandle,
     cartItemDeleteHandle,
     addCartItem
