@@ -153,7 +153,7 @@ router.beforeEach(async (to, from) => {
       // 無登入狀態
       authModal.value = true
       authModalType.value = 'login'
-      return { path: from.path }
+      return { path: from.path, query: { target: to.path } }
     }
   } else {
     if (to.meta.isInstructor && (!user.value.identity || user.value.identity !== '[1]')) {

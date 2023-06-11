@@ -273,7 +273,9 @@ function onSubmit() {
       courseId: +route.params.courseId,
       chapterId: +route.params.chapterId,
       lessonId: +route.params.lessonId,
-      data: formData
+      data: {
+        title: lessonTitle.value
+      }
     })
       .then((res) => {
         Swal.fire({
