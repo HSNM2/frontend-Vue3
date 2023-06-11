@@ -126,8 +126,9 @@
 
 <script setup lang="ts">
 import { shallowRef, ref, watch, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import Swal from 'sweetalert2'
 
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
@@ -182,6 +183,7 @@ interface Chapter {
   id: number
   title: string
   lessons: Lesson[]
+  isShow: boolean
 }
 
 interface Lesson {
@@ -211,6 +213,7 @@ interface Faq {
   id: string
   title: string
   questions: Question[]
+  isShow: boolean
 }
 
 interface Question {
@@ -234,6 +237,7 @@ interface RatingItem {
 }
 
 const route = useRoute()
+const router = useRouter()
 
 const { showError } = useErrorHandler()
 const { addCartItem } = useCartStore()
@@ -250,10 +254,27 @@ const getData = () => {
       courseDetail.value = res.data
       console.log('courseDetail', courseDetail.value)
       courseDetail.value?.data.inquiries.forEach((item) => {
-        console.log(item)
         item.isResponse = false
         item.responseValue = ''
       })
+
+      courseDetail.value?.data.chapters.forEach((item) => {
+        item.isShow = false
+      })
+
+      courseDetail.value?.data.faqs.forEach((item) => {
+        item.isShow = false
+      })
+
+      const isPublish = courseDetail.value?.data.course.isPublish
+      if (isPublish === false) {
+        Swal.fire({
+          icon: 'error',
+          title: '無此課程'
+        }).then(function () {
+          router.push({ path: '/courses' })
+        })
+      }
     })
     .catch((err) => {
       showError(err)

@@ -41,7 +41,7 @@
                   "
                   alt=""
                 />
-                <p class="">{{ user.nickName ?? user.name }}</p>
+                <p class="">{{ user.nickName === '' ? user.name : user.nickName }}</p>
               </div>
             </div>
           </div>
@@ -80,7 +80,7 @@
                     "
                     alt=""
                   />
-                  <p class="">{{ inquirie.name }}</p>
+                  <p class="">{{ inquirie.nickName === '' ? inquirie.name : inquirie.nickName }}</p>
                 </div>
                 <p class="text-sm text-primary-4">{{ inquirie.date.slice(0, 10) }}</p>
               </div>
@@ -104,7 +104,9 @@
                       "
                       alt=""
                     />
-                    <p class="">{{ response.name }}</p>
+                    <p class="">
+                      {{ response.nickName === '' ? response.name : response.nickName }}
+                    </p>
                     <!-- <p class="rounded-[15px] bg-neutral-50 px-2 text-xs text-primary-5">講師</p> -->
                   </div>
                   <p class="text-sm text-primary-4">{{ response.date.slice(0, 10) }}</p>
@@ -132,8 +134,16 @@
               <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-x-4">
-                    <img class="rounded-full" :src="user?.avatarImagePath" alt="" />
-                    <p class="">{{ user.nickName ?? user.name }}</p>
+                    <img
+                      class="rounded-full"
+                      :src="
+                        user?.avatarImagePath
+                          ? user?.avatarImagePath
+                          : 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
+                      "
+                      alt=""
+                    />
+                    <p class="">{{ user.nickName === '' ? user.name : user.nickName }}</p>
                   </div>
                 </div>
               </div>
@@ -199,6 +209,8 @@ const props = defineProps({
     required: true
   }
 })
+
+console.log(props.courseDetail)
 
 const { showError } = useErrorHandler()
 
