@@ -33,7 +33,7 @@
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
                 <img
-                  class="rounded-full"
+                  class="h-10 w-10 rounded-full"
                   :src="
                     user?.avatarImagePath
                       ? user?.avatarImagePath
@@ -72,7 +72,7 @@
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-x-4">
                   <img
-                    class="rounded-full"
+                    class="h-10 w-10 rounded-full"
                     :src="
                       inquirie.imagePath
                         ? inquirie.imagePath
@@ -96,7 +96,7 @@
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-x-4">
                     <img
-                      class="rounded-full"
+                      class="h-10 w-10 rounded-full"
                       :src="
                         response.imagePath
                           ? response.imagePath
@@ -135,7 +135,7 @@
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-x-4">
                     <img
-                      class="rounded-full"
+                      class="h-10 w-10 rounded-full"
                       :src="
                         user?.avatarImagePath
                           ? user?.avatarImagePath

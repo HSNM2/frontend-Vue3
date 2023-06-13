@@ -39,22 +39,36 @@
             </p>
             <div class="flex items-center gap-x-5 pb-6">
               <template v-if="hasAddCart === false">
+                <template v-if="isOwnedCourse === false">
+                  <button
+                    type="button"
+                    class="btn-primary hidden md:block"
+                    @click="enterOtherPage('cart-step-one')"
+                  >
+                    立即購買
+                  </button>
+                  <span
+                    class="material-icons hidden cursor-pointer text-primary-6 md:block"
+                    @click="handleCartAction()"
+                  >
+                    shopping_cart
+                  </span>
+                </template>
                 <button
+                  v-else
                   type="button"
                   class="btn-primary hidden md:block"
-                  @click="addCartItem(courseCartItem)"
+                  @click="enterOtherPage('learn')"
                 >
-                  立即購買
+                  進入課程
                 </button>
-                <span
-                  class="material-icons hidden cursor-pointer text-primary-6 md:block"
-                  @click="handleCartAction()"
-                >
-                  shopping_cart
-                </span>
-                <!-- @click="handleCartAction()" -->
               </template>
-              <button v-else type="button" class="btn-secondary hidden md:block">
+              <button
+                v-else
+                type="button"
+                class="btn-secondary hidden md:block"
+                @click="enterOtherPage('cart-step-one')"
+              >
                 已加入購物車
               </button>
               <span class="material-icons cursor-pointer text-primary-6"> share </span>
@@ -67,13 +81,12 @@
             </div>
           </div>
 
-          <!-- 影片先用圖片代替 -->
           <div class="col-span-12 lg:col-span-6">
-            <div class="grid grid-cols-4">
-              <div class="col-span-4">
-                <img class="w-100" src="https://picsum.photos/636/295" alt="" />
-              </div>
-            </div>
+            <img
+              class="h-52 w-full object-cover sm:h-96"
+              :src="courseDetail.data.course.image_path"
+              alt=""
+            />
           </div>
         </div>
       </div>
@@ -131,7 +144,12 @@ import CommonProblemView from '@/views/courseDtl/CommonProblemView.vue'
 import ReviewView from '@/views/courseDtl/ReviewView.vue'
 import useErrorHandler from '@/composables/useErrorHandler'
 import AuthModal from '@/components/AuthModal.vue'
-import { GetCourseRequest, UseCourseTagRequest, GetCourseTagRequest } from '@/models/course'
+import {
+  GetCourseRequest,
+  UseCourseTagRequest,
+  GetCourseTagRequest,
+  CheckUserHasCourseRequest
+} from '@/models/course'
 
 interface CourseDetail {
   status: boolean
@@ -146,6 +164,7 @@ interface CourseData {
   faqs: Faq[]
   rating: Rating
 }
+
 interface CourseCartItem {
   id: string
   title: string
@@ -249,6 +268,7 @@ const isLogin = ref(user.value !== null)
 const courseDetail = ref<CourseDetail | null>(null)
 const courseCartItem = ref<CourseCartItem | any>({})
 const courseID = Number(route.params.id)
+const isOwnedCourse = ref(false)
 
 const getData = () => {
   GetCourseRequest(courseID)
@@ -293,6 +313,29 @@ const getData = () => {
     .catch((err) => {
       showError(err)
     })
+}
+
+const checkHasCourse = () => {
+  let data = { id: courseID }
+  CheckUserHasCourseRequest(data)
+    .then((res) => {
+      isOwnedCourse.value = res.data.isOwned
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+const enterOtherPage = (page: string) => {
+  let path = ''
+  if (page === 'learn') {
+    path = `/learn/${courseID}`
+  } else if (page === 'cart-step-one') {
+    //path = `shoppingCart/orderConfirmation`
+  }
+  router.push({
+    path: path
+  })
 }
 
 //#region 書籤 需整理
@@ -346,39 +389,20 @@ const getStar = (score: string, index: number) => {
 //#endregion
 
 // #region Cart
-// const hasAddCart = ref(false)
 const handleCartAction = () => {
   if (isLogin.value === false) {
     openAuthModal()
   } else {
     addCartItem(courseCartItem.value)
-    // localStorage.setItem('sweetTimeCart', JSON.stringify(cart.value))
     getCartInfo()
-    // let courseCart = localStorage.getItem('sweetTimeCart')
-    // if (courseCart !== null && hasAddCart.value === false) {
-    //   let cartList = JSON.parse(courseCart)
-    //   storageCart(cartList)
-    // } else {
-    //   let cartList: number[] = []
-    //   storageCart(cartList)
-    // }
   }
 }
-
-// const storageCart = (cartList: number[]) => {
-//   cartList.push(courseID)
-//   let cartListString = JSON.stringify(cartList)
-//   localStorage.setItem('sweetTimeCart', JSON.stringify(cart.value))
-//   getCartInfo()
-// }
 
 const getCartInfo = () => {
   let courseCart = localStorage.getItem('sweetTimeCart')
   if (isLogin.value === true) {
     if (courseCart !== null) {
-      // let cartList = JSON.parse(courseCart)
       cart.value = JSON.parse(courseCart)
-      // hasAddCart.value = cartList.some((id: number) => id === courseID)
       courseAddedCheck(courseID.toString())
     }
   }
@@ -427,12 +451,14 @@ const getcourseTags = computed(() => {
 watch(user, () => {
   checkLogin()
   getCartInfo()
+  checkHasCourse()
 })
 
 onMounted(() => {
   getData()
   checkLogin()
   getCartInfo()
+  checkHasCourse()
 })
 </script>
 
