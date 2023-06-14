@@ -9,11 +9,7 @@
         <label for="link" class="form-label">封面圖片</label>
         <div class="group relative h-96 rounded border border-dashed hover:border-primary-4">
           <template v-if="coverImage">
-            <img
-              :src="coverImage"
-              alt="圖片有誤，請重新上傳"
-              class="mx-auto h-full w-auto object-contain"
-            />
+            <img :src="coverImage" alt="cover" class="mx-auto h-full w-auto object-contain" />
             <div
               v-if="showProgressBar"
               class="absolute bottom-0 left-0 h-2.5 w-full bg-gray-200 dark:bg-gray-300"

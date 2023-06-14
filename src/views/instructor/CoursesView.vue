@@ -34,9 +34,9 @@
               >
             </div>
             <img
-              :src="course.image_path || 'https://fakeimg.pl/125x80?text=cover'"
+              :src="course.image_path || 'https://fakeimg.pl/156x88?text=cover'"
               alt="cover"
-              class="mb-2 h-20 w-36 object-contain md:mb-0 md:me-4"
+              class="mb-2 h-22 w-39 object-contain md:mb-0 md:me-4"
             />
             <span class="text-sm md:me-4 md:text-base">{{ course.title }}</span>
             <RouterLink
