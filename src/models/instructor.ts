@@ -30,6 +30,25 @@ export function CourseInfoEditRequest(params: { id: number; data: object }) {
   })
 }
 
+export function UploadCourseCoverRequest(params: { data: object; onUploadProcess: any }) {
+  return request({
+    url: `api/courseProvider/coverPhoto/upload`,
+    method: 'post',
+    data: params.data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    onUploadProgress: params.onUploadProcess
+  })
+}
+
+export function DeleteCourseCoverRequest(data: number) {
+  return request({
+    url: `api/courseProvider/coverPhoto/upload/${data}`,
+    method: 'delete'
+  })
+}
+
 export function DeleteCourseRequest(params: { id: number }) {
   return request({
     url: `/api/courseProvider/course/${params.id}`,
