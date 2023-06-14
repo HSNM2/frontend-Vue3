@@ -7,32 +7,52 @@
       <!--封面圖片-->
       <div class="mb-6">
         <label for="link" class="form-label">封面圖片</label>
-        <div class="h-96 rounded border border-dashed">
-          <div class="flex h-full flex-col items-center justify-center">
-            <VField rules="required|ext:jpg,png" name="file" v-slot="{ handleBlur }">
-              <label for="coverImageFile" class="w-full">
-                <span
-                  class="block h-96 rounded border border-dashed hover:border-primary-4"
-                  :class="[isDragging ? 'border-primary-4' : '']"
-                  @dragover.prevent="isDragging = true"
-                  @dragleave.prevent="isDragging = false"
-                  @drop.prevent="onChangeFile"
-                >
-                  <span class="flex h-full flex-col items-center justify-center">
-                    <i class="material-icons text-4xl">file_upload</i>
-                    <span class="mb-2 block text-2xl">將檔案拖曳至此或點擊此處選擇檔案</span>
-                  </span>
-                </span>
-                <input
-                  id="coverImageFile"
-                  type="file"
-                  class="absolute hidden"
-                  @change="handleChange"
-                  @blur="handleBlur"
-                />
+        <div class="group relative h-96 rounded border border-dashed hover:border-primary-4">
+          <template v-if="coverImage">
+            <img :src="coverImage" alt="cover" class="mx-auto h-full w-auto object-contain" />
+            <div
+              v-if="showProgressBar"
+              class="mb-4 h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700"
+            >
+              <div
+                class="h-2.5 rounded-full bg-blue-600 transition-all duration-700 dark:bg-blue-500"
+                :style="`width: ${uploadProcessPercent}%`"
+              ></div>
+            </div>
+            <div
+              v-else
+              class="absolute bottom-0 left-0 flex h-0 w-full items-center justify-center overflow-hidden rounded-b bg-black/60 transition-all duration-100 group-hover:h-11"
+            >
+              <a href="#" class="me-8 text-neutral-100" @click.prevent="deleteCover">刪除</a>
+              <label
+                for="coverImageFile"
+                class="cursor-pointer rounded border px-3 text-neutral-100"
+              >
+                更換
               </label>
-            </VField>
-          </div>
+            </div>
+          </template>
+          <label for="coverImageFile" class="w-full" :class="{ hidden: coverImage }">
+            <span
+              class="block h-96 rounded border border-dashed hover:border-primary-4"
+              :class="[isDragging ? 'border-primary-4' : '']"
+              @dragover.prevent="isDragging = true"
+              @dragleave.prevent="isDragging = false"
+              @drop.prevent="onChangeFile"
+            >
+              <span class="flex h-full flex-col items-center justify-center">
+                <i class="material-icons text-4xl">file_upload</i>
+                <span class="mb-2 block text-2xl">將檔案拖曳至此或點擊此處選擇圖片</span>
+              </span>
+            </span>
+            <input
+              id="coverImageFile"
+              type="file"
+              accept=".png, .jpg"
+              class="absolute hidden"
+              @change="handleChange"
+            />
+          </label>
         </div>
       </div>
       <!--介紹影片-->
@@ -304,6 +324,8 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useInstructorStore } from '@/stores/instructor'
+import useErrorHandler from '@/composables/useErrorHandler'
+import { useStatusStore } from '@/stores/status'
 import Swal from 'sweetalert2'
 
 import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic'
@@ -318,17 +340,25 @@ import { ImageInsert } from '@ckeditor/ckeditor5-image'
 import { List } from '@ckeditor/ckeditor5-list'
 import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line'
 import { BlockQuote } from '@ckeditor/ckeditor5-block-quote'
+import { storeToRefs } from 'pinia'
 
 const instructor = useInstructorStore()
 const route = useRoute()
 
-const { course, getCourse, editCourseInfo } = instructor
+const { showError } = useErrorHandler()
+
+const { updateLoading } = useStatusStore()
+const { course, getCourse, editCourseInfo, uploadCourseCover, deleteCourseCover } = instructor
+const { uploadProcessPercent } = storeToRefs(instructor)
 
 const isDragging = ref(false)
 
 const tag = ref<string>('')
 const tags = ref<string[]>([]) // 標籤
-const coverImageFile = ref<File | undefined>(undefined)
+
+const coverImage = ref('') // 課程已有的封面
+const coverImageFile = ref<File | null>(null) // 上傳用課程封面
+const showProgressBar = ref(false)
 
 const editor = ClassicEditor
 const editorConfig = {
@@ -372,11 +402,12 @@ const editorConfig = {
 }
 
 function courseInfoProcess() {
-  getCourse({ id: +route.params.courseId }).then(() => {
+  getCourse({ id: +route.params.courseId }).then((res) => {
     tagHandle()
     if (course?.description == null) {
       course!.description = ''
     }
+    coverImage.value = res?.image_path || ''
   })
 }
 
@@ -386,6 +417,7 @@ function onChangeFile(e: DragEvent) {
   if (e.dataTransfer && e.dataTransfer.files[0]) {
     coverImageFile.value = e.dataTransfer.files[0]
   }
+  uploadCover()
 }
 
 function handleChange(e: Event) {
@@ -393,6 +425,41 @@ function handleChange(e: Event) {
   if (files && files.length !== 0) {
     coverImageFile.value = files[0]
   }
+  uploadCover()
+}
+
+function uploadCover() {
+  const formData = new FormData()
+  formData.append('courseId', route.params.courseId.toString())
+  if (coverImageFile.value) {
+    formData.append('coverPhoto', coverImageFile.value)
+  }
+  showProgressBar.value = true
+
+  uploadCourseCover(formData)
+    .then((res) => {
+      coverImage.value = res.data.data.imagePath
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      showProgressBar.value = false
+    })
+}
+
+function deleteCover() {
+  updateLoading(true)
+  deleteCourseCover(+route.params.courseId)
+    .then(() => {
+      coverImage.value = ''
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
 }
 
 function tagHandle() {
