@@ -50,3 +50,11 @@ export function GetUserCourseRequest(courseID: number) {
     method: 'get'
   })
 }
+
+export function CheckUserHasCourseRequest(data: object) {
+  return request({
+    url: `/api/user/ownedCourse/check`,
+    method: 'post',
+    data
+  })
+}
