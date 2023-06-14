@@ -105,6 +105,7 @@
       <component
         :is="currentTab"
         :isLogin="isLogin"
+        :isOwnedCourse="isOwnedCourse"
         :user="user"
         :courseDetail="courseDetail"
         @update-is-response="inquiryReplyAction"
@@ -118,8 +119,18 @@
       <div class="flex items-center justify-between gap-x-5 bg-secondary-1 px-3 py-[15px]">
         <p class="text-2xl font-bold text-primary-4">NT$23,000</p>
         <template v-if="hasAddCart === false">
-          <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
-          <button type="button" class="btn-primary w-full px-2">立即購買</button>
+          <template v-if="isOwnedCourse === false">
+            <button type="button" class="btn-primary w-full px-2">立即購買</button>
+            <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
+          </template>
+          <button
+            v-else
+            type="button"
+            class="btn-primary block w-full px-2 md:hidden"
+            @click="enterOtherPage('learn')"
+          >
+            進入課程
+          </button>
         </template>
         <button v-else type="button" class="btn-primary w-full px-2">已加入購物車</button>
       </div>
@@ -350,6 +361,8 @@ const getTagList = () => {
     .then((res) => {
       if (res.data.status === true) {
         tagList.value = res.data.data.split(',')
+      } else {
+        tagList.value = []
       }
     })
     .catch((err) => {

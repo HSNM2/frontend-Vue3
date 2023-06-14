@@ -173,6 +173,8 @@ const getTagList = () => {
     .then((res) => {
       if (res.data.status === true) {
         tagList.value = res.data.data.split(',')
+      } else {
+        tagList.value = []
       }
     })
     .catch((err) => {
@@ -184,7 +186,7 @@ const handleCourseTag = (courseID: number) => {
   if (isLogin.value === false) {
     openAuthModal()
   } else {
-    let method = judgeTags(courseID) ? 'delete' : 'post'
+    let method = judgeTags(courseID) === true ? 'delete' : 'post'
     UseCourseTagRequest(method, courseID)
       .then((res) => {
         getTagList()

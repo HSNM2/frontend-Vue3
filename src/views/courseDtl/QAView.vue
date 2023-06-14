@@ -200,6 +200,10 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
+  isOwnedCourse: {
+    type: Boolean,
+    required: false
+  },
   user: {
     type: Object,
     required: true

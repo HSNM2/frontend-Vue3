@@ -88,7 +88,7 @@
           </div>
         </div>
         <button
-          v-if="isLogin === true"
+          v-if="(isLogin === true && isOwnedCourse === true) || $route.name === 'learn'"
           type="button"
           class="btn-primary mx-auto block px-4"
           @click="reviewAction()"
@@ -160,8 +160,17 @@
 import { ref } from 'vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ReviewModal from '@/components/ReviewModal.vue'
+
+const emit = defineEmits(['update-is-response', 'get-data', 'update-video-path'])
 const props = defineProps({
-  isLogin: { type: Boolean },
+  isLogin: {
+    type: Boolean,
+    required: true
+  },
+  isOwnedCourse: {
+    type: Boolean,
+    required: false
+  },
   user: {
     type: Object,
     required: true
