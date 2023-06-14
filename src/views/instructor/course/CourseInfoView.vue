@@ -9,13 +9,17 @@
         <label for="link" class="form-label">封面圖片</label>
         <div class="group relative h-96 rounded border border-dashed hover:border-primary-4">
           <template v-if="coverImage">
-            <img :src="coverImage" alt="cover" class="mx-auto h-full w-auto object-contain" />
+            <img
+              :src="coverImage"
+              alt="圖片有誤，請重新上傳"
+              class="mx-auto h-full w-auto object-contain"
+            />
             <div
               v-if="showProgressBar"
-              class="mb-4 h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700"
+              class="absolute bottom-0 left-0 h-2.5 w-full bg-gray-200 dark:bg-gray-300"
             >
               <div
-                class="h-2.5 rounded-full bg-blue-600 transition-all duration-700 dark:bg-blue-500"
+                class="h-2.5 bg-blue-600 transition-all duration-700 dark:bg-primary-5"
                 :style="`width: ${uploadProcessPercent}%`"
               ></div>
             </div>
@@ -439,6 +443,7 @@ function uploadCover() {
   uploadCourseCover(formData)
     .then((res) => {
       coverImage.value = res.data.data.imagePath
+      coverImageFile.value = null
     })
     .catch((err) => {
       showError(err)
