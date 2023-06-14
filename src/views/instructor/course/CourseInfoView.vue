@@ -420,16 +420,16 @@ function onChangeFile(e: DragEvent) {
   isDragging.value = false
   if (e.dataTransfer && e.dataTransfer.files[0]) {
     coverImageFile.value = e.dataTransfer.files[0]
+    uploadCover()
   }
-  uploadCover()
 }
 
 function handleChange(e: Event) {
   const files: FileList | null = (e.target as HTMLInputElement).files
   if (files && files.length !== 0) {
     coverImageFile.value = files[0]
+    uploadCover()
   }
-  uploadCover()
 }
 
 function uploadCover() {
