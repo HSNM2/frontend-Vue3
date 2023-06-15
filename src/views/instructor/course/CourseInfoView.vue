@@ -3,7 +3,7 @@
     <h1 class="font-bold text-neutral-800">課程資訊</h1>
   </div>
   <div class="rounded bg-neutral-50 p-6">
-    <VForm ref="form" v-slot="{ meta }" @submit="onSubmit()">
+    <VForm ref="form" v-slot="{}" @submit="onSubmit()">
       <!--封面圖片-->
       <div class="mb-6">
         <label for="link" class="form-label">封面圖片</label>

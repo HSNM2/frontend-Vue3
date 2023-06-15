@@ -35,7 +35,7 @@
             </div>
 
             <p class="hidden pb-5 text-2xl font-bold text-primary-4 md:block">
-              NT${{ courseDetail.data.course.originPrice }}
+              NT${{ courseDetail.data.course.price }}
             </p>
             <div class="flex items-center gap-x-5 pb-6">
               <template v-if="hasAddCart === false">
@@ -43,7 +43,7 @@
                   <button
                     type="button"
                     class="btn-primary hidden md:block"
-                    @click="enterOtherPage('cart-step-one')"
+                    @click="enterOtherPage('paymentSelection')"
                   >
                     立即購買
                   </button>
@@ -270,7 +270,7 @@ const route = useRoute()
 const router = useRouter()
 
 const { showError } = useErrorHandler()
-const { addCartItem, courseAddedCheck } = useCartStore()
+const { addCartItem, courseAddedCheck, addImmediateCourseItem } = useCartStore()
 const { cart, hasAddCart } = storeToRefs(useCartStore())
 const auth = useAuthStore()
 const { authModal, authModalType, user } = storeToRefs(auth)
@@ -293,6 +293,7 @@ const getData = () => {
       if (courseDetail.value?.data.course != undefined) {
         courseCartItem.value = {
           id: courseDetail.value?.data.course.id.toString(),
+          image_path: courseDetail.value?.data.course.image_path,
           title: courseDetail.value?.data.course.title,
           provider: courseDetail.value?.data.course.provider,
           category: courseDetail.value?.data.course.category,
@@ -341,8 +342,9 @@ const enterOtherPage = (page: string) => {
   let path = ''
   if (page === 'learn') {
     path = `/learn/${courseID}`
-  } else if (page === 'cart-step-one') {
-    //path = `shoppingCart/orderConfirmation`
+  } else if (page === 'paymentSelection') {
+    addImmediateCourseItem(courseCartItem.value)
+    path = `/shoppingCart/paymentSelection`
   }
   router.push({
     path: path

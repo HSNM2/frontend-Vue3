@@ -14,6 +14,7 @@ interface CartItem {
   id: string
   title: string
   provider: string
+  image_path: string
   category: string
   type: string
   avgRating: number
@@ -27,6 +28,7 @@ export const useCartStore = defineStore('cart', () => {
   const hasAddCart = ref<boolean>(false)
 
   const cartCourseIDAry = ref<number[]>([])
+  const immediateCheckoutCourseInfo = ref<CartItem | any>({})
 
   function getLocalCart() {
     const localCart = localStorage.getItem('sweetTimeCart')
@@ -71,6 +73,12 @@ export const useCartStore = defineStore('cart', () => {
     cartHandle()
   }
 
+  function addImmediateCourseItem(item: CartItem) {
+    immediateCheckoutCourseInfo.value = JSON.parse(JSON.stringify(item))
+    localStorage.removeItem('immediateCheckout')
+    localStorage.setItem('immediateCheckout', JSON.stringify(immediateCheckoutCourseInfo.value))
+  }
+
   function cartItemDeleteHandle(courseId: string) {
     cart.value.cartItem = cart.value.cartItem.filter((item: any) => item.id != courseId)
     courseAddedCheck(courseId)
@@ -92,12 +100,14 @@ export const useCartStore = defineStore('cart', () => {
     cart,
     hasAddCart,
     cartCourseIDAry,
+    immediateCheckoutCourseInfo,
 
     getLocalCart,
     cartHandle,
     courseAddedCheck,
     emptyCartHandle,
     cartItemDeleteHandle,
-    addCartItem
+    addCartItem,
+    addImmediateCourseItem
   }
 })
