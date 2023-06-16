@@ -4,8 +4,8 @@
       <div class="mt-6 md:mt-[52px]">
         <div class="flex justify-between gap-x-4 md:items-center">
           <div>
-            <p class="text-base text-neutral-800">王小明</p>
-            <h2 class="text-heading-3xl text-primary-6">法式馬卡龍的製作與口感掌控</h2>
+            <!--            <p class="text-base text-neutral-800">王小明</p>-->
+            <h2 class="text-heading-3xl text-primary-6">{{ courseDetail?.data[0].title }}</h2>
           </div>
           <div class="md:hidden">
             <button class="btn-back-round">
@@ -274,7 +274,7 @@ const updateVideoPath = (videoPath: string, chapterID: number, lessonID: number)
 }
 
 watch(courseDetail, (newValue) => {
-  if (newValue?.data[0].chapters[0].lessons[0].videoPath) {
+  if (newValue?.data[0].chapters[0]?.lessons[0].videoPath) {
     isPlayerReady.value = true
     const videoPath = newValue?.data[0].chapters[0].lessons[0].videoPath
     playerOptions.value.sources[0].src = videoPath
