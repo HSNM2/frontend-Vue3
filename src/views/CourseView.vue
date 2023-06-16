@@ -285,7 +285,7 @@ const getData = () => {
   GetCourseRequest(courseID)
     .then((res) => {
       courseDetail.value = res.data
-      console.log('courseDetail', courseDetail.value)
+      //console.log('courseDetail', courseDetail.value)
       courseDetail.value?.data.inquiries.forEach((item) => {
         item.isResponse = false
         item.responseValue = ''
@@ -395,10 +395,20 @@ const judgeTags = (courseID: number) => {
 //#region 星星
 const getStar = (score: string, index: number) => {
   let rate = Number(score)
-  if (index + 1 <= rate) {
-    return 'star'
+  if (Number.isInteger(rate) === true) {
+    if (index + 1 <= rate) {
+      return 'star'
+    } else {
+      return 'star_border'
+    }
   } else {
-    return 'star_border'
+    if (index + 1 <= rate) {
+      return 'star'
+    } else if (index + 1 - rate === 0.5) {
+      return 'star_half'
+    } else {
+      return 'star_border'
+    }
   }
 }
 //#endregion

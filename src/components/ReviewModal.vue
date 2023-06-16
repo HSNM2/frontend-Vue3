@@ -16,7 +16,7 @@
               <span
                 class="material-icons text-xl text-primary-3"
                 @mouseover="mouseoverAction(index + 1)"
-                @mouseout="tempScore = 6"
+                @mouseout="tempScore = currentScore"
                 @click="getScore(index + 1)"
               >
                 {{ getStar(index) }}
@@ -29,11 +29,13 @@
               rows="4"
               class="w-full border border-neutral-200 px-4 py-4 md:px-5"
               placeholder="對這門課有心得？寫下你的心得，給老師一點鼓勵吧！"
+              v-model="rating.content"
             ></textarea>
           </div>
           <button
             type="button"
             class="btn-primary ms-auto block rounded-none text-center"
+            :disabled="rating.content === ''"
             @click="saveAction"
           >
             保存
@@ -47,10 +49,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const emits = defineEmits(['close-modal'])
+const emits = defineEmits(['save-action', 'close-modal'])
+const props = defineProps({
+  tempRating: {
+    type: Object,
+    required: true
+  }
+})
 
-const currentScore = ref(5)
-const tempScore = ref(6)
+const rating = ref(JSON.parse(JSON.stringify(props.tempRating)))
+const tempScore = ref(rating.value.score)
+const currentScore = ref(rating.value.score)
 
 const mouseoverAction = (score: number) => {
   tempScore.value = score
@@ -61,22 +70,15 @@ const getScore = (score: number) => {
 }
 
 const getStar = (index: number) => {
-  if (tempScore.value === 6) {
-    if (index + 1 <= currentScore.value) {
-      return 'star'
-    } else {
-      return 'star_border'
-    }
+  if (index + 1 <= tempScore.value) {
+    return 'star'
   } else {
-    if (index + 1 <= tempScore.value) {
-      return 'star'
-    } else {
-      return 'star_border'
-    }
+    return 'star_border'
   }
 }
 
 const saveAction = () => {
-  emits('close-modal')
+  rating.value.score = tempScore.value
+  emits('save-action', rating.value)
 }
 </script>
