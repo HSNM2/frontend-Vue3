@@ -5,9 +5,13 @@
       <p class="mb-2 text-center text-lg font-bold">感謝您於本網站訂購課程，訂單資訊如下：</p>
       <div class="border-1 mb-4 flex w-full justify-center border border-neutral-700 py-4">
         <div>
-          <p>訂單編號：orderNumber</p>
-          <p>訂單日期：orderDate</p>
-          <p>付款金額：paymentAmount</p>
+          <p>訂單編號：{{ orderInfo.orderNumber }}</p>
+          <p>訂單日期：{{ orderInfo.orderDate }}</p>
+          <div>
+            <p v-if="orderInfo.orderPaymentType == 'WEBATM'">付款方式：ATM轉帳</p>
+            <p v-if="orderInfo.orderPaymentType == 'CREDIT'">付款方式：信用卡</p>
+          </div>
+          <p>付款金額：{{ orderInfo.orderAmount }}</p>
         </div>
       </div>
       <div class="mb-4 flex justify-center bg-neutral-300 p-8">
@@ -20,12 +24,30 @@
       </div>
       <div class="flex justify-around">
         <router-link class="btn-secondary" to="/student/profile">課程列表</router-link
-        ><router-link class="btn-secondary" to="/learn/1">開始上課</router-link>
+        ><router-link
+          v-if="orderInfo && orderInfo.orderDetail"
+          class="btn-secondary"
+          :to="`/learn/${orderInfo.orderDetail.courseId}`"
+          >開始上課</router-link
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
+import { onMounted } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useOrderStore } from '@/stores/order'
+const { orderInfo } = storeToRefs(useOrderStore())
+
+const route = useRoute()
+
+onMounted(() => {
+  orderInfo.value = {}
+  if (route.query.data != undefined) {
+    orderInfo.value = JSON.parse(route.query.data as string)
+  }
+})
 </script>
