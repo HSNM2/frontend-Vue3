@@ -22,7 +22,7 @@
               <button @click="openAuthModal('register')" class="btn-secondary">註冊</button>
             </template>
             <template v-else>
-              <button class="btn-primary">我的學習</button>
+              <button class="btn-primary" @click="router.push('/student/courses')">我的學習</button>
               <div class="group relative">
                 <span class="material-icons cursor-pointer pr-1 text-3xl text-neutral-600">
                   shopping_cart
@@ -141,7 +141,7 @@
                         class="block px-4 py-2"
                         >課程後台</router-link
                       >
-                      <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
+                      <router-link to="/student/courses" class="block px-4 py-2"
                         >我的學習</router-link
                       >
                       <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
