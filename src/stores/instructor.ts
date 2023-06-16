@@ -106,6 +106,18 @@ export const useInstructorStore = defineStore('instructor', () => {
   function getCourse(payload: { id: number }) {
     return CourseRequest(payload).then((res) => {
       course.value = res.data.data
+      if (!course.value?.originPrice) {
+        course.value!.originPrice = 0
+      }
+      if (!course.value?.price) {
+        course.value!.price = 0
+      }
+      if (!course.value?.courseStatus) {
+        course.value!.courseStatus = '1'
+      }
+      if (!course.value?.description) {
+        course.value!.description = ''
+      }
       return res.data.data
     })
   }

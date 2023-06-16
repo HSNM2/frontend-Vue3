@@ -10,10 +10,10 @@
           <span class="material-icons text-4xl text-primary-5"> menu </span>
         </div>
         <div class="hidden md:flex md:items-center md:justify-between">
-          <button class="ml-14 flex items-center">
+          <RouterLink to="/courses" class="ml-14 flex items-center">
             <p class="mr-3 text-primary-5">探索</p>
             <span class="material-icons text-primary-5"> expand_more </span>
-          </button>
+          </RouterLink>
           <div class="flex items-center gap-x-4">
             <span class="material-icons pr-1 text-3xl text-neutral-600"> search </span>
             <template v-if="!user">
@@ -231,7 +231,7 @@ import { useStatusStore } from '@/stores/status'
 import { useCartStore } from '@/stores/cart'
 import AuthModal from './AuthModal.vue'
 import CourseProviderAllowModal from './CourseProviderAllowModal.vue'
-import { useRouter } from 'vue-router'
+import { useRouter, RouterLink } from 'vue-router'
 import useErrorHandler from '../composables/useErrorHandler'
 
 const router = useRouter()
