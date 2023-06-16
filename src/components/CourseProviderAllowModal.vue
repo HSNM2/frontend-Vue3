@@ -15,7 +15,9 @@
         </div>
         <div class="">
           <h2 class="mb-6 text-center text-2xl font-bold text-primary-5">開課說明</h2>
-          <p class="">於本網站提供課程需注意下列事項，並請於確認後按鈕同意：</p>
+          <p class="mb-4">於本網站提供課程需注意下列事項，並請於確認後按鈕同意：</p>
+          <p class="mb-2">(1)請勿提供不適當或違法之課程內容</p>
+          <p class="mb-2">(2)本網站對於不適當內容將強制下架，情況嚴重者將直接刪除不另行通知。</p>
           <button type="button" class="btn-primary block w-full text-center" @click="onRequest">
             我了解並同意，請幫我開通功能
           </button>

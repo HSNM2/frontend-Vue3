@@ -52,7 +52,11 @@
                         <div class="flex p-2 pt-0">
                           <div class="mr-2 w-1/3">
                             <img
-                              src="https://fakeimg.pl/90x56/B7B7B7/?text=Courses"
+                              :src="
+                                item?.image_path
+                                  ? item?.image_path
+                                  : 'https://fakeimg.pl/90x56/B7B7B7/?text=Courses'
+                              "
                               class="h-full w-full object-cover"
                               alt="課程圖片"
                             />

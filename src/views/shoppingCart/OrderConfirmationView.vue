@@ -11,9 +11,15 @@
           <div v-for="item in cart.cartItem" :key="item.id">
             <div class="flex items-center">
               <div class="w-1/4 p-2">
-                <div class="flex h-20 w-full items-center justify-center bg-neutral-300">
-                  <p class="text-center text-lg font-bold">course</p>
-                </div>
+                <img
+                  :src="
+                    item?.image_path
+                      ? item?.image_path
+                      : 'https://fakeimg.pl/90x56/B7B7B7/?text=Courses'
+                  "
+                  class="h-full w-full object-cover"
+                  alt="課程圖片"
+                />
               </div>
               <div class="w-1/2 p-2">
                 <span class="block font-bold">{{ item.title }}</span>

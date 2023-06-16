@@ -58,3 +58,18 @@ export function CheckUserHasCourseRequest(data: object) {
     data
   })
 }
+
+export function RatingRequest(method: string, courseID: number, data: object = {}) {
+  return request({
+    url: `/api/user/course/${courseID}/rating`,
+    method: method,
+    data
+  })
+}
+
+export function GetRatingsRequest(courseID: number) {
+  return request({
+    url: `/api/user/course/${courseID}/ratings`,
+    method: 'get'
+  })
+}

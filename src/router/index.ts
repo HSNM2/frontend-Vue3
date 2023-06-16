@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import { useAuthStore } from '../stores/auth.js'
+import { useCartStore } from '../stores/cart.js'
 import { storeToRefs } from 'pinia'
 import Swal from 'sweetalert2'
 
@@ -55,8 +56,18 @@ const router = createRouter({
         },
         {
           path: 'PaymentSelection',
-          name: 'orderCoPaymentSelection',
-          component: () => import('../views/shoppingCart/PaymentSelectionView.vue')
+          name: 'PaymentSelection',
+          component: () => import('../views/shoppingCart/PaymentSelectionView.vue'),
+          beforeEnter: (to, from) => {
+            const { cart, immediateCheckoutCourseInfo } = storeToRefs(useCartStore())
+            if (cart.value.cartItem.length == 0 && !immediateCheckoutCourseInfo.value.id)
+              return { path: from.path }
+          }
+        },
+        {
+          path: 'orderCheckoutInfo',
+          name: 'orderCheckoutInfo',
+          component: () => import('../views/shoppingCart/OrderCheckoutInfoView.vue')
         }
       ]
     },
@@ -135,7 +146,10 @@ const router = createRouter({
     {
       path: '/toPaymentSite',
       name: 'toPaymentSite',
-      component: () => import('../views/shoppingCart/ToPaymentSiteView.vue')
+      component: () => import('../views/shoppingCart/ToPaymentSiteView.vue'),
+      beforeEnter: (to, from) => {
+        if (from.path != '/shoppingCart/paymentSelection') return { path: from.path }
+      }
     },
     {
       // not found page

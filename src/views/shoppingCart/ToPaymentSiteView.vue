@@ -1,4 +1,5 @@
 <template>
+  <loading v-model:active="isLoading" :is-full-page="true" opacity="1" />
   <form
     action="https://ccore.newebpay.com/MPG/mpg_gateway"
     method="post"
@@ -20,17 +21,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-// import { useAuthStore } from '@/stores/auth'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/css/index.css'
 import { useOrderStore } from '@/stores/order'
 import { useCartStore } from '@/stores/cart'
+
 const { orderCreate } = useOrderStore()
 const { paymentInfo } = storeToRefs(useOrderStore())
-// const { user } = storeToRefs(useAuthStore())
 const { cartCourseIDAry } = storeToRefs(useCartStore())
 const version = import.meta.env.VITE_Version
 const merchantID = import.meta.env.VITE_MerchantID
+const isLoading = ref<boolean>(true)
 
 onMounted(() => {
   orderCreate({
