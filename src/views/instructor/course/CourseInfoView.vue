@@ -50,7 +50,7 @@
               type="file"
               accept=".png, .jpg"
               class="absolute hidden"
-              @change="handleChange"
+              @change.prevent="handleChange"
             />
           </label>
         </div>
@@ -60,7 +60,6 @@
         <label for="link" class="form-label">介紹影片</label>
         <VField
           name="link"
-          rules="required"
           label="介紹影片"
           v-model="course!.link"
           v-slot="{ field, errors, meta }"
@@ -153,7 +152,13 @@
       <!--課程簡介-->
       <div class="mb-6">
         <label for="description" class="form-label">課程簡介</label>
-        <ckeditor :editor="editor" v-model="course!.description" :config="editorConfig"></ckeditor>
+        <div class="prose max-w-none">
+          <ckeditor
+            :editor="editor"
+            v-model="course!.description"
+            :config="editorConfig"
+          ></ckeditor>
+        </div>
         <span class="form-text">列出本課程的學習重點</span>
       </div>
       <!--課程分類-->
@@ -175,7 +180,8 @@
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
               >
-                <option value="麵包" selected>麵包</option>
+                <option value="">請選擇</option>
+                <option value="麵包">麵包</option>
               </select>
             </div>
             <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="price" />
@@ -197,7 +203,8 @@
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
               >
-                <option value="法國麵包" selected>法國麵包</option>
+                <option value="">請選擇</option>
+                <option value="法國麵包">法國麵包</option>
               </select>
             </div>
           </VField>
@@ -214,7 +221,10 @@
       >
         <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:gap-6">
           <div class="flex flex-1 gap-x-6">
-            <div class="border-1 flex w-1/2 rounded border p-3" @click="course!.courseStatus = '1'">
+            <div
+              class="border-1 flex w-1/2 cursor-pointer rounded border p-3"
+              @click="course!.courseStatus = '1'"
+            >
               <div class="p-1">
                 <input
                   id="courseStatus"
@@ -231,7 +241,10 @@
                 <span class="text-sm">可設定售價與優惠條件的付費型內容。</span>
               </div>
             </div>
-            <div class="border-1 flex w-1/2 rounded border p-3" @click="course!.courseStatus = '2'">
+            <div
+              class="border-1 flex w-1/2 cursor-pointer rounded border p-3"
+              @click="course!.courseStatus = '2'"
+            >
               <div class="p-1">
                 <input
                   id="courseStatus"
@@ -271,7 +284,7 @@
               </span>
               <input
                 id="price"
-                type="text"
+                type="number"
                 class="form-control rounded-s-none pe-7 text-right"
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
@@ -298,7 +311,7 @@
               </span>
               <input
                 id="originPrice"
-                type="text"
+                type="number"
                 class="form-control rounded-s-none pe-7 text-right"
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
@@ -315,7 +328,7 @@
 
       <button type="button" class="me-3 inline-block" @click="onSubmit">更新</button>
       <!-- :disabled="!meta.valid" -->
-      <button class="inline-block">取消</button>
+      <!--      <button class="inline-block">取消</button>-->
     </VForm>
   </div>
 </template>
@@ -404,9 +417,6 @@ const editorConfig = {
 function courseInfoProcess() {
   getCourse({ id: +route.params.courseId }).then((res) => {
     tagHandle()
-    if (course?.description == null) {
-      course!.description = ''
-    }
     coverImage.value = res?.image_path || ''
   })
 }
@@ -484,7 +494,11 @@ function addTag() {
 
 function onSubmit() {
   course!.tag = tags.value
-  editCourseInfo({ id: +route.params.courseId, data: course! }).then((res) => {
+  const { image_path, ...data } = course!
+  editCourseInfo({
+    id: +route.params.courseId,
+    data
+  }).then((res) => {
     if (res.data.status == true) {
       Swal.fire({
         icon: 'success',
