@@ -50,3 +50,26 @@ export function GetUserCourseRequest(courseID: number) {
     method: 'get'
   })
 }
+
+export function CheckUserHasCourseRequest(data: object) {
+  return request({
+    url: `/api/user/ownedCourse/check`,
+    method: 'post',
+    data
+  })
+}
+
+export function RatingRequest(method: string, courseID: number, data: object = {}) {
+  return request({
+    url: `/api/user/course/${courseID}/rating`,
+    method: method,
+    data
+  })
+}
+
+export function GetRatingsRequest(courseID: number) {
+  return request({
+    url: `/api/user/course/${courseID}/ratings`,
+    method: 'get'
+  })
+}

@@ -27,12 +27,15 @@ import {
   EditCourseFAQQuestionRequest,
   DeleteCourseFAQQuestionRequest,
   PublishCourseFAQQuestionRequest,
-  UnpublishCourseFAQQuestionRequest
+  UnpublishCourseFAQQuestionRequest,
+  UploadCourseCoverRequest,
+  DeleteCourseCoverRequest
 } from '@/models/instructor'
 
 interface Courses {
   id: number
   title: string
+  image_path: string
   isPublish: boolean
 }
 
@@ -88,6 +91,8 @@ export const useInstructorStore = defineStore('instructor', () => {
   const faqs = ref<CourseFAQs[]>([])
   const questions = ref<CourseFAQsQuestions[]>([])
 
+  const uploadProcessPercent = ref(0)
+
   //
   // 課程相關
   //
@@ -101,11 +106,38 @@ export const useInstructorStore = defineStore('instructor', () => {
   function getCourse(payload: { id: number }) {
     return CourseRequest(payload).then((res) => {
       course.value = res.data.data
+      if (!course.value?.originPrice) {
+        course.value!.originPrice = 0
+      }
+      if (!course.value?.price) {
+        course.value!.price = 0
+      }
+      if (!course.value?.courseStatus) {
+        course.value!.courseStatus = '1'
+      }
+      if (!course.value?.description) {
+        course.value!.description = ''
+      }
+      return res.data.data
     })
   }
 
   function editCourseInfo(payload: { id: number; data: object }) {
     return CourseInfoEditRequest(payload)
+  }
+
+  function uploadCourseCover(payload: object) {
+    uploadProcessPercent.value = 0
+    return UploadCourseCoverRequest({
+      data: payload,
+      onUploadProcess: (progressEvent: ProgressEvent) => {
+        uploadProcessPercent.value = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      }
+    })
+  }
+
+  function deleteCourseCover(payload: number) {
+    return DeleteCourseCoverRequest(payload)
   }
 
   function addCourse(payload: { title: string }) {
@@ -280,10 +312,13 @@ export const useInstructorStore = defineStore('instructor', () => {
     lesson,
     faqs,
     questions,
+    uploadProcessPercent,
 
     getCourses,
     addCourse,
     editCourseInfo,
+    uploadCourseCover,
+    deleteCourseCover,
     getCourse,
     deleteCourse,
     coursePublish,

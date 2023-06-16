@@ -35,26 +35,40 @@
             </div>
 
             <p class="hidden pb-5 text-2xl font-bold text-primary-4 md:block">
-              NT${{ courseDetail.data.course.originPrice }}
+              NT${{ courseDetail.data.course.price }}
             </p>
             <div class="flex items-center gap-x-5 pb-6">
               <template v-if="hasAddCart === false">
+                <template v-if="isOwnedCourse === false">
+                  <button
+                    type="button"
+                    class="btn-primary hidden md:block"
+                    @click="enterOtherPage('paymentSelection')"
+                  >
+                    立即購買
+                  </button>
+                  <span
+                    class="material-icons hidden cursor-pointer text-primary-6 md:block"
+                    @click="handleCartAction()"
+                  >
+                    shopping_cart
+                  </span>
+                </template>
                 <button
+                  v-else
                   type="button"
                   class="btn-primary hidden md:block"
-                  @click="addCartItem(courseCartItem)"
+                  @click="enterOtherPage('learn')"
                 >
-                  立即購買
+                  進入課程
                 </button>
-                <span
-                  class="material-icons hidden cursor-pointer text-primary-6 md:block"
-                  @click="handleCartAction()"
-                >
-                  shopping_cart
-                </span>
-                <!-- @click="handleCartAction()" -->
               </template>
-              <button v-else type="button" class="btn-secondary hidden md:block">
+              <button
+                v-else
+                type="button"
+                class="btn-secondary hidden md:block"
+                @click="enterOtherPage('cart-step-one')"
+              >
                 已加入購物車
               </button>
               <span class="material-icons cursor-pointer text-primary-6"> share </span>
@@ -67,13 +81,12 @@
             </div>
           </div>
 
-          <!-- 影片先用圖片代替 -->
           <div class="col-span-12 lg:col-span-6">
-            <div class="grid grid-cols-4">
-              <div class="col-span-4">
-                <img class="w-100" src="https://picsum.photos/636/295" alt="" />
-              </div>
-            </div>
+            <img
+              class="h-52 w-full object-cover sm:h-96"
+              :src="courseDetail.data.course.image_path"
+              alt=""
+            />
           </div>
         </div>
       </div>
@@ -92,6 +105,7 @@
       <component
         :is="currentTab"
         :isLogin="isLogin"
+        :isOwnedCourse="isOwnedCourse"
         :user="user"
         :courseDetail="courseDetail"
         @update-is-response="inquiryReplyAction"
@@ -105,8 +119,18 @@
       <div class="flex items-center justify-between gap-x-5 bg-secondary-1 px-3 py-[15px]">
         <p class="text-2xl font-bold text-primary-4">NT$23,000</p>
         <template v-if="hasAddCart === false">
-          <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
-          <button type="button" class="btn-primary w-full px-2">立即購買</button>
+          <template v-if="isOwnedCourse === false">
+            <button type="button" class="btn-primary w-full px-2">立即購買</button>
+            <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
+          </template>
+          <button
+            v-else
+            type="button"
+            class="btn-primary block w-full px-2 md:hidden"
+            @click="enterOtherPage('learn')"
+          >
+            進入課程
+          </button>
         </template>
         <button v-else type="button" class="btn-primary w-full px-2">已加入購物車</button>
       </div>
@@ -131,7 +155,12 @@ import CommonProblemView from '@/views/courseDtl/CommonProblemView.vue'
 import ReviewView from '@/views/courseDtl/ReviewView.vue'
 import useErrorHandler from '@/composables/useErrorHandler'
 import AuthModal from '@/components/AuthModal.vue'
-import { GetCourseRequest, UseCourseTagRequest, GetCourseTagRequest } from '@/models/course'
+import {
+  GetCourseRequest,
+  UseCourseTagRequest,
+  GetCourseTagRequest,
+  CheckUserHasCourseRequest
+} from '@/models/course'
 
 interface CourseDetail {
   status: boolean
@@ -146,6 +175,7 @@ interface CourseData {
   faqs: Faq[]
   rating: Rating
 }
+
 interface CourseCartItem {
   id: string
   title: string
@@ -240,7 +270,7 @@ const route = useRoute()
 const router = useRouter()
 
 const { showError } = useErrorHandler()
-const { addCartItem, courseAddedCheck } = useCartStore()
+const { addCartItem, courseAddedCheck, addImmediateCourseItem } = useCartStore()
 const { cart, hasAddCart } = storeToRefs(useCartStore())
 const auth = useAuthStore()
 const { authModal, authModalType, user } = storeToRefs(auth)
@@ -249,12 +279,13 @@ const isLogin = ref(user.value !== null)
 const courseDetail = ref<CourseDetail | null>(null)
 const courseCartItem = ref<CourseCartItem | any>({})
 const courseID = Number(route.params.id)
+const isOwnedCourse = ref(false)
 
 const getData = () => {
   GetCourseRequest(courseID)
     .then((res) => {
       courseDetail.value = res.data
-      console.log('courseDetail', courseDetail.value)
+      //console.log('courseDetail', courseDetail.value)
       courseDetail.value?.data.inquiries.forEach((item) => {
         item.isResponse = false
         item.responseValue = ''
@@ -262,6 +293,7 @@ const getData = () => {
       if (courseDetail.value?.data.course != undefined) {
         courseCartItem.value = {
           id: courseDetail.value?.data.course.id.toString(),
+          image_path: courseDetail.value?.data.course.image_path,
           title: courseDetail.value?.data.course.title,
           provider: courseDetail.value?.data.course.provider,
           category: courseDetail.value?.data.course.category,
@@ -295,6 +327,30 @@ const getData = () => {
     })
 }
 
+const checkHasCourse = () => {
+  let data = { id: courseID }
+  CheckUserHasCourseRequest(data)
+    .then((res) => {
+      isOwnedCourse.value = res.data.isOwned
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+const enterOtherPage = (page: string) => {
+  let path = ''
+  if (page === 'learn') {
+    path = `/learn/${courseID}`
+  } else if (page === 'paymentSelection') {
+    addImmediateCourseItem(courseCartItem.value)
+    path = `/shoppingCart/paymentSelection`
+  }
+  router.push({
+    path: path
+  })
+}
+
 //#region 書籤 需整理
 const openAuthModal = (type = 'login') => {
   authModal.value = true
@@ -307,6 +363,8 @@ const getTagList = () => {
     .then((res) => {
       if (res.data.status === true) {
         tagList.value = res.data.data.split(',')
+      } else {
+        tagList.value = []
       }
     })
     .catch((err) => {
@@ -337,48 +395,39 @@ const judgeTags = (courseID: number) => {
 //#region 星星
 const getStar = (score: string, index: number) => {
   let rate = Number(score)
-  if (index + 1 <= rate) {
-    return 'star'
+  if (Number.isInteger(rate) === true) {
+    if (index + 1 <= rate) {
+      return 'star'
+    } else {
+      return 'star_border'
+    }
   } else {
-    return 'star_border'
+    if (index + 1 <= rate) {
+      return 'star'
+    } else if (index + 1 - rate === 0.5) {
+      return 'star_half'
+    } else {
+      return 'star_border'
+    }
   }
 }
 //#endregion
 
 // #region Cart
-// const hasAddCart = ref(false)
 const handleCartAction = () => {
   if (isLogin.value === false) {
     openAuthModal()
   } else {
     addCartItem(courseCartItem.value)
-    // localStorage.setItem('sweetTimeCart', JSON.stringify(cart.value))
     getCartInfo()
-    // let courseCart = localStorage.getItem('sweetTimeCart')
-    // if (courseCart !== null && hasAddCart.value === false) {
-    //   let cartList = JSON.parse(courseCart)
-    //   storageCart(cartList)
-    // } else {
-    //   let cartList: number[] = []
-    //   storageCart(cartList)
-    // }
   }
 }
-
-// const storageCart = (cartList: number[]) => {
-//   cartList.push(courseID)
-//   let cartListString = JSON.stringify(cartList)
-//   localStorage.setItem('sweetTimeCart', JSON.stringify(cart.value))
-//   getCartInfo()
-// }
 
 const getCartInfo = () => {
   let courseCart = localStorage.getItem('sweetTimeCart')
   if (isLogin.value === true) {
     if (courseCart !== null) {
-      // let cartList = JSON.parse(courseCart)
       cart.value = JSON.parse(courseCart)
-      // hasAddCart.value = cartList.some((id: number) => id === courseID)
       courseAddedCheck(courseID.toString())
     }
   }
@@ -427,12 +476,14 @@ const getcourseTags = computed(() => {
 watch(user, () => {
   checkLogin()
   getCartInfo()
+  checkHasCourse()
 })
 
 onMounted(() => {
   getData()
   checkLogin()
   getCartInfo()
+  checkHasCourse()
 })
 </script>
 

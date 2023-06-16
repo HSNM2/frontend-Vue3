@@ -3,36 +3,56 @@
     <h1 class="font-bold text-neutral-800">課程資訊</h1>
   </div>
   <div class="rounded bg-neutral-50 p-6">
-    <VForm ref="form" v-slot="{ meta }" @submit="onSubmit()">
+    <VForm ref="form" v-slot="{}" @submit="onSubmit()">
       <!--封面圖片-->
       <div class="mb-6">
         <label for="link" class="form-label">封面圖片</label>
-        <div class="h-96 rounded border border-dashed">
-          <div class="flex h-full flex-col items-center justify-center">
-            <VField rules="required|ext:jpg,png" name="file" v-slot="{ handleBlur }">
-              <label for="coverImageFile" class="w-full">
-                <span
-                  class="block h-96 rounded border border-dashed hover:border-primary-4"
-                  :class="[isDragging ? 'border-primary-4' : '']"
-                  @dragover.prevent="isDragging = true"
-                  @dragleave.prevent="isDragging = false"
-                  @drop.prevent="onChangeFile"
-                >
-                  <span class="flex h-full flex-col items-center justify-center">
-                    <i class="material-icons text-4xl">file_upload</i>
-                    <span class="mb-2 block text-2xl">將檔案拖曳至此或點擊此處選擇檔案</span>
-                  </span>
-                </span>
-                <input
-                  id="coverImageFile"
-                  type="file"
-                  class="absolute hidden"
-                  @change="handleChange"
-                  @blur="handleBlur"
-                />
+        <div class="group relative h-96 rounded border border-dashed hover:border-primary-4">
+          <template v-if="coverImage">
+            <img :src="coverImage" alt="cover" class="mx-auto h-full w-auto object-contain" />
+            <div
+              v-if="showProgressBar"
+              class="absolute bottom-0 left-0 h-2.5 w-full bg-gray-200 dark:bg-gray-300"
+            >
+              <div
+                class="h-2.5 bg-blue-600 transition-all duration-700 dark:bg-primary-5"
+                :style="`width: ${uploadProcessPercent}%`"
+              ></div>
+            </div>
+            <div
+              v-else
+              class="absolute bottom-0 left-0 flex h-0 w-full items-center justify-center overflow-hidden rounded-b bg-black/60 transition-all duration-100 group-hover:h-11"
+            >
+              <a href="#" class="me-8 text-neutral-100" @click.prevent="deleteCover">刪除</a>
+              <label
+                for="coverImageFile"
+                class="cursor-pointer rounded border px-3 text-neutral-100"
+              >
+                更換
               </label>
-            </VField>
-          </div>
+            </div>
+          </template>
+          <label for="coverImageFile" class="w-full" :class="{ hidden: coverImage }">
+            <span
+              class="block h-96 rounded border border-dashed hover:border-primary-4"
+              :class="[isDragging ? 'border-primary-4' : '']"
+              @dragover.prevent="isDragging = true"
+              @dragleave.prevent="isDragging = false"
+              @drop.prevent="onChangeFile"
+            >
+              <span class="flex h-full flex-col items-center justify-center">
+                <i class="material-icons text-4xl">file_upload</i>
+                <span class="mb-2 block text-2xl">將檔案拖曳至此或點擊此處選擇圖片</span>
+              </span>
+            </span>
+            <input
+              id="coverImageFile"
+              type="file"
+              accept=".png, .jpg"
+              class="absolute hidden"
+              @change.prevent="handleChange"
+            />
+          </label>
         </div>
       </div>
       <!--介紹影片-->
@@ -40,7 +60,6 @@
         <label for="link" class="form-label">介紹影片</label>
         <VField
           name="link"
-          rules="required"
           label="介紹影片"
           v-model="course!.link"
           v-slot="{ field, errors, meta }"
@@ -133,7 +152,13 @@
       <!--課程簡介-->
       <div class="mb-6">
         <label for="description" class="form-label">課程簡介</label>
-        <ckeditor :editor="editor" v-model="course!.description" :config="editorConfig"></ckeditor>
+        <div class="prose max-w-none">
+          <ckeditor
+            :editor="editor"
+            v-model="course!.description"
+            :config="editorConfig"
+          ></ckeditor>
+        </div>
         <span class="form-text">列出本課程的學習重點</span>
       </div>
       <!--課程分類-->
@@ -155,7 +180,8 @@
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
               >
-                <option value="麵包" selected>麵包</option>
+                <option value="">請選擇</option>
+                <option value="麵包">麵包</option>
               </select>
             </div>
             <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="price" />
@@ -177,7 +203,8 @@
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
               >
-                <option value="法國麵包" selected>法國麵包</option>
+                <option value="">請選擇</option>
+                <option value="法國麵包">法國麵包</option>
               </select>
             </div>
           </VField>
@@ -194,7 +221,10 @@
       >
         <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:gap-6">
           <div class="flex flex-1 gap-x-6">
-            <div class="border-1 flex w-1/2 rounded border p-3" @click="course!.courseStatus = '1'">
+            <div
+              class="border-1 flex w-1/2 cursor-pointer rounded border p-3"
+              @click="course!.courseStatus = '1'"
+            >
               <div class="p-1">
                 <input
                   id="courseStatus"
@@ -211,7 +241,10 @@
                 <span class="text-sm">可設定售價與優惠條件的付費型內容。</span>
               </div>
             </div>
-            <div class="border-1 flex w-1/2 rounded border p-3" @click="course!.courseStatus = '2'">
+            <div
+              class="border-1 flex w-1/2 cursor-pointer rounded border p-3"
+              @click="course!.courseStatus = '2'"
+            >
               <div class="p-1">
                 <input
                   id="courseStatus"
@@ -251,7 +284,7 @@
               </span>
               <input
                 id="price"
-                type="text"
+                type="number"
                 class="form-control rounded-s-none pe-7 text-right"
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
@@ -278,7 +311,7 @@
               </span>
               <input
                 id="originPrice"
-                type="text"
+                type="number"
                 class="form-control rounded-s-none pe-7 text-right"
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
@@ -295,7 +328,7 @@
 
       <button type="button" class="me-3 inline-block" @click="onSubmit">更新</button>
       <!-- :disabled="!meta.valid" -->
-      <button class="inline-block">取消</button>
+      <!--      <button class="inline-block">取消</button>-->
     </VForm>
   </div>
 </template>
@@ -304,6 +337,8 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useInstructorStore } from '@/stores/instructor'
+import useErrorHandler from '@/composables/useErrorHandler'
+import { useStatusStore } from '@/stores/status'
 import Swal from 'sweetalert2'
 
 import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic'
@@ -318,17 +353,25 @@ import { ImageInsert } from '@ckeditor/ckeditor5-image'
 import { List } from '@ckeditor/ckeditor5-list'
 import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line'
 import { BlockQuote } from '@ckeditor/ckeditor5-block-quote'
+import { storeToRefs } from 'pinia'
 
 const instructor = useInstructorStore()
 const route = useRoute()
 
-const { course, getCourse, editCourseInfo } = instructor
+const { showError } = useErrorHandler()
+
+const { updateLoading } = useStatusStore()
+const { course, getCourse, editCourseInfo, uploadCourseCover, deleteCourseCover } = instructor
+const { uploadProcessPercent } = storeToRefs(instructor)
 
 const isDragging = ref(false)
 
 const tag = ref<string>('')
 const tags = ref<string[]>([]) // 標籤
-const coverImageFile = ref<File | undefined>(undefined)
+
+const coverImage = ref('') // 課程已有的封面
+const coverImageFile = ref<File | null>(null) // 上傳用課程封面
+const showProgressBar = ref(false)
 
 const editor = ClassicEditor
 const editorConfig = {
@@ -372,11 +415,9 @@ const editorConfig = {
 }
 
 function courseInfoProcess() {
-  getCourse({ id: +route.params.courseId }).then(() => {
+  getCourse({ id: +route.params.courseId }).then((res) => {
     tagHandle()
-    if (course?.description == null) {
-      course!.description = ''
-    }
+    coverImage.value = res?.image_path || ''
   })
 }
 
@@ -385,6 +426,7 @@ function onChangeFile(e: DragEvent) {
   isDragging.value = false
   if (e.dataTransfer && e.dataTransfer.files[0]) {
     coverImageFile.value = e.dataTransfer.files[0]
+    uploadCover()
   }
 }
 
@@ -392,7 +434,43 @@ function handleChange(e: Event) {
   const files: FileList | null = (e.target as HTMLInputElement).files
   if (files && files.length !== 0) {
     coverImageFile.value = files[0]
+    uploadCover()
   }
+}
+
+function uploadCover() {
+  const formData = new FormData()
+  formData.append('courseId', route.params.courseId.toString())
+  if (coverImageFile.value) {
+    formData.append('coverPhoto', coverImageFile.value)
+  }
+  showProgressBar.value = true
+
+  uploadCourseCover(formData)
+    .then((res) => {
+      coverImage.value = res.data.data.imagePath
+      coverImageFile.value = null
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      showProgressBar.value = false
+    })
+}
+
+function deleteCover() {
+  updateLoading(true)
+  deleteCourseCover(+route.params.courseId)
+    .then(() => {
+      coverImage.value = ''
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
 }
 
 function tagHandle() {
@@ -416,7 +494,11 @@ function addTag() {
 
 function onSubmit() {
   course!.tag = tags.value
-  editCourseInfo({ id: +route.params.courseId, data: course! }).then((res) => {
+  const { image_path, ...data } = course!
+  editCourseInfo({
+    id: +route.params.courseId,
+    data
+  }).then((res) => {
     if (res.data.status == true) {
       Swal.fire({
         icon: 'success',

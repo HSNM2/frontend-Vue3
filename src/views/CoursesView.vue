@@ -28,38 +28,42 @@
                 <div class="cursor-pointer hover:shadow hover:shadow-md hover:shadow-neutral-150">
                   <div class="overflow-hidden">
                     <img
-                      class="w-full duration-150 hover:scale-110"
-                      src="https://picsum.photos/300/180"
+                      class="block h-48 w-full object-cover duration-150 hover:scale-110"
+                      :src="item.image_path"
                       alt=""
                     />
                   </div>
-                  <div class="border border-t-0 border-solid border-neutral-150 p-3">
-                    <h3 class="mb-4 text-lg font-bold text-primary-6">
-                      {{ item.title }}
-                    </h3>
-                    <span class="text-sm text-neutral-800">{{ item.provider }}</span>
-                    <div class="flex items-center">
-                      <span class="material-icons pr-2 text-base"> watch_later </span>
-                      <span class="text-sm text-neutral-800">{{ item.totalTime }}</span>
-                    </div>
-                    <div class="flex items-center">
-                      <span class="material-icons pr-2 text-base"> person </span>
-                      <span class="text-sm text-neutral-800">{{ item.buyers }}</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center">
-                        <template v-for="(star, starIndex) in 5" :key="starIndex">
-                          <span class="material-icons text-lg text-primary-3">
-                            {{ getStar(item.rating.avgRating, starIndex) }}
-                          </span>
-                        </template>
-                        <span class="text-sm text-neutral-600">{{
-                          `(${item.rating.countRating})`
-                        }}</span>
+                  <div class="h-48 border border-t-0 border-solid border-neutral-150 p-3">
+                    <div class="flex h-full flex-col justify-between">
+                      <h3 class="text-lg font-bold text-primary-6">
+                        {{ item.title }}
+                      </h3>
+                      <div>
+                        <span class="text-sm text-neutral-800">{{ item.provider }}</span>
+                        <div class="flex items-center">
+                          <span class="material-icons pr-2 text-base"> watch_later </span>
+                          <span class="text-sm text-neutral-800">{{ item.totalTime }}</span>
+                        </div>
+                        <div class="flex items-center">
+                          <span class="material-icons pr-2 text-base"> person </span>
+                          <span class="text-sm text-neutral-800">{{ item.buyers }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <div class="flex items-center">
+                            <template v-for="(star, starIndex) in 5" :key="starIndex">
+                              <span class="material-icons text-lg text-primary-3">
+                                {{ getStar(item.rating.avgRating, starIndex) }}
+                              </span>
+                            </template>
+                            <span class="text-sm text-neutral-600">{{
+                              `(${item.rating.countRating})`
+                            }}</span>
+                          </div>
+                          <span class="text-lg font-bold text-primary-4"
+                            >NT${{ item.originPrice }}</span
+                          >
+                        </div>
                       </div>
-                      <span class="text-lg font-bold text-primary-4"
-                        >NT${{ item.originPrice }}</span
-                      >
                     </div>
                   </div>
                 </div>
@@ -169,6 +173,8 @@ const getTagList = () => {
     .then((res) => {
       if (res.data.status === true) {
         tagList.value = res.data.data.split(',')
+      } else {
+        tagList.value = []
       }
     })
     .catch((err) => {
@@ -180,7 +186,7 @@ const handleCourseTag = (courseID: number) => {
   if (isLogin.value === false) {
     openAuthModal()
   } else {
-    let method = judgeTags(courseID) ? 'delete' : 'post'
+    let method = judgeTags(courseID) === true ? 'delete' : 'post'
     UseCourseTagRequest(method, courseID)
       .then((res) => {
         getTagList()

@@ -4,8 +4,8 @@
       <div class="mt-6 md:mt-[52px]">
         <div class="flex justify-between gap-x-4 md:items-center">
           <div>
-            <p class="text-base text-neutral-800">王小明</p>
-            <h2 class="text-heading-3xl text-primary-6">法式馬卡龍的製作與口感掌控</h2>
+            <!--            <p class="text-base text-neutral-800">王小明</p>-->
+            <h2 class="text-heading-3xl text-primary-6">{{ courseDetail?.data[0].title }}</h2>
           </div>
           <div class="md:hidden">
             <button class="btn-back-round">
@@ -91,6 +91,8 @@
 
               <component
                 :is="currentTab"
+                :isLogin="true"
+                :user="{}"
                 :courseDetail="courseDetail?.data[0]"
                 @update-video-path="updateVideoPath"
               ></component>
@@ -112,9 +114,10 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import { shallowRef, ref, triggerRef, onMounted, watch, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { VideoPlayer } from '@videojs-player/vue'
 import 'video.js/dist/video-js.css'
+import Swal from 'sweetalert2'
 
 import ProgressBar from '@/components/ProgressBar.vue'
 import CourseTabs from '@/components/CourseTabs.vue'
@@ -123,7 +126,7 @@ import DiscussView from '@/views/courseDtl/DiscussView.vue'
 import ReviewView from '@/views/courseDtl/ReviewView.vue'
 import useErrorHandler from '@/composables/useErrorHandler'
 
-import { GetUserCourseRequest } from '@/models/course'
+import { GetUserCourseRequest, CheckUserHasCourseRequest } from '@/models/course'
 
 interface CourseDetail {
   status: boolean
@@ -151,6 +154,7 @@ interface Lesson {
 }
 
 const route = useRoute()
+const router = useRouter()
 
 const { showError } = useErrorHandler()
 
@@ -176,6 +180,24 @@ const getData = () => {
     })
     .catch((err) => {
       showError(err)
+    })
+}
+
+const checkHasCourse = () => {
+  let data = { id: courseID }
+  CheckUserHasCourseRequest(data)
+    .then((res) => {
+      if (res.data.isOwned === false) {
+        Swal.fire({
+          icon: 'error',
+          title: '尚未購買此課程'
+        }).then(function () {
+          router.push({ path: `/course/${courseID}` })
+        })
+      }
+    })
+    .catch((error) => {
+      console.log(error)
     })
 }
 
@@ -219,20 +241,20 @@ const playerOptions = shallowRef({
     }
   ],
   fluid: true,
-  controls: true
+  controls: true,
   //poster: 'https://picsum.photos/856/472'
-  // controlBar: {
-  //   timeDivider: true, // 当前时间和持续时间的分隔符
-  //   durationDisplay: true, // 显示持续时间
-  //   remainingTimeDisplay: true, // 是否显示剩余时间功能
-  //   fullscreenToggle: true // 是否显示全屏按钮
-  // }
+  controlBar: {
+    timeDivider: true, // 当前时间和持续时间的分隔符
+    durationDisplay: true, // 显示持续时间
+    remainingTimeDisplay: false // 是否显示剩余时间功能
+    //fullscreenToggle: true // 是否显示全屏按钮
+  }
 })
 
 const updateVideoPath = (videoPath: string, chapterID: number, lessonID: number) => {
   isPlayerReady.value = false
   isLoading.value = true
-  playerOptions.value.sources[0].src = `http://localhost:3002/static/video/${videoPath}`
+  playerOptions.value.sources[0].src = videoPath
   triggerRef(playerOptions)
   courseDetail.value?.data[0].chapters.forEach((chapter) => {
     if (chapter.id === chapterID) {
@@ -252,10 +274,10 @@ const updateVideoPath = (videoPath: string, chapterID: number, lessonID: number)
 }
 
 watch(courseDetail, (newValue) => {
-  if (newValue?.data[0].chapters[0].lessons[0].videoPath) {
+  if (newValue?.data[0].chapters[0]?.lessons[0].videoPath) {
     isPlayerReady.value = true
     const videoPath = newValue?.data[0].chapters[0].lessons[0].videoPath
-    playerOptions.value.sources[0].src = `http://localhost:3002/static/video/${videoPath}`
+    playerOptions.value.sources[0].src = videoPath
   }
 })
 
@@ -298,6 +320,7 @@ const changeTabView = (name: string) => {
 onMounted(() => {
   changeTabView('課程討論')
   getData()
+  checkHasCourse()
 })
 </script>
 

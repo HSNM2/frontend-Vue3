@@ -1,6 +1,6 @@
 {
   "name": "sweet-time-front-end",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "糖漬時光 Client 端",
   "repository": "git@github.com:HSNM2/frontend-Vue3.git",
   "author": "HSNM2",
@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
+    "@tailwindcss/typography": "^0.5.9",
     "@types/jsdom": "^21.1.0",
     "@types/node": "^18.14.2",
     "@vitejs/plugin-vue": "^4.0.0",

@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/HSNM2/frontend-Vue3/compare/v1.0.0...v1.2.0) (2023-06-16)
+
+
+### Features
+
+*  課程評價 資料對接api調整 ([7f6cef1](https://github.com/HSNM2/frontend-Vue3/commit/7f6cef1c1bb46047035ef396fe7b0909128e18c3))
+* 1. 課程封面圖片顯示 2. 課程問答大頭貼圖片修正 ([83f4e3e](https://github.com/HSNM2/frontend-Vue3/commit/83f4e3e2d153119e37254e09f9cf16af8a7cd942))
+* 1. 課程詳細頁面、課程介面 判斷是否擁有課程 2. 修正 書籤 加入移除的顯示 ([1d46935](https://github.com/HSNM2/frontend-Vue3/commit/1d4693573a1b945a3e5e786b49c110d9b4029973))
+* display checkout detail function ([83f4e3f](https://github.com/HSNM2/frontend-Vue3/commit/83f4e3f91d20e3f17e1df3c53b9d1c35a7b7d700))
+* 協助調整課程介面標題 ([0042816](https://github.com/HSNM2/frontend-Vue3/commit/00428163d9cd18225d1b49ced25655c9ba110b18))
+* 學生-我的課程 評價dialog ([7d2abc7](https://github.com/HSNM2/frontend-Vue3/commit/7d2abc7d6af6d398d503f542b08dbeedb17d39fb))
+* 新增 video 客製化選項 ([07ed481](https://github.com/HSNM2/frontend-Vue3/commit/07ed4814c9eaa46de27cb440f9e6d4a635c7fa7f))
+* 新增 學生-我的課程 ([2b83f31](https://github.com/HSNM2/frontend-Vue3/commit/2b83f3141abc337af546302cadb20ef01443e7f5))
+* 新增 學生-我的課程 串接api ([9f392a0](https://github.com/HSNM2/frontend-Vue3/commit/9f392a0b0377e3ca018845681592fa0781fa3187))
+* 新增我的購物車連結 ([859516a](https://github.com/HSNM2/frontend-Vue3/commit/859516a0f881c1240e17a4b923c624d5dd519d56))
+* 新增版本展示 ([310a625](https://github.com/HSNM2/frontend-Vue3/commit/310a6254a8094cdb98dada3c9756f964ee2ecb1a))
+* 新增講師後台圖片上傳/刪除 ([503ed80](https://github.com/HSNM2/frontend-Vue3/commit/503ed8076ad35d06b7259e42883c1c0aa8ecc6ec))
+* 課程詳細資訊頁面 課程評價api串接 ([af5a090](https://github.com/HSNM2/frontend-Vue3/commit/af5a0901871d395d209748c63b82e32b6427d90b))
+* 調整image alt ([f3c9a53](https://github.com/HSNM2/frontend-Vue3/commit/f3c9a53eb0e65bf0088f04afcda7c1471df01812))
+* 調整因tailwind 和 ckeditor 互衝樣式 ([4772698](https://github.com/HSNM2/frontend-Vue3/commit/47726980c38605ce75d7305fbd7e69880ac3b45a))
+* 調整圖片上傳progress bar 樣式 ([2bd2c16](https://github.com/HSNM2/frontend-Vue3/commit/2bd2c1654ce78bc6cc2791db67455515538aa9e0))
+* 調整講師後台資訊送出 ([06a4e94](https://github.com/HSNM2/frontend-Vue3/commit/06a4e94e275a392668cba0017ead09adccd70ce7))
+* 調整連結 ([780d747](https://github.com/HSNM2/frontend-Vue3/commit/780d747de97a529a586ef72d1990afc243666bd6))
+
+
+### Bug Fixes
+
+* bug of toPaymentSite form fix ([00645fb](https://github.com/HSNM2/frontend-Vue3/commit/00645fb5fc69ca5a89d3d36844ff5974a4c317c0))
+* fix build error ([8f2eb1b](https://github.com/HSNM2/frontend-Vue3/commit/8f2eb1b476fc11defdab8fade74ce58b9d625b18))
+* remove cart after payment ([f1738fa](https://github.com/HSNM2/frontend-Vue3/commit/f1738fac8d25fe2178e710344eb7f96e9c9d52c0))
+* 修正build 錯誤 ([2f2ba61](https://github.com/HSNM2/frontend-Vue3/commit/2f2ba61485a574b4948517b02a2ce9c4ad0d57e7))
+* 修正input file取消會報錯 ([05bb11c](https://github.com/HSNM2/frontend-Vue3/commit/05bb11ce4cdb3ab407aea3ce19112046465ec130))
+
 ## 1.1.0 (2023-06-11)
 
 

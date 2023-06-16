@@ -10,10 +10,10 @@
           <span class="material-icons text-4xl text-primary-5"> menu </span>
         </div>
         <div class="hidden md:flex md:items-center md:justify-between">
-          <button class="ml-14 flex items-center">
+          <RouterLink to="/courses" class="ml-14 flex items-center">
             <p class="mr-3 text-primary-5">探索</p>
             <span class="material-icons text-primary-5"> expand_more </span>
-          </button>
+          </RouterLink>
           <div class="flex items-center gap-x-4">
             <span class="material-icons pr-1 text-3xl text-neutral-600"> search </span>
             <template v-if="!user">
@@ -22,7 +22,7 @@
               <button @click="openAuthModal('register')" class="btn-secondary">註冊</button>
             </template>
             <template v-else>
-              <button class="btn-primary">我的學習</button>
+              <button class="btn-primary" @click="router.push('/student/courses')">我的學習</button>
               <div class="group relative">
                 <span class="material-icons cursor-pointer pr-1 text-3xl text-neutral-600">
                   shopping_cart
@@ -52,7 +52,11 @@
                         <div class="flex p-2 pt-0">
                           <div class="mr-2 w-1/3">
                             <img
-                              src="https://fakeimg.pl/90x56/B7B7B7/?text=Courses"
+                              :src="
+                                item?.image_path
+                                  ? item?.image_path
+                                  : 'https://fakeimg.pl/90x56/B7B7B7/?text=Courses'
+                              "
                               class="h-full w-full object-cover"
                               alt="課程圖片"
                             />
@@ -137,10 +141,10 @@
                         class="block px-4 py-2"
                         >課程後台</router-link
                       >
-                      <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
+                      <router-link to="/student/courses" class="block px-4 py-2"
                         >我的學習</router-link
                       >
-                      <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
+                      <router-link to="/shoppingCart/orderConfirmation" class="block px-4 py-2"
                         >我的購物車</router-link
                       >
                       <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
@@ -227,7 +231,7 @@ import { useStatusStore } from '@/stores/status'
 import { useCartStore } from '@/stores/cart'
 import AuthModal from './AuthModal.vue'
 import CourseProviderAllowModal from './CourseProviderAllowModal.vue'
-import { useRouter } from 'vue-router'
+import { useRouter, RouterLink } from 'vue-router'
 import useErrorHandler from '../composables/useErrorHandler'
 
 const router = useRouter()

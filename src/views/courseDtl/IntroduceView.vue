@@ -33,7 +33,7 @@
         關於簡介
       </h4>
 
-      <div v-html="courseDetail.data.course.description"></div>
+      <div class="prose max-w-none" v-html="courseDetail.data.course.description"></div>
     </div>
   </div>
 </template>
