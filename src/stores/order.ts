@@ -25,9 +25,12 @@ interface PaymentInfo {
   shaEncrypt: string
 }
 
+interface CheckoutInfo {}
+
 export const useOrderStore = defineStore('order', () => {
   const orderInfo = ref<OrderInfo | any>({})
   const paymentInfo = ref<PaymentInfo | any>({})
+  const checkoutInfo = ref<CheckoutInfo | any>({})
 
   function orderInfoGenerate(payload: { id: number[]; email: string | any; name: string | any }) {
     return GetOrderInfoRequest(payload)
@@ -49,6 +52,7 @@ export const useOrderStore = defineStore('order', () => {
   return {
     orderInfo,
     paymentInfo,
+    checkoutInfo,
 
     orderInfoGenerate,
     orderCreate,
