@@ -14,7 +14,7 @@
           <div class="flex items-center justify-center">
             <template v-for="(item, index) in 5" :key="index">
               <span
-                class="material-icons text-xl text-primary-3"
+                class="material-icons cursor-pointer text-xl text-primary-3"
                 @mouseover="mouseoverAction(index + 1)"
                 @mouseout="tempScore = currentScore"
                 @click="getScore(index + 1)"
