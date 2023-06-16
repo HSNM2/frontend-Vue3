@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
+    "@tailwindcss/typography": "^0.5.9",
     "@types/jsdom": "^21.1.0",
     "@types/node": "^18.14.2",
     "@vitejs/plugin-vue": "^4.0.0",

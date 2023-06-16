@@ -153,7 +153,13 @@
       <!--課程簡介-->
       <div class="mb-6">
         <label for="description" class="form-label">課程簡介</label>
-        <ckeditor :editor="editor" v-model="course!.description" :config="editorConfig"></ckeditor>
+        <div class="prose max-w-none">
+          <ckeditor
+            :editor="editor"
+            v-model="course!.description"
+            :config="editorConfig"
+          ></ckeditor>
+        </div>
         <span class="form-text">列出本課程的學習重點</span>
       </div>
       <!--課程分類-->

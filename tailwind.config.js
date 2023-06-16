@@ -125,5 +125,5 @@ module.exports = {
       'heading-4xl': ['40px', '48px']
     }
   },
-  plugins: []
+  plugins: [require('@tailwindcss/typography')]
 }
