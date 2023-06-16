@@ -47,9 +47,9 @@
                         <template v-for="(star, starIndex) in 5" :key="starIndex">
                           <span
                             class="material-icons text-base text-primary-3"
-                            @click.prevent="openReviewModal"
+                            @click.prevent="openReviewModal(item.id)"
                           >
-                            {{ getStar(item.rating.avgRating, starIndex) }}
+                            {{ getStar(item.rating, starIndex) }}
                           </span>
                         </template>
                       </div>
@@ -83,7 +83,12 @@
       </div>
     </div>
   </div>
-  <ReviewModal v-if="isShowModal" @close-modal="isShowModal = false"></ReviewModal>
+  <ReviewModal
+    v-if="isShowModal"
+    :tempRating="ratingData"
+    @close-modal="isShowModal = false"
+    @save-action="saveRatingAction"
+  ></ReviewModal>
 </template>
 
 <script setup lang="ts">
@@ -92,6 +97,8 @@ import { ref, onMounted } from 'vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ReviewModal from '@/components/ReviewModal.vue'
 import { GetUserCoursesRequest } from '@/models/user'
+import { RatingRequest } from '@/models/course'
+import useErrorHandler from '@/composables/useErrorHandler'
 
 interface Course {
   title: string
@@ -110,7 +117,8 @@ interface Lesson {
   isPublish: boolean
 }
 
-// 缺課程id
+const { showError } = useErrorHandler()
+const courseID = ref(0)
 
 const minVal = ref(0)
 const maxVal = ref(100)
@@ -120,20 +128,52 @@ const progressBarStyle = {
   progress: 'bg-neutral-500',
   height: 'h-1'
 }
+
 const isShowModal = ref(false)
-const openReviewModal = () => {
-  isShowModal.value = true
-}
+const ratingData = ref({ content: '', score: 5 })
 
 const courseList = ref<Course | any>({})
 const getData = () => {
   GetUserCoursesRequest()
     .then((res) => {
       courseList.value = res.data.data
-      console.log(courseList.value)
     })
     .catch((err) => {
-      console.log(err)
+      showError(err)
+    })
+}
+
+const openReviewModal = (id: number) => {
+  courseID.value = id
+  getUserRatingRecord()
+}
+
+const isRating = ref(false)
+const getUserRatingRecord = () => {
+  RatingRequest('get', courseID.value)
+    .then((res) => {
+      if (res.data.message !== '使用者尚未評價該課程') {
+        isRating.value = true
+        ratingData.value = res.data.data
+        ratingData.value.score = Number(ratingData.value.score)
+      }
+      isShowModal.value = true
+    })
+    .catch((err) => {
+      showError(err)
+    })
+}
+
+const saveRatingAction = (rating: Object) => {
+  let method = 'post'
+  if (isRating.value === true) method = 'patch'
+  RatingRequest(method, courseID.value, rating)
+    .then((res) => {
+      isShowModal.value = false
+      getData()
+    })
+    .catch((err) => {
+      showError(err)
     })
 }
 
@@ -146,7 +186,6 @@ const setPage = (page: number) => {
 
 //#region 星星
 const getStar = (score: number, index: number) => {
-  console.log(score)
   if (index + 1 <= score) {
     return 'star'
   } else {
