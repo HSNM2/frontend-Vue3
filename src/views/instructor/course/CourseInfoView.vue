@@ -58,7 +58,12 @@
       <!--介紹影片-->
       <div class="mb-6">
         <label for="link" class="form-label">介紹影片</label>
-        <VField name="link" label="介紹影片" v-model="course.link" v-slot="{ field, errors, meta }">
+        <VField
+          name="link"
+          label="介紹影片"
+          v-model="course!.link"
+          v-slot="{ field, errors, meta }"
+        >
           <input
             id="link"
             type="text"
@@ -79,7 +84,7 @@
           name="name"
           rules="required"
           label="課程名稱"
-          v-model="course.title"
+          v-model="course!.title"
           v-slot="{ field, errors, meta }"
         >
           <input
@@ -102,7 +107,7 @@
           name="subTitle"
           rules="required"
           label="課程副標題"
-          v-model="course.subTitle"
+          v-model="course!.subTitle"
           v-slot="{ field, errors, meta }"
         >
           <input
@@ -148,7 +153,11 @@
       <div class="mb-6">
         <label for="description" class="form-label">課程簡介</label>
         <div class="prose max-w-none">
-          <ckeditor :editor="editor" v-model="course.description" :config="editorConfig"></ckeditor>
+          <ckeditor
+            :editor="editor"
+            v-model="course!.description"
+            :config="editorConfig"
+          ></ckeditor>
         </div>
         <span class="form-text">列出本課程的學習重點</span>
       </div>
@@ -184,7 +193,7 @@
             name="type"
             rules="required"
             label="細節種類"
-            v-model="course.type"
+            v-model="course!.type"
             v-slot="{ field, errors, meta }"
           >
             <div class="flex">
@@ -207,14 +216,14 @@
         name="courseStatus"
         rules="required"
         label="課程公開模式"
-        v-model="course.courseStatus"
+        v-model="course!.courseStatus"
         v-slot="{ field, errors, meta }"
       >
         <div class="mb-6 flex flex-col gap-4 lg:flex-row lg:gap-6">
           <div class="flex flex-1 gap-x-6">
             <div
               class="border-1 flex w-1/2 cursor-pointer rounded border p-3"
-              @click="course.courseStatus = '1'"
+              @click="course!.courseStatus = '1'"
             >
               <div class="p-1">
                 <input
@@ -224,7 +233,7 @@
                   class="form-control h-4 w-4"
                   v-bind="field"
                   :class="{ invalid: meta.validated && !!errors.length }"
-                  :checked="course.courseStatus == '1'"
+                  :checked="course!.courseStatus == '1'"
                 />
               </div>
               <div>
@@ -234,7 +243,7 @@
             </div>
             <div
               class="border-1 flex w-1/2 cursor-pointer rounded border p-3"
-              @click="course.courseStatus = '2'"
+              @click="course!.courseStatus = '2'"
             >
               <div class="p-1">
                 <input
@@ -244,7 +253,7 @@
                   class="form-control h-4 w-4"
                   v-bind="field"
                   :class="{ invalid: meta.validated && !!errors.length }"
-                  :checked="course.courseStatus == '2'"
+                  :checked="course!.courseStatus == '2'"
                 />
               </div>
               <div>
@@ -264,7 +273,7 @@
             name="price"
             rules="required|integer"
             label="銷售價格"
-            v-model="course.price"
+            v-model="course!.price"
             v-slot="{ field, errors, meta }"
           >
             <div class="relative flex">
@@ -291,7 +300,7 @@
             name="originPrice"
             rules="required|integer"
             label="原價"
-            v-model="course.originPrice"
+            v-model="course!.originPrice"
             v-slot="{ field, errors, meta }"
           >
             <div class="relative flex">
