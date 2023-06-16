@@ -7,10 +7,8 @@
       <div class="rounded-2.5xl border border-neutral-200 px-[38px] py-5 lg:px-4">
         <div class="flex items-center justify-center gap-x-1.5">
           <span class="material-icons text-4xl text-primary-3"> star </span>
-          <p class="text-xl font-bold">{{ courseDetail.data.rating.avgRating }}</p>
-          <p class="text-base text-neutral-600">
-            /5.0({{ courseDetail.data.rating.countRating }}則評價)
-          </p>
+          <p class="text-xl font-bold">{{ ratingDataList.avgRating }}</p>
+          <p class="text-base text-neutral-600">/5.0({{ ratingDataList.countRating }}則評價)</p>
         </div>
         <div class="my-4">
           <div class="flex items-center justify-center gap-x-4">
@@ -104,7 +102,7 @@
       class="col-span-12"
       :class="$route.name === 'course' ? 'lg:col-span-9 lg:row-start-1' : ''"
     >
-      <template v-for="(item, index) in ratingDataList" :key="index">
+      <template v-for="(item, index) in ratingDataList.ratings" :key="index">
         <div class="mb-4 rounded-2.5xl border border-secondary-2 p-5">
           <div
             class="flex flex-col gap-y-4 md:flex-row md:items-center md:justify-between md:gap-y-0"
@@ -160,6 +158,13 @@ interface Rating {
 
 interface RatingDataList {
   ratings: Rating[]
+  avgRating: string
+  countRating: number
+  star1Count: number
+  star2Count: number
+  star3Count: number
+  star4Count: number
+  star5Count: number
 }
 
 const route = useRoute()
@@ -186,31 +191,34 @@ const props = defineProps({
   }
 })
 
-
+const ratingDataList = ref<RatingDataList | any>({})
 
 //#region 進度條
 const getProgressVal = (count: number) => {
-  return (count / 2) * 100
+  return (count / ratingDataList.value.countRating) * 100
 }
-
 const minVal = ref(0)
 const maxVal = ref(100)
-const progressValForFive = ref(getProgressVal(props.courseDetail.data.rating.star5Count))
-const progressValForFour = ref(getProgressVal(props.courseDetail.data.rating.star4Count))
-const progressValForThree = ref(getProgressVal(props.courseDetail.data.rating.star3Count))
-const progressValForTwo = ref(getProgressVal(props.courseDetail.data.rating.star2Count))
-const progressValForOne = ref(getProgressVal(props.courseDetail.data.rating.star1Count))
+const progressValForFive = ref(0)
+const progressValForFour = ref(0)
+const progressValForThree = ref(0)
+const progressValForTwo = ref(0)
+const progressValForOne = ref(0)
 const progressBarStyle = { bg: 'bg-neutral-150', progress: 'bg-neutral-500', height: 'h-1' }
 //#endregion 進度條
 const isShowModal = ref(false)
 const courseID = Number(route.params.id)
 const rating = ref({ content: '', score: 5 })
-const ratingDataList = ref<RatingDataList | any>({})
 
 const getRatingInfo = () => {
   GetRatingsRequest(courseID)
     .then((res) => {
-      ratingDataList.value = res.data.ratings
+      ratingDataList.value = res.data
+      progressValForFive.value = getProgressVal(ratingDataList.value.star5Count)
+      progressValForFour.value = getProgressVal(ratingDataList.value.star4Count)
+      progressValForThree.value = getProgressVal(ratingDataList.value.star3Count)
+      progressValForTwo.value = getProgressVal(ratingDataList.value.star2Count)
+      progressValForOne.value = getProgressVal(ratingDataList.value.star1Count)
     })
     .catch((err) => {
       showError(err)
@@ -240,6 +248,7 @@ const saveAction = (rating: Object) => {
       isShowModal.value = false
       getRatingInfo()
       getUserRatingRecord()
+      emit('get-data')
     })
     .catch((err) => {
       showError(err)

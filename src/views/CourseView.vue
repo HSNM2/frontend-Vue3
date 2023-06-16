@@ -285,7 +285,7 @@ const getData = () => {
   GetCourseRequest(courseID)
     .then((res) => {
       courseDetail.value = res.data
-      console.log('courseDetail', courseDetail.value)
+      //console.log('courseDetail', courseDetail.value)
       courseDetail.value?.data.inquiries.forEach((item) => {
         item.isResponse = false
         item.responseValue = ''
