@@ -146,6 +146,7 @@ import Swal from 'sweetalert2'
 
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
+import getStar from '@/composables/userCourse'
 
 import CourseTabs from '@/components/CourseTabs.vue'
 import IntroduceView from '@/views/courseDtl/IntroduceView.vue'
@@ -389,27 +390,6 @@ const handleCourseTag = (courseID: number) => {
 
 const judgeTags = (courseID: number) => {
   return tagList.value.some((tag) => Number(tag) === courseID)
-}
-//#endregion
-
-//#region 星星
-const getStar = (score: string, index: number) => {
-  let rate = Number(score)
-  if (Number.isInteger(rate) === true) {
-    if (index + 1 <= rate) {
-      return 'star'
-    } else {
-      return 'star_border'
-    }
-  } else {
-    if (index + 1 <= rate) {
-      return 'star'
-    } else if (index + 1 - rate === 0.5) {
-      return 'star_half'
-    } else {
-      return 'star_border'
-    }
-  }
 }
 //#endregion
 

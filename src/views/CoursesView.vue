@@ -101,8 +101,10 @@ import { ref, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
-import { GetCoursesListRequest, GetCourseTagRequest, UseCourseTagRequest } from '@/models/course'
+import getStar from '@/composables/userCourse'
 import useErrorHandler from '@/composables/useErrorHandler'
+
+import { GetCoursesListRequest, GetCourseTagRequest, UseCourseTagRequest } from '@/models/course'
 
 interface CourseList {
   page: number
@@ -199,16 +201,6 @@ const handleCourseTag = (courseID: number) => {
 
 const judgeTags = (courseID: number) => {
   return tagList.value.some((tag) => Number(tag) === courseID)
-}
-//#endregion
-
-//#region 星星
-const getStar = (score: number, index: number) => {
-  if (index + 1 <= score) {
-    return 'star'
-  } else {
-    return 'star_border'
-  }
 }
 //#endregion
 
