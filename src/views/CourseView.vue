@@ -146,7 +146,7 @@ import Swal from 'sweetalert2'
 
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
-import getStar from '@/composables/userCourse'
+import { getStar } from '@/composables/userCourse'
 
 import CourseTabs from '@/components/CourseTabs.vue'
 import IntroduceView from '@/views/courseDtl/IntroduceView.vue'

@@ -142,10 +142,11 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
+import useErrorHandler from '@/composables/useErrorHandler'
+import { getStar, getAvatar } from '@/composables/userCourse'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ReviewModal from '@/components/ReviewModal.vue'
 import { RatingRequest, GetRatingsRequest } from '@/models/course'
-import useErrorHandler from '@/composables/useErrorHandler'
 
 interface Rating {
   name: string
@@ -256,27 +257,6 @@ const saveAction = (rating: Object) => {
     })
 }
 
-//#region 星星
-const getStar = (score: string, index: number) => {
-  let rate = Number(score)
-  if (index + 1 <= rate) {
-    return 'star'
-  } else {
-    return 'star_border'
-  }
-}
-//#endregion
-
-//#region 大頭照
-const getAvatar = (imagePath: string) => {
-  let str = imagePath.slice(-4)
-  if (str === 'null') {
-    return 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
-  } else {
-    return imagePath
-  }
-}
-//#endregion
 onMounted(() => {
   getRatingInfo()
   getUserRatingRecord()

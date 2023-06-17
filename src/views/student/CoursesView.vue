@@ -95,7 +95,7 @@
 import { ref, onMounted } from 'vue'
 
 import useErrorHandler from '@/composables/useErrorHandler'
-import getStar from '@/composables/userCourse'
+import { getStar } from '@/composables/userCourse'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ReviewModal from '@/components/ReviewModal.vue'
 import { GetUserCoursesRequest } from '@/models/user'

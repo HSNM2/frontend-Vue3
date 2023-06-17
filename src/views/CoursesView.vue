@@ -101,7 +101,7 @@ import { ref, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
-import getStar from '@/composables/userCourse'
+import { getStar } from '@/composables/userCourse'
 import useErrorHandler from '@/composables/useErrorHandler'
 
 import { GetCoursesListRequest, GetCourseTagRequest, UseCourseTagRequest } from '@/models/course'

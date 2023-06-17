@@ -32,15 +32,7 @@
           <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
-                <img
-                  class="h-10 w-10 rounded-full"
-                  :src="
-                    user?.avatarImagePath
-                      ? user?.avatarImagePath
-                      : 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
-                  "
-                  alt=""
-                />
+                <img class="h-10 w-10 rounded-full" :src="getAvatar(user.imagePath)" alt="" />
                 <p class="">{{ user.nickName === '' ? user.name : user.nickName }}</p>
               </div>
             </div>
@@ -71,15 +63,7 @@
             <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-x-4">
-                  <img
-                    class="h-10 w-10 rounded-full"
-                    :src="
-                      inquirie.imagePath
-                        ? inquirie.imagePath
-                        : 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
-                    "
-                    alt=""
-                  />
+                  <img class="h-10 w-10 rounded-full" :src="getAvatar(inquirie.imagePath)" alt="" />
                   <p class="">{{ inquirie.nickName === '' ? inquirie.name : inquirie.nickName }}</p>
                 </div>
                 <p class="text-sm text-primary-4">{{ inquirie.date.slice(0, 10) }}</p>
@@ -97,11 +81,7 @@
                   <div class="flex items-center gap-x-4">
                     <img
                       class="h-10 w-10 rounded-full"
-                      :src="
-                        response.imagePath
-                          ? response.imagePath
-                          : 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
-                      "
+                      :src="getAvatar(response.imagePath)"
                       alt=""
                     />
                     <p class="">
@@ -134,15 +114,7 @@
               <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-x-4">
-                    <img
-                      class="h-10 w-10 rounded-full"
-                      :src="
-                        user?.avatarImagePath
-                          ? user?.avatarImagePath
-                          : 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
-                      "
-                      alt=""
-                    />
+                    <img class="h-10 w-10 rounded-full" :src="getAvatar(user.imagePath)" alt="" />
                     <p class="">{{ user.nickName === '' ? user.name : user.nickName }}</p>
                   </div>
                 </div>
@@ -187,10 +159,11 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
+import useErrorHandler from '@/composables/useErrorHandler'
+import { getAvatar } from '@/composables/userCourse'
 import { useAuthStore } from '@/stores/auth'
 import AuthModal from '@/components/AuthModal.vue'
 import { InquiryRequest, InquiryResponseRequest } from '@/models/course'
-import useErrorHandler from '@/composables/useErrorHandler'
 
 const route = useRoute()
 
@@ -212,8 +185,6 @@ const props = defineProps({
     required: true
   }
 })
-
-
 
 const { showError } = useErrorHandler()
 
