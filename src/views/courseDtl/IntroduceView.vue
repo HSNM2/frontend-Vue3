@@ -45,8 +45,7 @@ const props = defineProps({
     required: true
   },
   user: {
-    type: Object,
-    required: true
+    type: Object
   },
   courseDetail: {
     type: Object,

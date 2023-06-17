@@ -205,8 +205,7 @@ const props = defineProps({
     required: false
   },
   user: {
-    type: Object,
-    required: true
+    type: Object
   },
   courseDetail: {
     type: Object,
@@ -214,7 +213,7 @@ const props = defineProps({
   }
 })
 
-console.log(props.courseDetail)
+
 
 const { showError } = useErrorHandler()
 

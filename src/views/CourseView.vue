@@ -425,14 +425,11 @@ const handleCartAction = () => {
 
 const getCartInfo = () => {
   let courseCart = localStorage.getItem('sweetTimeCart')
-  if (isLogin.value === true) {
-    if (courseCart !== null) {
-      cart.value = JSON.parse(courseCart)
-      courseAddedCheck(courseID.toString())
-    }
+  if (courseCart !== null) {
+    cart.value = JSON.parse(courseCart)
+    courseAddedCheck(courseID.toString())
   }
 }
-
 // #endregion
 const tabs = [
   { name: '課程介紹', comp: IntroduceView, style: '' },
@@ -464,6 +461,8 @@ const checkLogin = () => {
   if (user.value !== null) {
     isLogin.value = true
     getTagList()
+    getCartInfo()
+    checkHasCourse()
   } else isLogin.value = false
 }
 
@@ -475,15 +474,11 @@ const getcourseTags = computed(() => {
 
 watch(user, () => {
   checkLogin()
-  getCartInfo()
-  checkHasCourse()
 })
 
 onMounted(() => {
   getData()
   checkLogin()
-  getCartInfo()
-  checkHasCourse()
 })
 </script>
 

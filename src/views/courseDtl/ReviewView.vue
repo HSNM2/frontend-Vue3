@@ -182,8 +182,7 @@ const props = defineProps({
     required: false
   },
   user: {
-    type: Object,
-    required: true
+    type: Object
   },
   courseDetail: {
     type: Object,
@@ -227,17 +226,19 @@ const getRatingInfo = () => {
 
 const isRating = ref(false)
 const getUserRatingRecord = () => {
-  RatingRequest('get', courseID)
-    .then((res) => {
-      if (res.data.message !== '使用者尚未評價該課程') {
-        isRating.value = true
-        rating.value = res.data.data
-        rating.value.score = Number(rating.value.score)
-      }
-    })
-    .catch((err) => {
-      showError(err)
-    })
+  if (props.isLogin === true) {
+    RatingRequest('get', courseID)
+      .then((res) => {
+        if (res.data.message !== '使用者尚未評價該課程') {
+          isRating.value = true
+          rating.value = res.data.data
+          rating.value.score = Number(rating.value.score)
+        }
+      })
+      .catch((err) => {
+        showError(err)
+      })
+  }
 }
 
 const saveAction = (rating: Object) => {
