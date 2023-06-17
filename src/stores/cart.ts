@@ -29,6 +29,7 @@ export const useCartStore = defineStore('cart', () => {
 
   const cartCourseIDAry = ref<number[]>([])
   const immediateCheckoutCourseInfo = ref<CartItem | any>({})
+  const isImmediateCheckout = ref<boolean>(false)
 
   function getLocalCart() {
     const localCart = localStorage.getItem('sweetTimeCart')
@@ -101,6 +102,7 @@ export const useCartStore = defineStore('cart', () => {
     hasAddCart,
     cartCourseIDAry,
     immediateCheckoutCourseInfo,
+    isImmediateCheckout,
 
     getLocalCart,
     cartHandle,
