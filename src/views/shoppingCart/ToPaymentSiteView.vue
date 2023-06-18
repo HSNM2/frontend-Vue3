@@ -30,7 +30,9 @@ import { useCartStore } from '@/stores/cart'
 
 const { orderCreate } = useOrderStore()
 const { paymentInfo } = storeToRefs(useOrderStore())
-const { cartCourseIDAry, immediateCheckoutCourseInfo } = storeToRefs(useCartStore())
+const { cartCourseIDAry, immediateCheckoutCourseInfo, isImmediateCheckout } = storeToRefs(
+  useCartStore()
+)
 const version = import.meta.env.VITE_Version
 const merchantID = import.meta.env.VITE_MerchantID
 const isLoading = ref<boolean>(true)
@@ -38,7 +40,7 @@ const isLoading = ref<boolean>(true)
 onMounted(() => {
   let payload: any,
     checkoutCourseId: number[] = []
-  if (immediateCheckoutCourseInfo.value) {
+  if (isImmediateCheckout.value) {
     checkoutCourseId.push(+immediateCheckoutCourseInfo.value.id)
     payload = {
       id: checkoutCourseId,

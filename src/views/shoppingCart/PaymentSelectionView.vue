@@ -49,7 +49,7 @@
           >購物車中共有{{ cart.cartItem.length }}項課程</span
         >
         <hr class="my-1" />
-        <div v-if="immediateCheckoutCourseInfo.id">
+        <div v-if="isImmediateCheckout">
           <div class="flex items-center">
             <div class="w-1/4 p-2">
               <img
@@ -174,7 +174,9 @@ import { useRouter } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import { useOrderStore } from '@/stores/order'
 const router = useRouter()
-const { cart, cartCourseIDAry, immediateCheckoutCourseInfo } = storeToRefs(useCartStore())
+const { cart, cartCourseIDAry, immediateCheckoutCourseInfo, isImmediateCheckout } = storeToRefs(
+  useCartStore()
+)
 const { orderInfoGenerate } = useOrderStore()
 const { paymentInfo } = storeToRefs(useOrderStore())
 
@@ -190,7 +192,7 @@ function cartCourseIDHandle() {
 function paymentConfirmationHandle() {
   let payload: any,
     checkoutCourseId: number[] = []
-  if (immediateCheckoutCourseInfo.value) {
+  if (isImmediateCheckout.value) {
     checkoutCourseId.push(+immediateCheckoutCourseInfo.value.id)
     payload = {
       id: checkoutCourseId,

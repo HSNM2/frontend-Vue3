@@ -88,6 +88,12 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useCartStore } from '@/stores/cart'
+const { isImmediateCheckout } = storeToRefs(useCartStore())
 const { cart, cartItemDeleteHandle } = useCartStore()
+onMounted(() => {
+  isImmediateCheckout.value = false
+})
 </script>

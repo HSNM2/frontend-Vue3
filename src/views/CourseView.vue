@@ -283,7 +283,7 @@ const router = useRouter()
 
 const { showError } = useErrorHandler()
 const { addCartItem, courseAddedCheck, addImmediateCourseItem } = useCartStore()
-const { cart, hasAddCart } = storeToRefs(useCartStore())
+const { cart, hasAddCart, isImmediateCheckout } = storeToRefs(useCartStore())
 const auth = useAuthStore()
 const { authModal, authModalType, user } = storeToRefs(auth)
 const isLogin = ref(user.value !== null)
@@ -355,6 +355,7 @@ const enterOtherPage = (page: string) => {
   if (page === 'learn') {
     path = `/learn/${courseID}`
   } else if (page === 'paymentSelection') {
+    isImmediateCheckout.value = true
     addImmediateCourseItem(courseCartItem.value)
     path = `/shoppingCart/paymentSelection`
   }
