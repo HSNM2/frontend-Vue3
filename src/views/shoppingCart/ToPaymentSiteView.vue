@@ -30,18 +30,33 @@ import { useCartStore } from '@/stores/cart'
 
 const { orderCreate } = useOrderStore()
 const { paymentInfo } = storeToRefs(useOrderStore())
-const { cartCourseIDAry } = storeToRefs(useCartStore())
+const { cartCourseIDAry, immediateCheckoutCourseInfo, isImmediateCheckout } = storeToRefs(
+  useCartStore()
+)
 const version = import.meta.env.VITE_Version
 const merchantID = import.meta.env.VITE_MerchantID
 const isLoading = ref<boolean>(true)
 
 onMounted(() => {
-  orderCreate({
-    id: cartCourseIDAry.value,
-    name: paymentInfo.value.order.Name,
-    email: paymentInfo.value.order.Email,
-    merchantOrderNo: paymentInfo.value.order.MerchantOrderNo
-  })
+  let payload: any,
+    checkoutCourseId: number[] = []
+  if (isImmediateCheckout.value) {
+    checkoutCourseId.push(+immediateCheckoutCourseInfo.value.id)
+    payload = {
+      id: checkoutCourseId,
+      name: paymentInfo.value.order.Name,
+      email: paymentInfo.value.order.Email,
+      merchantOrderNo: paymentInfo.value.order.MerchantOrderNo
+    }
+  } else {
+    payload = {
+      id: cartCourseIDAry.value,
+      name: paymentInfo.value.order.Name,
+      email: paymentInfo.value.order.Email,
+      merchantOrderNo: paymentInfo.value.order.MerchantOrderNo
+    }
+  }
+  orderCreate(payload)
   localStorage.removeItem('sweetTimeCart')
   const toPaymentSiteForm = document.getElementById('toPaymentSite') as HTMLFormElement
   toPaymentSiteForm.submit()

@@ -240,7 +240,7 @@ const { showError } = useErrorHandler()
 const { updateLoading } = useStatusStore()
 const auth = useAuthStore()
 const { cartHandle, emptyCartHandle, cartItemDeleteHandle, getLocalCart } = useCartStore()
-const { cart } = storeToRefs(useCartStore())
+const { cart, isImmediateCheckout } = storeToRefs(useCartStore())
 const { logout } = auth
 const { authModal, authModalType, courseProviderAllowModal, user } = storeToRefs(auth)
 
@@ -266,5 +266,6 @@ function handleLogout() {
 onMounted(() => {
   getLocalCart()
   cartHandle()
+  isImmediateCheckout.value = false
 })
 </script>

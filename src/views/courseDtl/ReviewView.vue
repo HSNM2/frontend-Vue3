@@ -142,10 +142,11 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
+import useErrorHandler from '@/composables/useErrorHandler'
+import { getStar, getAvatar } from '@/composables/userCourse'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ReviewModal from '@/components/ReviewModal.vue'
 import { RatingRequest, GetRatingsRequest } from '@/models/course'
-import useErrorHandler from '@/composables/useErrorHandler'
 
 interface Rating {
   name: string
@@ -182,8 +183,7 @@ const props = defineProps({
     required: false
   },
   user: {
-    type: Object,
-    required: true
+    type: Object
   },
   courseDetail: {
     type: Object,
@@ -227,17 +227,19 @@ const getRatingInfo = () => {
 
 const isRating = ref(false)
 const getUserRatingRecord = () => {
-  RatingRequest('get', courseID)
-    .then((res) => {
-      if (res.data.message !== '使用者尚未評價該課程') {
-        isRating.value = true
-        rating.value = res.data.data
-        rating.value.score = Number(rating.value.score)
-      }
-    })
-    .catch((err) => {
-      showError(err)
-    })
+  if (props.isLogin === true) {
+    RatingRequest('get', courseID)
+      .then((res) => {
+        if (res.data.message !== '使用者尚未評價該課程') {
+          isRating.value = true
+          rating.value = res.data.data
+          rating.value.score = Number(rating.value.score)
+        }
+      })
+      .catch((err) => {
+        showError(err)
+      })
+  }
 }
 
 const saveAction = (rating: Object) => {
@@ -255,27 +257,6 @@ const saveAction = (rating: Object) => {
     })
 }
 
-//#region 星星
-const getStar = (score: string, index: number) => {
-  let rate = Number(score)
-  if (index + 1 <= rate) {
-    return 'star'
-  } else {
-    return 'star_border'
-  }
-}
-//#endregion
-
-//#region 大頭照
-const getAvatar = (imagePath: string) => {
-  let str = imagePath.slice(-4)
-  if (str === 'null') {
-    return 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
-  } else {
-    return imagePath
-  }
-}
-//#endregion
 onMounted(() => {
   getRatingInfo()
   getUserRatingRecord()

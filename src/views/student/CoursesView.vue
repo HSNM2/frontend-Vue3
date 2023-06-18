@@ -94,11 +94,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
+import useErrorHandler from '@/composables/useErrorHandler'
+import { getStar } from '@/composables/userCourse'
 import ProgressBar from '@/components/ProgressBar.vue'
 import ReviewModal from '@/components/ReviewModal.vue'
 import { GetUserCoursesRequest } from '@/models/user'
 import { RatingRequest } from '@/models/course'
-import useErrorHandler from '@/composables/useErrorHandler'
 
 interface Course {
   title: string
@@ -183,16 +184,6 @@ const setPage = (page: number) => {
   if (page <= 0 || page >= totalPages.value) return
   currentPage.value = page
 }
-
-//#region 星星
-const getStar = (score: number, index: number) => {
-  if (index + 1 <= score) {
-    return 'star'
-  } else {
-    return 'star_border'
-  }
-}
-//#endregion
 
 onMounted(() => {
   getData()

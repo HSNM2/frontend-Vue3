@@ -33,10 +33,16 @@
                 `(${courseDetail.data.rating.countRating})`
               }}</span>
             </div>
-
-            <p class="hidden pb-5 text-2xl font-bold text-primary-4 md:block">
-              NT${{ courseDetail.data.course.price }}
-            </p>
+            <div class="hidden pb-5 md:block">
+              <div class="flex items-center gap-x-2">
+                <p class="text-2xl font-bold text-primary-4">
+                  NT${{ courseDetail.data.course.price }}
+                </p>
+                <p class="text-sm font-bold text-neutral-400 line-through">
+                  NT${{ courseDetail.data.course.originPrice }}
+                </p>
+              </div>
+            </div>
             <div class="flex items-center gap-x-5 pb-6">
               <template v-if="hasAddCart === false">
                 <template v-if="isOwnedCourse === false">
@@ -112,30 +118,35 @@
         @get-data="getData"
       ></component>
     </div>
+    <teleport to="body">
+      <div class="sticky bottom-0 z-10 w-full md:hidden">
+        <div class="flex items-center justify-between gap-x-5 bg-secondary-1 px-3 py-[15px]">
+          <div class="flex items-center gap-x-2">
+            <p class="text-2xl font-bold text-primary-4">NT${{ courseDetail.data.course.price }}</p>
+            <p class="text-sm font-bold text-neutral-400 line-through">
+              NT${{ courseDetail.data.course.originPrice }}
+            </p>
+          </div>
+          <template v-if="hasAddCart === false">
+            <template v-if="isOwnedCourse === false">
+              <button type="button" class="btn-primary w-full px-2">立即購買</button>
+              <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
+            </template>
+            <button
+              v-else
+              type="button"
+              class="btn-primary block w-full px-2 md:hidden"
+              @click="enterOtherPage('learn')"
+            >
+              進入課程
+            </button>
+          </template>
+          <button v-else type="button" class="btn-primary w-full px-2">已加入購物車</button>
+        </div>
+      </div>
+    </teleport>
   </main>
   <AuthModal />
-  <teleport to="body">
-    <div class="sticky bottom-0 z-10 w-full md:hidden">
-      <div class="flex items-center justify-between gap-x-5 bg-secondary-1 px-3 py-[15px]">
-        <p class="text-2xl font-bold text-primary-4">NT$23,000</p>
-        <template v-if="hasAddCart === false">
-          <template v-if="isOwnedCourse === false">
-            <button type="button" class="btn-primary w-full px-2">立即購買</button>
-            <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
-          </template>
-          <button
-            v-else
-            type="button"
-            class="btn-primary block w-full px-2 md:hidden"
-            @click="enterOtherPage('learn')"
-          >
-            進入課程
-          </button>
-        </template>
-        <button v-else type="button" class="btn-primary w-full px-2">已加入購物車</button>
-      </div>
-    </div>
-  </teleport>
 </template>
 
 <script setup lang="ts">
@@ -146,6 +157,7 @@ import Swal from 'sweetalert2'
 
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
+import { getStar } from '@/composables/userCourse'
 
 import CourseTabs from '@/components/CourseTabs.vue'
 import IntroduceView from '@/views/courseDtl/IntroduceView.vue'
@@ -271,7 +283,7 @@ const router = useRouter()
 
 const { showError } = useErrorHandler()
 const { addCartItem, courseAddedCheck, addImmediateCourseItem } = useCartStore()
-const { cart, hasAddCart } = storeToRefs(useCartStore())
+const { cart, hasAddCart, isImmediateCheckout } = storeToRefs(useCartStore())
 const auth = useAuthStore()
 const { authModal, authModalType, user } = storeToRefs(auth)
 const isLogin = ref(user.value !== null)
@@ -343,6 +355,7 @@ const enterOtherPage = (page: string) => {
   if (page === 'learn') {
     path = `/learn/${courseID}`
   } else if (page === 'paymentSelection') {
+    isImmediateCheckout.value = true
     addImmediateCourseItem(courseCartItem.value)
     path = `/shoppingCart/paymentSelection`
   }
@@ -392,27 +405,6 @@ const judgeTags = (courseID: number) => {
 }
 //#endregion
 
-//#region 星星
-const getStar = (score: string, index: number) => {
-  let rate = Number(score)
-  if (Number.isInteger(rate) === true) {
-    if (index + 1 <= rate) {
-      return 'star'
-    } else {
-      return 'star_border'
-    }
-  } else {
-    if (index + 1 <= rate) {
-      return 'star'
-    } else if (index + 1 - rate === 0.5) {
-      return 'star_half'
-    } else {
-      return 'star_border'
-    }
-  }
-}
-//#endregion
-
 // #region Cart
 const handleCartAction = () => {
   if (isLogin.value === false) {
@@ -425,14 +417,11 @@ const handleCartAction = () => {
 
 const getCartInfo = () => {
   let courseCart = localStorage.getItem('sweetTimeCart')
-  if (isLogin.value === true) {
-    if (courseCart !== null) {
-      cart.value = JSON.parse(courseCart)
-      courseAddedCheck(courseID.toString())
-    }
+  if (courseCart !== null) {
+    cart.value = JSON.parse(courseCart)
+    courseAddedCheck(courseID.toString())
   }
 }
-
 // #endregion
 const tabs = [
   { name: '課程介紹', comp: IntroduceView, style: '' },
@@ -464,6 +453,8 @@ const checkLogin = () => {
   if (user.value !== null) {
     isLogin.value = true
     getTagList()
+    getCartInfo()
+    checkHasCourse()
   } else isLogin.value = false
 }
 
@@ -475,15 +466,11 @@ const getcourseTags = computed(() => {
 
 watch(user, () => {
   checkLogin()
-  getCartInfo()
-  checkHasCourse()
 })
 
 onMounted(() => {
   getData()
   checkLogin()
-  getCartInfo()
-  checkHasCourse()
 })
 </script>
 
