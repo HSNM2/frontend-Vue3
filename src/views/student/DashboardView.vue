@@ -1,7 +1,7 @@
 <template>
-  <main class="bg-neutral-100 py-8">
-    <div class="px-4 lg:container">
-      <div class="grid grid-cols-12 gap-6">
+  <main class="h-full bg-neutral-100 py-8">
+    <div class="h-full px-4 lg:container">
+      <div class="grid h-full grid-cols-12 gap-6">
         <aside class="col-span-3 flex flex-col items-center bg-neutral-50 py-6">
           <div class="relative">
             <img
