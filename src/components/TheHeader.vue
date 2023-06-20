@@ -147,7 +147,9 @@
                       <router-link to="/shoppingCart/orderConfirmation" class="block px-4 py-2"
                         >我的購物車</router-link
                       >
-                      <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
+                      <router-link
+                        to="/student/tags"
+                        class="block px-4 py-2"
                         >我的收藏</router-link
                       >
                       <button
