@@ -13,12 +13,13 @@ const { isLoading } = storeToRefs(status)
 
 <template>
   <VLoading v-model:active="isLoading" :is-full-page="true" />
-
-  <TheHeader />
-
-  <RouterView />
-
-  <TheFooter />
+  <div class="flex h-screen flex-col">
+    <TheHeader />
+    <div class="flex-1">
+      <RouterView />
+    </div>
+    <TheFooter />
+  </div>
 </template>
 
 <style scoped></style>
