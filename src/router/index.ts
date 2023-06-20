@@ -88,6 +88,11 @@ const router = createRouter({
           path: 'courses',
           name: 'studentCourses',
           component: () => import('../views/student/CoursesView.vue')
+        },
+        {
+          path: 'tags',
+          name: 'studentTags',
+          component: () => import('../views/student/TagsView.vue')
         }
       ]
     },
