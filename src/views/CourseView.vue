@@ -75,7 +75,7 @@
                 v-else
                 type="button"
                 class="btn-secondary hidden md:block"
-                @click="enterOtherPage('cart-step-one')"
+                @click="enterOtherPage('orderConfirmation')"
               >
                 已加入購物車
               </button>
@@ -130,8 +130,16 @@
         </div>
         <template v-if="hasAddCart === false">
           <template v-if="isOwnedCourse === false">
-            <button type="button" class="btn-primary w-full px-2">立即購買</button>
-            <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
+            <button
+              type="button"
+              class="btn-primary w-full px-2"
+              @click="enterOtherPage('paymentSelection')"
+            >
+              立即購買
+            </button>
+            <span class="material-icons cursor-pointer text-primary-6" @click="handleCartAction()">
+              shopping_cart
+            </span>
           </template>
           <button
             v-else
@@ -142,7 +150,14 @@
             進入課程
           </button>
         </template>
-        <button v-else type="button" class="btn-primary w-full px-2">已加入購物車</button>
+        <button
+          v-else
+          type="button"
+          class="btn-primary w-full px-2"
+          @click="enterOtherPage('orderConfirmation')"
+        >
+          已加入購物車
+        </button>
       </div>
     </div>
   </main>
@@ -316,17 +331,23 @@ const checkHasCourse = () => {
 }
 
 const enterOtherPage = (page: string) => {
-  let path = ''
-  if (page === 'learn') {
-    path = `/learn/${courseID}`
-  } else if (page === 'paymentSelection') {
-    isImmediateCheckout.value = true
-    addImmediateCourseItem(courseCartItem.value)
-    path = `/shoppingCart/paymentSelection`
+  if (page === 'paymentSelection' && isLogin.value === false) {
+    openAuthModal()
+  } else {
+    let path = ''
+    if (page === 'learn') {
+      path = `/learn/${courseID}`
+    } else if (page === 'paymentSelection') {
+      isImmediateCheckout.value = true
+      addImmediateCourseItem(courseCartItem.value)
+      path = `/shoppingCart/paymentSelection`
+    } else if (page === 'orderConfirmation') {
+      path = `/shoppingCart/orderConfirmation`
+    }
+    router.push({
+      path: path
+    })
   }
-  router.push({
-    path: path
-  })
 }
 
 //#region 書籤 需整理
