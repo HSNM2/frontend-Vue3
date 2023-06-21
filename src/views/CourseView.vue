@@ -120,33 +120,31 @@
         @get-data="getData"
       ></component>
     </div>
-    <teleport to="body">
-      <div class="sticky bottom-0 z-10 w-full md:hidden">
-        <div class="flex items-center justify-between gap-x-5 bg-secondary-1 px-3 py-[15px]">
-          <div class="flex items-center gap-x-2">
-            <p class="text-2xl font-bold text-primary-4">NT${{ courseDetail.data.course.price }}</p>
-            <p class="text-sm font-bold text-neutral-400 line-through">
-              NT${{ courseDetail.data.course.originPrice }}
-            </p>
-          </div>
-          <template v-if="hasAddCart === false">
-            <template v-if="isOwnedCourse === false">
-              <button type="button" class="btn-primary w-full px-2">立即購買</button>
-              <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
-            </template>
-            <button
-              v-else
-              type="button"
-              class="btn-primary block w-full px-2 md:hidden"
-              @click="enterOtherPage('learn')"
-            >
-              進入課程
-            </button>
-          </template>
-          <button v-else type="button" class="btn-primary w-full px-2">已加入購物車</button>
+    <div class="fixed bottom-0 z-10 w-full md:hidden">
+      <div class="flex items-center justify-between gap-x-5 bg-secondary-1 px-3 py-[15px]">
+        <div class="flex items-center gap-x-2">
+          <p class="text-2xl font-bold text-primary-4">NT${{ courseDetail.data.course.price }}</p>
+          <p class="text-sm font-bold text-neutral-400 line-through">
+            NT${{ courseDetail.data.course.originPrice }}
+          </p>
         </div>
+        <template v-if="hasAddCart === false">
+          <template v-if="isOwnedCourse === false">
+            <button type="button" class="btn-primary w-full px-2">立即購買</button>
+            <span class="material-icons cursor-pointer text-primary-6"> shopping_cart </span>
+          </template>
+          <button
+            v-else
+            type="button"
+            class="btn-primary block w-full px-2 md:hidden"
+            @click="enterOtherPage('learn')"
+          >
+            進入課程
+          </button>
+        </template>
+        <button v-else type="button" class="btn-primary w-full px-2">已加入購物車</button>
       </div>
-    </teleport>
+    </div>
   </main>
   <AuthModal />
 </template>
