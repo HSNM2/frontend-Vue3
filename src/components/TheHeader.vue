@@ -112,7 +112,7 @@
                   alt="頭像"
                 />
                 <div
-                  class="absolute right-0 top-full z-10 hidden w-72 pt-2 hover:block group-hover:block"
+                  class="absolute right-0 top-full z-20 hidden w-72 pt-2 hover:block group-hover:block"
                 >
                   <div class="rounded border bg-neutral-50">
                     <div class="flex items-center p-4 pb-2">
@@ -147,11 +147,7 @@
                       <router-link to="/shoppingCart/orderConfirmation" class="block px-4 py-2"
                         >我的購物車</router-link
                       >
-                      <router-link
-                        to="/student/tags"
-                        class="block px-4 py-2"
-                        >我的收藏</router-link
-                      >
+                      <router-link to="/student/tags" class="block px-4 py-2">我的收藏</router-link>
                       <button
                         v-if="!user.identity"
                         type="button"
