@@ -184,7 +184,6 @@
                 <option value="麵包">麵包</option>
               </select>
             </div>
-            <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="price" />
           </VField>
         </div>
         <div class="flex-1">
