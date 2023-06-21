@@ -172,7 +172,7 @@ const route = useRoute()
 
 const { showError } = useErrorHandler()
 
-const emit = defineEmits(['update-is-response', 'get-data', 'update-video-path'])
+const emit = defineEmits(['get-data', 'update-video-path'])
 const props = defineProps({
   isLogin: {
     type: Boolean,
@@ -188,6 +188,9 @@ const props = defineProps({
   courseDetail: {
     type: Object,
     required: true
+  },
+  courseID: {
+    type: Number
   }
 })
 

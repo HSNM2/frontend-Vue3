@@ -24,14 +24,16 @@
               </template>
             </div>
             <div class="flex items-center lg:pb-3">
-              <template v-for="(star, starIndex) in 5" :key="starIndex">
-                <span class="material-icons text-lg text-primary-3">
-                  {{ getStar(courseDetail.data.rating.avgRating, starIndex) }}
+              <template v-if="ratingData">
+                <template v-for="(star, starIndex) in 5" :key="starIndex">
+                  <span class="material-icons text-lg text-primary-3">
+                    {{ getStar(ratingData.rating.avgRating, starIndex) }}
+                  </span>
+                </template>
+                <span class="text-sm text-neutral-600">
+                  {{ `(${ratingData.rating.countRating})` }}
                 </span>
               </template>
-              <span class="text-sm text-neutral-600">{{
-                `(${courseDetail.data.rating.countRating})`
-              }}</span>
             </div>
             <div class="hidden pb-5 md:block">
               <div class="flex items-center gap-x-2">
@@ -114,7 +116,7 @@
         :isOwnedCourse="isOwnedCourse"
         :user="user"
         :courseDetail="courseDetail"
-        @update-is-response="inquiryReplyAction"
+        :courseID="courseID"
         @get-data="getData"
       ></component>
     </div>
@@ -169,22 +171,64 @@ import useErrorHandler from '@/composables/useErrorHandler'
 import AuthModal from '@/components/AuthModal.vue'
 import {
   GetCourseRequest,
+  GetCourseRatingRequest,
   UseCourseTagRequest,
   GetCourseTagRequest,
   CheckUserHasCourseRequest
 } from '@/models/course'
 
-interface CourseDetail {
-  status: boolean
-  message: string
-  data: CourseData
+interface Course {
+  id: number
+  price: number
+  originPrice: number
+  title: string
+  tag: string
+  image_path: string
+  link: string | null
+  subTitle: string
+  description: string
+  courseStatus: string
+  type: string
+  category: string
+  provider: string
+  buyers: null
+  totalTime: null
+  isPublish: boolean
+  teacherId: string
+  createdAt: string
+  updatedAt: string
 }
 
-interface CourseData {
-  course: Course
-  chapters: Chapter[]
-  inquiries: Inquiry[]
-  faqs: Faq[]
+interface Rating {
+  avgRating: string
+  countRating: number
+  ratings: RatingEntry[]
+  star1Count: number
+  star2Count: number
+  star3Count: number
+  star4Count: number
+  star5Count: number
+}
+
+interface RatingEntry {
+  name: string
+  score: string
+  nickName: string
+  imagePath: string
+  date: string
+  content: string
+}
+
+interface CourseResponse {
+  status: boolean
+  message: string
+  data: {
+    course: Course
+  }
+}
+
+interface RatingResponse {
+  status: number
   rating: Rating
 }
 
@@ -199,85 +243,6 @@ interface CourseCartItem {
   price: number
 }
 
-interface Course {
-  id: number
-  price: number
-  originPrice: number
-  title: string
-  tag: string
-  image_path: string
-  link: string
-  subTitle: string
-  description: string
-  courseStatus: string // 1: 公開 / 2: 非公開
-  type: string
-  category: string // 待確認
-  provider: string
-  buyers: number
-  totalTime: number // 待確認
-  isPublish: boolean
-  teacherId: string
-  createdAt: string
-  updatedAt: string
-}
-
-interface Chapter {
-  id: number
-  title: string
-  lessons: Lesson[]
-  isShow: boolean
-}
-
-interface Lesson {
-  id: number
-  title: string
-  videoPath: string
-}
-
-interface Inquiry {
-  id: string
-  name: string
-  date: string
-  content: string
-  responses: Response[]
-  isResponse: boolean
-  responseValue: string
-}
-
-interface Response {
-  id: number
-  name: string
-  date: string
-  content: string
-}
-
-interface Faq {
-  id: string
-  title: string
-  questions: Question[]
-  isShow: boolean
-}
-
-interface Question {
-  id: number
-  title: string
-  content: string
-  publish: boolean
-}
-
-interface Rating {
-  avgRating: string
-  countRating: number
-  ratings: RatingItem[]
-}
-
-interface RatingItem {
-  name: string
-  number: string
-  date: string
-  content: string
-}
-
 const route = useRoute()
 const router = useRouter()
 
@@ -288,7 +253,8 @@ const auth = useAuthStore()
 const { authModal, authModalType, user } = storeToRefs(auth)
 const isLogin = ref(user.value !== null)
 
-const courseDetail = ref<CourseDetail | null>(null)
+const courseDetail = ref<CourseResponse | null>(null)
+const ratingData = ref<RatingResponse | null>(null)
 const courseCartItem = ref<CourseCartItem | any>({})
 const courseID = Number(route.params.id)
 const isOwnedCourse = ref(false)
@@ -298,10 +264,6 @@ const getData = () => {
     .then((res) => {
       courseDetail.value = res.data
       //console.log('courseDetail', courseDetail.value)
-      courseDetail.value?.data.inquiries.forEach((item) => {
-        item.isResponse = false
-        item.responseValue = ''
-      })
       if (courseDetail.value?.data.course != undefined) {
         courseCartItem.value = {
           id: courseDetail.value?.data.course.id.toString(),
@@ -310,19 +272,11 @@ const getData = () => {
           provider: courseDetail.value?.data.course.provider,
           category: courseDetail.value?.data.course.category,
           type: courseDetail.value?.data.course.type,
-          avgRating: +courseDetail.value!.data.rating.avgRating,
+          // avgRating: +courseDetail.value!.data.rating.avgRating,
           originPrice: courseDetail.value?.data.course.originPrice,
           price: courseDetail.value?.data.course.price
         }
       }
-
-      courseDetail.value?.data.chapters.forEach((item) => {
-        item.isShow = false
-      })
-
-      courseDetail.value?.data.faqs.forEach((item) => {
-        item.isShow = false
-      })
 
       const isPublish = courseDetail.value?.data.course.isPublish
       if (isPublish === false) {
@@ -336,6 +290,19 @@ const getData = () => {
     })
     .catch((err) => {
       showError(err)
+    })
+}
+
+const getRating = () => {
+  GetCourseRatingRequest(courseID)
+    .then((res) => {
+      ratingData.value = res.data
+      if (courseDetail.value?.data.course != undefined) {
+        courseCartItem.value.avgRating = +ratingData.value!.rating.avgRating
+      }
+    })
+    .catch((error) => {
+      console.log(error)
     })
 }
 
@@ -441,14 +408,6 @@ const changeTabView = (name: string) => {
   })
 }
 
-const inquiryReplyAction = (id: string) => {
-  courseDetail.value?.data.inquiries.forEach((item) => {
-    if (item.id === id) {
-      item.isResponse = true
-    }
-  })
-}
-
 const checkLogin = () => {
   if (user.value !== null) {
     isLogin.value = true
@@ -470,6 +429,7 @@ watch(user, () => {
 
 onMounted(() => {
   getData()
+  getRating()
   checkLogin()
 })
 </script>
