@@ -1,5 +1,6 @@
 <template>
   <div class="mb-16 grid grid-cols-12 gap-x-6 gap-y-4 px-3">
+    <!-- #region 搜尋 -->
     <div class="relative col-span-12 lg:col-span-5">
       <input
         type="search"
@@ -14,20 +15,35 @@
     <select class="col-span-6 h-10 rounded-2.5xl border border-neutral-200 px-4 py-2 lg:col-span-2">
       <option value="">日期最新</option>
     </select>
-    <div class="col-span-12 md:mx-0 lg:col-span-3">
+    <!-- #endregion 搜尋 -->
+
+    <!-- #region 手機板 -->
+    <div class="col-span-12 md:mx-0 lg:hidden">
       <div
         v-if="isLogin === false"
-        class="-mx-3 flex items-center justify-between bg-primary-1 px-[33.5px] py-3 lg:hidden"
+        class="-mx-3 flex items-center justify-between bg-primary-1 px-[33.5px] py-3"
       >
         <p class="text-primary-6">對課程有些許問題？</p>
-        <button class="btn-primary">開始提問</button>
+        <button class="btn-primary" @click="openAuthModal('login')">開始提問</button>
       </div>
     </div>
+    <!-- #endregion -->
+
+    <!-- #region 留言區 -->
     <div class="col-span-12 lg:col-span-9">
-      <div v-if="isLogin === false" class="h-14 rounded-2.5xl border border-neutral-200 px-7 py-4">
-        <p class="text-neutral-800">請先登入才能使用留言功能～</p>
-      </div>
-      <template v-if="isLogin">
+      <template v-if="isLogin === false">
+        <div class="h-14 rounded-2.5xl border border-neutral-200 px-7 py-4">
+          <p class="text-neutral-800">請先登入才能使用留言功能～</p>
+        </div>
+        <template v-if="inquiriesData?.inquiries.length === 0">
+          <div class="col-span-9 mt-8 h-20 bg-secondary-1 lg:h-80">
+            <div class="flex h-20 items-center justify-center lg:h-80">
+              <p class="text-xl font-bold text-neutral-800">尚無問答</p>
+            </div>
+          </div>
+        </template>
+      </template>
+      <template v-else>
         <div class="mt-4 rounded-2.5xl border border-neutral-200 p-2 md:p-4">
           <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
             <div class="flex items-center justify-between">
@@ -141,7 +157,9 @@
         </div>
       </template>
     </div>
+    <!-- #endregion 留言區 -->
 
+    <!-- #region -->
     <div v-if="isLogin === false" class="-mt-14 hidden lg:col-span-3 lg:block">
       <div
         class="flex flex-col items-center gap-y-4 rounded-2.5xl border border-neutral-200 bg-primary-1 py-8"
@@ -151,6 +169,7 @@
         <button class="btn-primary" @click="openAuthModal('login')">開始提問</button>
       </div>
     </div>
+    <!-- #endregion -->
   </div>
   <AuthModal />
 </template>

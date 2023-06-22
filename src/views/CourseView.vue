@@ -100,25 +100,27 @@
       </div>
     </div>
 
-    <div class="md:container">
-      <div class="py-6 lg:py-[52px]">
-        <div class="relative mx-[12.5px] py-3">
-          <div
-            class="flex justify-around gap-x-[19px] after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-primary-3 after:content-[''] lg:justify-start"
-          >
-            <CourseTabs :tabs="tabs" @changeTabView="changeTabView"> </CourseTabs>
+    <div ref="tabsElement">
+      <div class="md:container">
+        <div class="py-6 lg:py-[52px]">
+          <div class="relative mx-[12.5px] py-3">
+            <div
+              class="flex justify-around gap-x-[19px] after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-primary-3 after:content-[''] lg:justify-start"
+            >
+              <CourseTabs :tabs="tabs" @changeTabView="changeTabView"> </CourseTabs>
+            </div>
           </div>
         </div>
+        <component
+          :is="currentTab"
+          :isLogin="isLogin"
+          :isOwnedCourse="isOwnedCourse"
+          :user="user"
+          :courseDetail="courseDetail"
+          :courseID="courseID"
+          @get-data="getData"
+        ></component>
       </div>
-      <component
-        :is="currentTab"
-        :isLogin="isLogin"
-        :isOwnedCourse="isOwnedCourse"
-        :user="user"
-        :courseDetail="courseDetail"
-        :courseID="courseID"
-        @get-data="getData"
-      ></component>
     </div>
     <div class="fixed bottom-0 z-10 w-full md:hidden">
       <div class="flex items-center justify-between gap-x-5 bg-secondary-1 px-3 py-[15px]">
@@ -165,12 +167,13 @@
 </template>
 
 <script setup lang="ts">
+import type { Ref } from 'vue'
 import { shallowRef, ref, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import Swal from 'sweetalert2'
 
 import { useAuthStore } from '@/stores/auth'
+import { useStatusStore } from '@/stores/status'
 import { useCartStore } from '@/stores/cart'
 import { getStar } from '@/composables/userCourse'
 
@@ -262,6 +265,8 @@ const router = useRouter()
 const { showError } = useErrorHandler()
 const { addCartItem, courseAddedCheck, addImmediateCourseItem } = useCartStore()
 const { cart, hasAddCart, isImmediateCheckout } = storeToRefs(useCartStore())
+const status = useStatusStore()
+const { updateLoading } = status
 const auth = useAuthStore()
 const { authModal, authModalType, user } = storeToRefs(auth)
 const isLogin = ref(user.value !== null)
@@ -273,10 +278,11 @@ const courseID = Number(route.params.id)
 const isOwnedCourse = ref(false)
 
 const getData = () => {
+  updateLoading(true)
   GetCourseRequest(courseID)
     .then((res) => {
+      getRating()
       courseDetail.value = res.data
-      //console.log('courseDetail', courseDetail.value)
       if (courseDetail.value?.data.course != undefined) {
         courseCartItem.value = {
           id: courseDetail.value?.data.course.id.toString(),
@@ -285,24 +291,19 @@ const getData = () => {
           provider: courseDetail.value?.data.course.provider,
           category: courseDetail.value?.data.course.category,
           type: courseDetail.value?.data.course.type,
-          // avgRating: +courseDetail.value!.data.rating.avgRating,
           originPrice: courseDetail.value?.data.course.originPrice,
           price: courseDetail.value?.data.course.price
         }
       }
-
-      const isPublish = courseDetail.value?.data.course.isPublish
-      if (isPublish === false) {
-        Swal.fire({
-          icon: 'error',
-          title: '無此課程'
-        }).then(function () {
-          router.push({ path: '/courses' })
-        })
-      }
+      setTimeout(() => {
+        updateLoading(false)
+      }, 500)
     })
     .catch((err) => {
-      showError(err)
+      updateLoading(false)
+      showError(err).finally(function () {
+        router.push({ path: '/courses' })
+      })
     })
 }
 
@@ -314,8 +315,8 @@ const getRating = () => {
         courseCartItem.value.avgRating = +ratingData.value!.rating.avgRating
       }
     })
-    .catch((error) => {
-      console.log(error)
+    .catch((err) => {
+      showError(err)
     })
 }
 
@@ -325,8 +326,8 @@ const checkHasCourse = () => {
     .then((res) => {
       isOwnedCourse.value = res.data.isOwned
     })
-    .catch((error) => {
-      console.log(error)
+    .catch((err) => {
+      showError(err)
     })
 }
 
@@ -418,11 +419,24 @@ const tabs = [
 ]
 
 const currentTab = shallowRef(tabs[0].comp)
+const tabsElement = ref<null | HTMLDivElement>(null)
+const tabsCompRef: Ref<null | typeof CourseTabs> = ref(null)
+const scrollToTabs = (tabName: string) => {
+  if (tabsElement.value) {
+    tabsElement.value.scrollIntoView({ behavior: 'smooth' })
+    tabsCompRef.value?.changeTabAction(tabName)
+  }
+}
 
 const changeTabView = (name: string) => {
+  updateLoading(true)
   tabs.forEach((item) => {
     if (item.name === name) {
       currentTab.value = item.comp
+      scrollToTabs(name)
+      setTimeout(() => {
+        updateLoading(false)
+      }, 500)
     }
   })
 }
@@ -448,7 +462,6 @@ watch(user, () => {
 
 onMounted(() => {
   getData()
-  getRating()
   checkLogin()
 })
 </script>
