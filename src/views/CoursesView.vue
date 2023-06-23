@@ -21,7 +21,7 @@
               <router-link :to="`/course/${item.id}`">
                 <span
                   class="material-icons absolute right-2 top-2 z-10 cursor-pointer text-2xl text-primary-3"
-                  @click.prevent="handleCourseTag(item.id)"
+                  @click.prevent="courseTagAction(item.id)"
                 >
                   {{ judgeTags(item.id) ? 'bookmark' : 'bookmark_border' }}
                 </span>
@@ -105,10 +105,11 @@ import { storeToRefs } from 'pinia'
 
 import { useStatusStore } from '@/stores/status.js'
 import { useAuthStore } from '@/stores/auth'
+import { useTagStore } from '@/stores/tag'
 import { getStar } from '@/composables/userCourse'
 import useErrorHandler from '@/composables/useErrorHandler'
 
-import { GetCoursesListRequest, GetCourseTagRequest, UseCourseTagRequest } from '@/models/course'
+import { GetCoursesListRequest } from '@/models/course'
 
 interface CourseList {
   page: number
@@ -140,11 +141,14 @@ interface Course {
 
 const { showError } = useErrorHandler()
 
-const auth = useAuthStore()
-const { authModal, authModalType, user } = storeToRefs(auth)
 const status = useStatusStore()
 const { updateLoading } = status
+const auth = useAuthStore()
+const { authModal, authModalType, user } = storeToRefs(auth)
 const isLogin = ref(user.value !== null)
+const tag = useTagStore()
+const { tagList } = storeToRefs(tag)
+const { getTagList, handleCourseTag, judgeTags } = tag
 
 const selectCoursesList = [
   { value: '', label: '全部課程' },
@@ -174,46 +178,18 @@ const getDataList = () => {
   }, 500)
 }
 
-//#region tag需整理
-const openAuthModal = (type = 'login') => {
+function openAuthModal(type = 'login') {
   authModal.value = true
   authModalType.value = type
 }
 
-const tagList = ref([])
-const getTagList = () => {
-  GetCourseTagRequest()
-    .then((res) => {
-      if (res.data.status === true) {
-        tagList.value = res.data.data.split(',')
-      } else {
-        tagList.value = []
-      }
-    })
-    .catch((err) => {
-      showError(err)
-    })
-}
-
-const handleCourseTag = (courseID: number) => {
+const courseTagAction = (courseID: number) => {
   if (isLogin.value === false) {
     openAuthModal()
   } else {
-    let method = judgeTags(courseID) === true ? 'delete' : 'post'
-    UseCourseTagRequest(method, courseID)
-      .then((res) => {
-        getTagList()
-      })
-      .catch((err) => {
-        showError(err)
-      })
+    handleCourseTag(courseID)
   }
 }
-
-const judgeTags = (courseID: number) => {
-  return tagList.value.some((tag) => Number(tag) === courseID)
-}
-//#endregion
 
 const setPage = (page: number) => {
   if (page <= 0 || page >= courseList.value.totalPages) return
@@ -225,7 +201,10 @@ const checkLogin = () => {
   if (user.value !== null) {
     isLogin.value = true
     getTagList()
-  } else isLogin.value = false
+  } else {
+    isLogin.value = false
+    tagList.value = []
+  }
 }
 
 watch(user, () => {

@@ -99,78 +99,14 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 
-import useErrorHandler from '@/composables/useErrorHandler'
+import { useTagStore } from '@/stores/tag'
 import { getStar } from '@/composables/userCourse'
-import { GetUserTagsRequest } from '@/models/user'
-import { GetCourseTagRequest, UseCourseTagRequest } from '@/models/course'
 
-interface Course {
-  id: number
-  title: string
-  price: number
-  originPrice: number
-  image_path: string
-  link: string | null
-  provider: string
-  buyers: number | null
-  totalTime: number | null
-  avgRating: string
-  countRating: number
-}
-
-interface CourseResponse {
-  status: number
-  message: string
-  data: Course[]
-}
-
-const { showError } = useErrorHandler()
-
-const courseList = ref<Course | any>({})
-
-const getData = () => {
-  GetUserTagsRequest()
-    .then((res) => {
-      courseList.value = res.data.data
-    })
-    .catch((err) => {
-      showError(err)
-    })
-}
-
-//#region tag需整理
-const tagList = ref([])
-const getTagList = () => {
-  GetCourseTagRequest()
-    .then((res) => {
-      if (res.data.status === true) {
-        tagList.value = res.data.data.split(',')
-      } else {
-        tagList.value = []
-      }
-    })
-    .catch((err) => {
-      showError(err)
-    })
-}
-
-const handleCourseTag = (courseID: number) => {
-  let method = judgeTags(courseID) === true ? 'delete' : 'post'
-  UseCourseTagRequest(method, courseID)
-    .then((res) => {
-      getTagList()
-      getData()
-    })
-    .catch((err) => {
-      showError(err)
-    })
-}
-
-const judgeTags = (courseID: number) => {
-  return tagList.value.some((tag) => Number(tag) === courseID)
-}
-//#endregion
+const tag = useTagStore()
+const { courseList } = storeToRefs(tag)
+const { getTagsData, getTagList, handleCourseTag, judgeTags } = tag
 
 const currentPage = ref(1)
 const totalPages = ref(1)
@@ -180,7 +116,7 @@ const setPage = (page: number) => {
 }
 
 onMounted(() => {
-  getData()
+  getTagsData()
   getTagList()
 })
 </script>

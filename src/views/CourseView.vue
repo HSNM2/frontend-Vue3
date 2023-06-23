@@ -15,7 +15,7 @@
             </p>
             <div class="flex gap-x-2 pb-3">
               <template
-                v-for="(tag, index) in getcourseTags(courseDetail.data.course.tag)"
+                v-for="(tag, index) in getCourseTagsText(courseDetail.data.course.tag)"
                 :key="index"
               >
                 <p class="rounded-[15px] bg-secondary-2 px-3 py-1 text-sm">
@@ -82,7 +82,7 @@
               <span class="material-icons cursor-pointer text-primary-6"> share </span>
               <span
                 class="material-icons cursor-pointer text-2xl text-primary-6"
-                @click="handleCourseTag(courseDetail.data.course.id)"
+                @click="courseTagAction(courseDetail.data.course.id)"
               >
                 {{ judgeTags(courseDetail.data.course.id) ? 'bookmark' : 'bookmark_border' }}
               </span>
@@ -175,6 +175,7 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useStatusStore } from '@/stores/status'
 import { useCartStore } from '@/stores/cart'
+import { useTagStore } from '@/stores/tag'
 import { getStar } from '@/composables/userCourse'
 
 import CourseTabs from '@/components/CourseTabs.vue'
@@ -271,6 +272,10 @@ const auth = useAuthStore()
 const { authModal, authModalType, user } = storeToRefs(auth)
 const isLogin = ref(user.value !== null)
 
+const tag = useTagStore()
+const { tagList } = storeToRefs(tag)
+const { getTagList, handleCourseTag, judgeTags } = tag
+
 const courseDetail = ref<CourseResponse | null>(null)
 const ratingData = ref<RatingResponse | null>(null)
 const courseCartItem = ref<CourseCartItem | any>({})
@@ -351,46 +356,18 @@ const enterOtherPage = (page: string) => {
   }
 }
 
-//#region 書籤 需整理
 const openAuthModal = (type = 'login') => {
   authModal.value = true
   authModalType.value = type
 }
 
-const tagList = ref([])
-const getTagList = () => {
-  GetCourseTagRequest()
-    .then((res) => {
-      if (res.data.status === true) {
-        tagList.value = res.data.data.split(',')
-      } else {
-        tagList.value = []
-      }
-    })
-    .catch((err) => {
-      showError(err)
-    })
-}
-
-const handleCourseTag = (courseID: number) => {
+const courseTagAction = (courseID: number) => {
   if (isLogin.value === false) {
     openAuthModal()
   } else {
-    let method = judgeTags(courseID) ? 'delete' : 'post'
-    UseCourseTagRequest(method, courseID)
-      .then((res) => {
-        getTagList()
-      })
-      .catch((err) => {
-        showError(err)
-      })
+    handleCourseTag(courseID)
   }
 }
-
-const judgeTags = (courseID: number) => {
-  return tagList.value.some((tag) => Number(tag) === courseID)
-}
-//#endregion
 
 // #region Cart
 const handleCartAction = () => {
@@ -447,10 +424,13 @@ const checkLogin = () => {
     getTagList()
     getCartInfo()
     checkHasCourse()
-  } else isLogin.value = false
+  } else {
+    isLogin.value = false
+    tagList.value = []
+  }
 }
 
-const getcourseTags = computed(() => {
+const getCourseTagsText = computed(() => {
   return (tags: string) => {
     return tags?.split(',')
   }
