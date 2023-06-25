@@ -7,7 +7,7 @@
       課程大綱
     </h4>
     <ul>
-      <li v-for="chapter in courseDetail.data.chapters" :key="chapter.id">
+      <li v-for="chapter in chaptersData?.chapters" :key="chapter.id">
         <div class="mb-4">
           <div
             class="flex cursor-pointer items-center justify-between gap-x-1 bg-primary-3/50 px-2"
@@ -38,11 +38,56 @@
   </div>
 </template>
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+
+import { GetCourseChapterRequest } from '@/models/course'
+
+interface ChaptersResponse {
+  status: number
+  chapters: Chapter[]
+}
+
+interface Chapter {
+  id: number
+  title: string
+  lessons: Lesson[]
+  isShow: boolean
+}
+
+interface Lesson {
+  id: number
+  title: string
+  videoPath: string
+}
+
 const props = defineProps({
   courseDetail: {
     type: Object,
     required: true
+  },
+  courseID: {
+    type: Number,
+    required: true
   }
+})
+
+const chaptersData = ref<ChaptersResponse | null>(null)
+
+const getChapter = () => {
+  GetCourseChapterRequest(props.courseID)
+    .then((res) => {
+      chaptersData.value = res.data
+      chaptersData.value?.chapters.forEach((item) => {
+        item.isShow = false
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+onMounted(() => {
+  getChapter()
 })
 </script>
 <style lang="scss" scoped>

@@ -1,6 +1,6 @@
 <template>
-  <ul class="mb-10 flex flex-col gap-y-2">
-    <li v-for="chapter in courseDetail.chapters" :key="chapter.id">
+  <ul class="mb-10 flex h-80 flex-col gap-y-2 overflow-y-auto lg:min-h-full">
+    <li v-for="chapter in courseDetail?.chapters" :key="chapter.id">
       <div
         class="flex cursor-pointer justify-between rounded-[10px] border border-primary-3 p-4 shadow shadow-primary-3"
         @click="chapter.isShow = !chapter.isShow"
@@ -38,13 +38,16 @@
   </ul>
 </template>
 <script setup lang="ts">
+const emit = defineEmits(['update-video-path'])
 const props = defineProps({
+  user: {
+    type: Object
+  },
   courseDetail: {
     type: Object,
     required: true
   }
 })
-const emit = defineEmits(['update-video-path', 'test'])
 
 const videoPlayerHandler = (videoPath: string, chapterID: number, lessonID: number) => {
   emit('update-video-path', videoPath, chapterID, lessonID)

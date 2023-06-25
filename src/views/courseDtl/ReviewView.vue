@@ -102,32 +102,41 @@
       class="col-span-12"
       :class="$route.name === 'course' ? 'lg:col-span-9 lg:row-start-1' : ''"
     >
-      <template v-for="(item, index) in ratingDataList.ratings" :key="index">
-        <div class="mb-4 rounded-2.5xl border border-secondary-2 p-5">
-          <div
-            class="flex flex-col gap-y-4 md:flex-row md:items-center md:justify-between md:gap-y-0"
-          >
-            <div class="flex items-center gap-x-4">
-              <img class="h-10 w-10 rounded-full" :src="getAvatar(item.imagePath)" alt="" />
-              <p class="">{{ item.nickName === '' ? item.name : item.nickName }}</p>
-            </div>
-            <div class="flex items-center justify-between md:gap-x-4">
-              <div class="flex items-center">
-                <template v-for="(star, starIndex) in 5" :key="starIndex">
-                  <span class="material-icons text-lg text-primary-3">
-                    {{ getStar(item.score, starIndex) }}
-                  </span>
-                </template>
-              </div>
-              <p class="text-sm text-primary-4">{{ item.date.slice(0, 10) }}</p>
-            </div>
-          </div>
-          <div class="mt-4 md:ml-14">
-            <p>
-              {{ item.content }}
-            </p>
+      <template v-if="ratingDataList.ratings?.length === 0">
+        <div class="col-span-9 h-20 bg-secondary-1 lg:h-80">
+          <div class="flex h-20 items-center justify-center lg:h-80">
+            <p class="text-xl font-bold text-neutral-800">尚無評價</p>
           </div>
         </div>
+      </template>
+      <template v-else>
+        <template v-for="(item, index) in ratingDataList.ratings" :key="index">
+          <div class="mb-4 rounded-2.5xl border border-secondary-2 p-5">
+            <div
+              class="flex flex-col gap-y-4 md:flex-row md:items-center md:justify-between md:gap-y-0"
+            >
+              <div class="flex items-center gap-x-4">
+                <img class="h-10 w-10 rounded-full" :src="getAvatar(item.imagePath)" alt="" />
+                <p class="">{{ item.nickName === '' ? item.name : item.nickName }}</p>
+              </div>
+              <div class="flex items-center justify-between md:gap-x-4">
+                <div class="flex items-center">
+                  <template v-for="(star, starIndex) in 5" :key="starIndex">
+                    <span class="material-icons text-lg text-primary-3">
+                      {{ getStar(item.score, starIndex) }}
+                    </span>
+                  </template>
+                </div>
+                <p class="text-sm text-primary-4">{{ item.date.slice(0, 10) }}</p>
+              </div>
+            </div>
+            <div class="mt-4 md:ml-14">
+              <p>
+                {{ item.content }}
+              </p>
+            </div>
+          </div>
+        </template>
       </template>
     </div>
   </div>
@@ -172,7 +181,7 @@ const route = useRoute()
 
 const { showError } = useErrorHandler()
 
-const emit = defineEmits(['update-is-response', 'get-data', 'update-video-path'])
+const emit = defineEmits(['get-data', 'update-video-path'])
 const props = defineProps({
   isLogin: {
     type: Boolean,
@@ -188,6 +197,9 @@ const props = defineProps({
   courseDetail: {
     type: Object,
     required: true
+  },
+  courseID: {
+    type: Number
   }
 })
 

@@ -14,6 +14,34 @@ export function GetCourseRequest(courseID: number) {
   })
 }
 
+export function GetCourseChapterRequest(courseID: number) {
+  return request({
+    url: `/api/course/${courseID}/chapter`,
+    method: 'get'
+  })
+}
+
+export function GetCourseInquiryRequest(courseID: number) {
+  return request({
+    url: `/api/course/${courseID}/inquiry`,
+    method: 'get'
+  })
+}
+
+export function GetCourseFaqRequest(courseID: number) {
+  return request({
+    url: `/api/course/${courseID}/faq`,
+    method: 'get'
+  })
+}
+
+export function GetCourseRatingRequest(courseID: number) {
+  return request({
+    url: `/api/course/${courseID}/rating`,
+    method: 'get'
+  })
+}
+
 export function InquiryRequest(courseID: number, data: object) {
   return request({
     url: `/api/course/${courseID}/preClassInquiry`,
