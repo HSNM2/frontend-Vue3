@@ -189,8 +189,6 @@ import AuthModal from '@/components/AuthModal.vue'
 import {
   GetCourseRequest,
   GetCourseRatingRequest,
-  UseCourseTagRequest,
-  GetCourseTagRequest,
   CheckUserHasCourseRequest
 } from '@/models/course'
 
