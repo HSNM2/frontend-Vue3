@@ -40,7 +40,7 @@
             />
             <span class="text-sm md:me-4 md:text-base">{{ course.title }}</span>
             <RouterLink
-              class="material-icons ms-auto hidden cursor-pointer text-primary-5 md:block"
+              class="material-icons ms-auto hidden cursor-pointer p-5 text-primary-5 md:block"
               :to="`/instructor/course/${course.id}`"
               >settings</RouterLink
             >

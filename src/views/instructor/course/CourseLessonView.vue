@@ -128,7 +128,7 @@
                 </VField>
                 <ErrorMessage class="invalid-feedback" name="url" />
               </div>
-              <button class="ms-auto block w-fit">新增</button>
+              <button class="ms-auto block w-fit" disabled>新增</button>
             </div>
           </div>
         </div>

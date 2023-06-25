@@ -284,6 +284,7 @@
               <input
                 id="price"
                 type="number"
+                min="0"
                 class="form-control rounded-s-none pe-7 text-right"
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
@@ -311,6 +312,7 @@
               <input
                 id="originPrice"
                 type="number"
+                min="0"
                 class="form-control rounded-s-none pe-7 text-right"
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
