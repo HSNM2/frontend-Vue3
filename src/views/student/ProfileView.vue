@@ -87,7 +87,7 @@
           <VField
             name="phone"
             type="text"
-            rules="required|numeric"
+            rules="required|numeric|length:10"
             v-model.trim="phone"
             label="聯絡電話"
             v-slot="{ field, errors }"
@@ -96,6 +96,7 @@
               id="phone"
               class="form-control"
               v-bind="field"
+              placeholder="請以09為開頭"
               :class="{ invalid: !!errors.length }"
             />
           </VField>
