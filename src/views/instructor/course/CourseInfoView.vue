@@ -494,20 +494,28 @@ function addTag() {
 }
 
 function onSubmit() {
+  updateLoading(true)
   course!.tag = tags.value
   const { image_path, ...data } = course!
   editCourseInfo({
     id: +route.params.courseId,
     data
-  }).then((res) => {
-    if (res.data.status == true) {
-      Swal.fire({
-        icon: 'success',
-        title: res.data.message
-      })
-      courseInfoProcess()
-    }
   })
+    .then((res) => {
+      if (res.data.status == true) {
+        Swal.fire({
+          icon: 'success',
+          title: res.data.message
+        })
+        courseInfoProcess()
+      }
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
 }
 
 onMounted(() => {
