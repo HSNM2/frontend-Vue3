@@ -122,10 +122,10 @@
 import type { Ref } from 'vue'
 import { shallowRef, ref, triggerRef, onMounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
 import { VideoPlayer } from '@videojs-player/vue'
 import 'video.js/dist/video-js.css'
 import Swal from 'sweetalert2'
-import { storeToRefs } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
 import { useStatusStore } from '@/stores/status'
@@ -136,7 +136,11 @@ import DiscussView from '@/views/courseDtl/DiscussView.vue'
 import ReviewView from '@/views/courseDtl/ReviewView.vue'
 import useErrorHandler from '@/composables/useErrorHandler'
 
-import { GetUserCourseRequest, CheckUserHasCourseRequest } from '@/models/course'
+import {
+  GetCourseIsExistRequest,
+  GetUserCourseRequest,
+  CheckUserHasCourseRequest
+} from '@/models/course'
 
 interface CourseDetail {
   status: boolean
@@ -181,20 +185,20 @@ const maxVal = ref(100)
 const progressVal = ref(0)
 const progressBarStyle = { bg: 'bg-neutral-100', progress: 'bg-secondary-2', height: 'h-2' }
 
-const getData = () => {
-  updateLoading(true)
-  GetUserCourseRequest(courseID)
+const getCourseIsExist = () => {
+  const data = { courseId: courseID }
+  GetCourseIsExistRequest(data)
     .then((res) => {
-      courseDetail.value = res.data
-      courseDetail.value?.data[0].chapters.forEach((chapter) => {
-        chapter.isShow = false
-        chapter.lessons.forEach((lesson) => {
-          lesson.isPlay = false
+      if (res.data.isPublish === true) {
+        checkHasCourse()
+      } else {
+        return Swal.fire({
+          icon: 'error',
+          title: '未有此課程'
+        }).finally(function () {
+          router.push({ path: '/courses' })
         })
-      })
-      setTimeout(() => {
-        updateLoading(false)
-      }, 500)
+      }
     })
     .catch((err) => {
       showError(err)
@@ -215,6 +219,26 @@ const checkHasCourse = () => {
       } else {
         getData()
       }
+    })
+    .catch((err) => {
+      showError(err)
+    })
+}
+
+const getData = () => {
+  updateLoading(true)
+  GetUserCourseRequest(courseID)
+    .then((res) => {
+      courseDetail.value = res.data
+      courseDetail.value?.data[0].chapters.forEach((chapter) => {
+        chapter.isShow = false
+        chapter.lessons.forEach((lesson) => {
+          lesson.isPlay = false
+        })
+      })
+      setTimeout(() => {
+        updateLoading(false)
+      }, 500)
     })
     .catch((err) => {
       showError(err)
@@ -339,7 +363,7 @@ const changeTabView = (name: string) => {
 
 onMounted(() => {
   changeTabView('課程討論')
-  checkHasCourse()
+  getCourseIsExist()
 })
 </script>
 
