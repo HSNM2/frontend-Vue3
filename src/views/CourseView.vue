@@ -171,6 +171,7 @@ import type { Ref } from 'vue'
 import { shallowRef, ref, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import Swal from 'sweetalert2'
 
 import { useAuthStore } from '@/stores/auth'
 import { useStatusStore } from '@/stores/status'
@@ -187,6 +188,7 @@ import ReviewView from '@/views/courseDtl/ReviewView.vue'
 import useErrorHandler from '@/composables/useErrorHandler'
 import AuthModal from '@/components/AuthModal.vue'
 import {
+  GetCourseIsExistRequest,
   GetCourseRequest,
   GetCourseRatingRequest,
   CheckUserHasCourseRequest
@@ -279,6 +281,27 @@ const ratingData = ref<RatingResponse | null>(null)
 const courseCartItem = ref<CourseCartItem | any>({})
 const courseID = Number(route.params.id)
 const isOwnedCourse = ref(false)
+
+const getCourseIsExist = () => {
+  const data = { courseId: courseID }
+  GetCourseIsExistRequest(data)
+    .then((res) => {
+      if (res.data.isPublish === true) {
+        getData()
+        checkLogin()
+      } else {
+        return Swal.fire({
+          icon: 'error',
+          title: '未有此課程'
+        }).finally(function () {
+          router.push({ path: '/courses' })
+        })
+      }
+    })
+    .catch((err) => {
+      showError(err)
+    })
+}
 
 const getData = () => {
   updateLoading(true)
@@ -439,8 +462,7 @@ watch(user, () => {
 })
 
 onMounted(() => {
-  getData()
-  checkLogin()
+  getCourseIsExist()
 })
 </script>
 
