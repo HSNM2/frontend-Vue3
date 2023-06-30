@@ -197,12 +197,7 @@
         」一同打造最精彩的線上甜點課程！讓您的專業技能得以展現，
         共創甜點界的新藍海。現在就加入我們，開啟您的甜點教學之旅！
       </p>
-      <button
-        v-if="!user?.identity"
-        type="button"
-        class="btn-primary"
-        @click="courseProviderAllowModal = true"
-      >
+      <button v-if="!user?.identity" type="button" class="btn-primary" @click="checkIdentity">
         我要開課
       </button>
     </div>
@@ -229,11 +224,52 @@
   <!--#endregion section6 -->
 </template>
 <script setup lang="ts">
+import { ref, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
-const { courseProviderAllowModal, user } = storeToRefs(auth)
+const { authModal, authModalType, courseProviderAllowModal, user } = storeToRefs(auth)
+
+const isLogin = ref(false)
+
+const checkIdentity = () => {
+  if (isLogin.value === false) {
+    openAuthModal()
+  } else {
+    courseProviderAllowModal.value = true
+  }
+}
+
+const openAuthModal = (type = 'login') => {
+  authModal.value = true
+  authModalType.value = type
+}
+
+const checkLogin = () => {
+  if (user.value !== null) {
+    isLogin.value = true
+  } else {
+    isLogin.value = false
+  }
+}
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  })
+}
+
+watch(user, () => {
+  checkLogin()
+})
+
+onMounted(() => {
+  scrollToTop()
+  checkLogin()
+})
 </script>
 <style lang="scss" scoped></style>
