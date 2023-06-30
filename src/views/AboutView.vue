@@ -128,39 +128,39 @@
         認識我們的團隊
       </h2>
       <div
-        class="grid grid-cols-2 gap-x-2 md:flex md:flex-wrap md:justify-center md:gap-x-44 lg:gap-x-[280px]"
+        class="grid grid-cols-2 gap-x-2 gap-y-4 md:flex md:flex-wrap md:justify-center md:gap-x-44 lg:gap-x-[280px]"
       >
         <div class="flex flex-col items-center justify-center gap-y-2">
-          <div class="rounded-full border border-[10px] border-primary-1">
-            <img class="h-40 w-40 rounded-full" src="https://picsum.photos/160/160" alt="" />
+          <div class="rounded-full border border-[10px] border-primary-1 bg-neutral-150">
+            <img class="h-40 w-40 rounded-full" src="/image/profile/Paper.png" alt="profile-img" />
           </div>
           <p class="text-lg font-bold text-primary-5">Paper</p>
           <p class="text-base text-neutral-800">共同創辦人</p>
         </div>
         <div class="flex flex-col items-center justify-center gap-y-2">
-          <div class="rounded-full border border-[10px] border-primary-1">
-            <img class="h-40 w-40 rounded-full" src="https://picsum.photos/160/160" alt="" />
+          <div class="rounded-full border border-[10px] border-primary-1 bg-neutral-150">
+            <img class="h-40 w-40 rounded-full" src="/image/profile/Shila.png" alt="profile-img" />
           </div>
           <p class="text-lg font-bold text-primary-5">Shila</p>
           <p class="text-base text-neutral-800">共同創辦人</p>
         </div>
         <div class="flex flex-col items-center justify-center gap-y-2">
-          <div class="rounded-full border border-[10px] border-primary-1">
-            <img class="h-40 w-40 rounded-full" src="https://picsum.photos/160/160" alt="" />
+          <div class="rounded-full border border-[10px] border-primary-1 bg-neutral-150">
+            <img class="h-40 w-40 rounded-full" src="/image/profile/Ruby.png" alt="profile-img" />
           </div>
           <p class="text-lg font-bold text-primary-5">Ruby</p>
           <p class="text-base text-neutral-800">共同創辦人</p>
         </div>
         <div class="flex flex-col items-center justify-center gap-y-2">
-          <div class="rounded-full border border-[10px] border-primary-1">
-            <img class="h-40 w-40 rounded-full" src="https://picsum.photos/160/160" alt="" />
+          <div class="rounded-full border border-[10px] border-primary-1 bg-neutral-150">
+            <img class="h-40 w-40 rounded-full" src="/image/profile/Jhon.png" alt="profile-img" />
           </div>
           <p class="text-lg font-bold text-primary-5">Jhon</p>
           <p class="text-base text-neutral-800">共同創辦人</p>
         </div>
         <div class="flex flex-col items-center justify-center gap-y-2">
-          <div class="rounded-full border border-[10px] border-primary-1">
-            <img class="h-40 w-40 rounded-full" src="https://picsum.photos/160/160" alt="" />
+          <div class="rounded-full border border-[10px] border-primary-1 bg-neutral-150">
+            <img class="h-40 w-40 rounded-full" src="/image/profile/Brook.png" alt="profile-img" />
           </div>
           <p class="text-lg font-bold text-primary-5">Brook</p>
           <p class="text-base text-neutral-800">共同創辦人</p>
@@ -179,7 +179,11 @@
           <p class="text-heading-3xl">喜愛甜食是人類的天性</p>
           <p class="text-base">讓我們一起享受甜食的魅力，一起創造美好的味覺體驗！</p>
           <div class="mt-2">
-            <button type="button" class="btn-secondary me-4" @click="enterOtherPage('')">
+            <button
+              type="button"
+              class="btn-secondary me-4"
+              @click="enterOtherPage('createCourseInfo')"
+            >
               開課教學
             </button>
             <button type="button" class="btn-primary" @click="enterOtherPage('courses')">
@@ -196,11 +200,26 @@
   <!--#endregion section6 -->
 </template>
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
+
 const enterOtherPage = (name: string) => {
   if (name === '') return
   router.push({ name: name })
 }
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth'
+  })
+}
+
+onMounted(() => {
+  scrollToTop()
+})
 </script>
 <style></style>
