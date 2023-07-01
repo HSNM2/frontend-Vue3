@@ -32,6 +32,7 @@
               v-for="link in sidebarMenuLinks"
               :key="link.to"
               class="flex items-center justify-center p-4 text-neutral-600 hover:text-primary-4"
+              :class="{ 'pointer-events-none': !link.enabled }"
               :to="link.to"
             >
               <span class="material-icons me-2"> {{ link.icon }}</span>
@@ -63,10 +64,10 @@ const { getUser } = auth
 const avatarPic = ref<FormData | null>(new FormData())
 
 const sidebarMenuLinks = ref([
-  { name: '我的學習', icon: 'computer', to: '/student/courses' },
-  { name: '我的收藏', icon: 'bookmark', to: '/student/tags' },
-  { name: '訂單記錄', icon: 'description', to: '/student/orders' },
-  { name: '會員資料', icon: 'person', to: '/student/profile' }
+  { name: '我的學習', icon: 'computer', to: '/student/courses', enabled: true },
+  { name: '我的收藏', icon: 'bookmark', to: '/student/tags', enabled: true },
+  { name: '訂單記錄', icon: 'description', to: '/student/orders', enabled: false },
+  { name: '會員資料', icon: 'person', to: '/student/profile', enabled: true }
 ])
 
 function avatarPicChange(e: Event) {
