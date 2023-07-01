@@ -37,7 +37,11 @@ export const useCartStore = defineStore('cart', () => {
     const localCart = localStorage.getItem('sweetTimeCart')
     if (localCart != null) {
       cart.value = JSON.parse(localCart)
-      getCart()
+      if (cart.value?.cartItem.length !== 0) {
+        getCart()
+      } else {
+        cartHandle()
+      }
     } else {
       cart.value = {
         cartItem: [],

@@ -99,7 +99,7 @@ const { cart, cartItemDeleteHandle, getCart } = useCartStore()
 onMounted(() => {
   isImmediateCheckout.value = false
 
-  if (cart.value?.cartItem.length !== 0) {
+  if (cart?.cartItem.length !== 0) {
     getCart()
   }
 })
