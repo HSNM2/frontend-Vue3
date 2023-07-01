@@ -141,13 +141,15 @@
         <p class="">總計</p>
         <span class="block text-lg font-bold"
           >${{
-            immediateCheckoutCourseInfo.price ? immediateCheckoutCourseInfo.price : cart.totalPrice
+            isImmediateCheckout && immediateCheckoutCourseInfo.price
+              ? immediateCheckoutCourseInfo.price
+              : cart.totalPrice
           }}</span
         >
         <div class="flex justify-between">
           <span class="line-through"
             >${{
-              immediateCheckoutCourseInfo.originPrice
+              isImmediateCheckout && immediateCheckoutCourseInfo.originPrice
                 ? immediateCheckoutCourseInfo.originPrice
                 : cart.totalOriginPrice
             }}</span
