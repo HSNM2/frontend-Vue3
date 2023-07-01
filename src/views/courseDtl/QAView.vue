@@ -48,7 +48,11 @@
           <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
-                <img class="h-10 w-10 rounded-full" :src="getAvatar(user?.imagePath)" alt="" />
+                <img
+                  class="h-10 w-10 rounded-full"
+                  :src="getAvatar(user?.avatarImagePath)"
+                  alt=""
+                />
                 <p class="">{{ user?.nickName === null ? user?.name : user?.nickName }}</p>
               </div>
             </div>
@@ -130,7 +134,11 @@
               <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-x-4">
-                    <img class="h-10 w-10 rounded-full" :src="getAvatar(user?.imagePath)" alt="" />
+                    <img
+                      class="h-10 w-10 rounded-full"
+                      :src="getAvatar(user?.avatarImagePath)"
+                      alt=""
+                    />
                     <p class="">{{ user?.nickName === null ? user.name : user?.nickName }}</p>
                   </div>
                 </div>
