@@ -95,8 +95,12 @@ import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useCartStore } from '@/stores/cart'
 const { isImmediateCheckout } = storeToRefs(useCartStore())
-const { cart, cartItemDeleteHandle } = useCartStore()
+const { cart, cartItemDeleteHandle, getCart } = useCartStore()
 onMounted(() => {
   isImmediateCheckout.value = false
+
+  if (cart.value?.cartItem.length !== 0) {
+    getCart()
+  }
 })
 </script>

@@ -266,7 +266,6 @@ function handleLogout() {
 
 onMounted(() => {
   getLocalCart()
-  cartHandle()
   isImmediateCheckout.value = false
 })
 </script>

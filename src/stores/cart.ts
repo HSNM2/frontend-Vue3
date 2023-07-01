@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+import { GetCartRequest } from '@/models/cart'
+
 interface Cart {
   cartId: string
   cartItem: CartItem[]
@@ -35,6 +37,7 @@ export const useCartStore = defineStore('cart', () => {
     const localCart = localStorage.getItem('sweetTimeCart')
     if (localCart != null) {
       cart.value = JSON.parse(localCart)
+      getCart()
     } else {
       cart.value = {
         cartItem: [],
@@ -43,7 +46,15 @@ export const useCartStore = defineStore('cart', () => {
         totalPrice: 0,
         offPercent: 0
       }
+      cartHandle()
     }
+  }
+
+  function getCart() {
+    GetCartRequest({ id: cart.value.cartItem?.map((item: CartItem) => item.id) }).then((res) => {
+      cart.value.cartItem = res.data.data
+      cartHandle()
+    })
   }
 
   function cartHandle() {
@@ -105,6 +116,7 @@ export const useCartStore = defineStore('cart', () => {
     isImmediateCheckout,
 
     getLocalCart,
+    getCart,
     cartHandle,
     courseAddedCheck,
     emptyCartHandle,
