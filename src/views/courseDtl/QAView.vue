@@ -1,5 +1,6 @@
 <template>
   <div class="mb-16 grid grid-cols-12 gap-x-6 gap-y-4 px-3">
+    <!-- #region 搜尋 -->
     <div class="relative col-span-12 lg:col-span-5">
       <input
         type="search"
@@ -14,26 +15,45 @@
     <select class="col-span-6 h-10 rounded-2.5xl border border-neutral-200 px-4 py-2 lg:col-span-2">
       <option value="">日期最新</option>
     </select>
-    <div class="col-span-12 md:mx-0 lg:col-span-3">
+    <!-- #endregion 搜尋 -->
+
+    <!-- #region 手機板 -->
+    <div class="col-span-12 md:mx-0 lg:hidden">
       <div
         v-if="isLogin === false"
-        class="-mx-3 flex items-center justify-between bg-primary-1 px-[33.5px] py-3 lg:hidden"
+        class="-mx-3 flex items-center justify-between bg-primary-1 px-[33.5px] py-3"
       >
         <p class="text-primary-6">對課程有些許問題？</p>
-        <button class="btn-primary">開始提問</button>
+        <button class="btn-primary" @click="openAuthModal('login')">開始提問</button>
       </div>
     </div>
+    <!-- #endregion -->
+
+    <!-- #region 留言區 -->
     <div class="col-span-12 lg:col-span-9">
-      <div v-if="isLogin === false" class="h-14 rounded-2.5xl border border-neutral-200 px-7 py-4">
-        <p class="text-neutral-800">請先登入才能使用留言功能～</p>
-      </div>
-      <template v-if="isLogin">
+      <template v-if="isLogin === false">
+        <div class="h-14 rounded-2.5xl border border-neutral-200 px-7 py-4">
+          <p class="text-neutral-800">請先登入才能使用留言功能～</p>
+        </div>
+        <template v-if="inquiriesData?.inquiries.length === 0">
+          <div class="col-span-9 mt-8 h-20 bg-secondary-1 lg:h-80">
+            <div class="flex h-20 items-center justify-center lg:h-80">
+              <p class="text-xl font-bold text-neutral-800">尚無問答</p>
+            </div>
+          </div>
+        </template>
+      </template>
+      <template v-else>
         <div class="mt-4 rounded-2.5xl border border-neutral-200 p-2 md:p-4">
           <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-x-4">
-                <img class="h-10 w-10 rounded-full" :src="getAvatar(user.imagePath)" alt="" />
-                <p class="">{{ user.nickName === '' ? user.name : user.nickName }}</p>
+                <img
+                  class="h-10 w-10 rounded-full"
+                  :src="getAvatar(user?.avatarImagePath)"
+                  alt=""
+                />
+                <p class="">{{ user?.nickName === null ? user?.name : user?.nickName }}</p>
               </div>
             </div>
           </div>
@@ -57,7 +77,7 @@
         </div>
       </template>
 
-      <template v-for="inquirie in courseDetail.data.inquiries" :key="inquirie.id">
+      <template v-for="inquirie in inquiriesData?.inquiries" :key="inquirie.id">
         <div class="mt-4 rounded-2.5xl border border-neutral-200 p-2 md:p-4">
           <div>
             <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
@@ -114,8 +134,12 @@
               <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-x-4">
-                    <img class="h-10 w-10 rounded-full" :src="getAvatar(user.imagePath)" alt="" />
-                    <p class="">{{ user.nickName === '' ? user.name : user.nickName }}</p>
+                    <img
+                      class="h-10 w-10 rounded-full"
+                      :src="getAvatar(user?.avatarImagePath)"
+                      alt=""
+                    />
+                    <p class="">{{ user?.nickName === null ? user.name : user?.nickName }}</p>
                   </div>
                 </div>
               </div>
@@ -141,7 +165,9 @@
         </div>
       </template>
     </div>
+    <!-- #endregion 留言區 -->
 
+    <!-- #region -->
     <div v-if="isLogin === false" class="-mt-14 hidden lg:col-span-3 lg:block">
       <div
         class="flex flex-col items-center gap-y-4 rounded-2.5xl border border-neutral-200 bg-primary-1 py-8"
@@ -151,11 +177,12 @@
         <button class="btn-primary" @click="openAuthModal('login')">開始提問</button>
       </div>
     </div>
+    <!-- #endregion -->
   </div>
   <AuthModal />
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
@@ -163,11 +190,37 @@ import useErrorHandler from '@/composables/useErrorHandler'
 import { getAvatar } from '@/composables/userCourse'
 import { useAuthStore } from '@/stores/auth'
 import AuthModal from '@/components/AuthModal.vue'
-import { InquiryRequest, InquiryResponseRequest } from '@/models/course'
+import { GetCourseInquiryRequest, InquiryRequest, InquiryResponseRequest } from '@/models/course'
+
+interface InquiriesResponse {
+  status: number
+  inquiries: Inquiry[]
+}
+
+interface Inquiry {
+  id: number
+  name: string
+  nickName: string
+  imagePath: string
+  date: string
+  content: string
+  responses: InquiryResponse[]
+  isResponse: boolean
+  responseValue: string
+}
+
+interface InquiryResponse {
+  id: number
+  name: string
+  nickName: string
+  imagePath: string
+  date: string
+  content: string
+}
 
 const route = useRoute()
 
-const emit = defineEmits(['update-is-response', 'get-data'])
+const emit = defineEmits(['get-data'])
 const props = defineProps({
   isLogin: {
     type: Boolean,
@@ -183,6 +236,10 @@ const props = defineProps({
   courseDetail: {
     type: Object,
     required: true
+  },
+  courseID: {
+    type: Number,
+    required: true
   }
 })
 
@@ -191,11 +248,34 @@ const { showError } = useErrorHandler()
 const auth = useAuthStore()
 const { authModal, authModalType } = storeToRefs(auth)
 
+const inquiriesData = ref<InquiriesResponse | null>(null)
 const inquiryValue = ref('')
 
-const replyAction = (id: string) => {
+const getInquiry = () => {
+  GetCourseInquiryRequest(props.courseID)
+    .then((res) => {
+      inquiriesData.value = res.data
+      inquiriesData.value?.inquiries.forEach((item) => {
+        item.isResponse = false
+        item.responseValue = ''
+      })
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
+
+const replyAction = (id: number) => {
   if (props.isLogin === false) openAuthModal()
-  else emit('update-is-response', id)
+  else inquiryReplyAction(id)
+}
+
+const inquiryReplyAction = (id: number) => {
+  inquiriesData.value?.inquiries.forEach((item) => {
+    if (item.id === id) {
+      item.isResponse = true
+    }
+  })
 }
 
 const openAuthModal = (type = 'login') => {
@@ -209,7 +289,7 @@ const sendInquiryAction = (content: string) => {
   InquiryRequest(courseID, data)
     .then((res) => {
       inquiryValue.value = ''
-      emit('get-data')
+      getInquiry()
     })
     .catch((err) => {
       showError(err)
@@ -221,11 +301,15 @@ const sendResponseAction = (inquiryID: number, content: string) => {
   let data = { content }
   InquiryResponseRequest(courseID, inquiryID, data)
     .then((res) => {
-      emit('get-data')
+      getInquiry()
     })
     .catch((err) => {
       showError(err)
     })
 }
+
+onMounted(() => {
+  getInquiry()
+})
 </script>
 <style lang=""></style>

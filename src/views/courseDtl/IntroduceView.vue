@@ -38,7 +38,7 @@
   </div>
 </template>
 <script setup lang="ts">
-const emit = defineEmits(['update-is-response', 'get-data'])
+const emit = defineEmits(['get-data'])
 const props = defineProps({
   isLogin: {
     type: Boolean,

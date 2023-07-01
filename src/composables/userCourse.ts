@@ -17,11 +17,15 @@ export function getStar(score: number | string, index: number) {
   }
 }
 
-export function getAvatar(imagePath: string = '') {
-  const str = imagePath.slice(-4)
-  if (str === 'null' || imagePath === '') {
+export function getAvatar(imagePath: string) {
+  if (imagePath === null) {
     return 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
   } else {
-    return imagePath
+    const str = imagePath.slice(-4)
+    if (str === 'null') {
+      return 'https://fakeimg.pl/40x40/B7B7B7/?text=用戶'
+    } else {
+      return imagePath
+    }
   }
 }

@@ -65,12 +65,15 @@
                             <p>{{ item.title }}</p>
                             <div class="flex items-end justify-between">
                               <div>
-                                <span class="text-lg text-primary-5"
-                                  >{{ `$${item.price} `
-                                  }}<span class="text-sm text-neutral-900 line-through">{{
-                                    `$${item.originPrice}`
-                                  }}</span></span
-                                >
+                                <p class="text-lg text-primary-5">
+                                  {{ `$${item.price} ` }}
+                                  <span
+                                    v-if="item.originPrice !== 0 && item.price < item.originPrice"
+                                    class="text-sm text-neutral-900 line-through"
+                                  >
+                                    {{ `$${item.originPrice}` }}
+                                  </span>
+                                </p>
                               </div>
                               <i
                                 class="material-icons cursor-pointer text-red-400"
@@ -112,7 +115,7 @@
                   alt="頭像"
                 />
                 <div
-                  class="absolute right-0 top-full z-10 hidden w-72 pt-2 hover:block group-hover:block"
+                  class="absolute right-0 top-full z-20 hidden w-72 pt-2 hover:block group-hover:block"
                 >
                   <div class="rounded border bg-neutral-50">
                     <div class="flex items-center p-4 pb-2">
@@ -135,29 +138,29 @@
                       <router-link to="/student/profile" class="block px-4 py-2"
                         >會員資料</router-link
                       >
-                      <router-link
-                        v-if="user.identity == '[1]'"
-                        to="/instructor/courses"
-                        class="block px-4 py-2"
-                        >課程後台</router-link
-                      >
                       <router-link to="/student/courses" class="block px-4 py-2"
                         >我的學習</router-link
                       >
                       <router-link to="/shoppingCart/orderConfirmation" class="block px-4 py-2"
                         >我的購物車</router-link
                       >
-                      <router-link to="/" class="pointer-events-none block px-4 py-2 opacity-50"
-                        >我的收藏</router-link
-                      >
-                      <button
-                        v-if="!user.identity"
-                        type="button"
-                        class="block w-full px-4 py-2 text-left"
-                        @click="courseProviderAllowModal = true"
-                      >
-                        開啟開課功能
-                      </button>
+                      <router-link to="/student/tags" class="block px-4 py-2">我的收藏</router-link>
+                      <template v-if="!user.identity">
+                        <hr class="my-2" />
+                        <button
+                          type="button"
+                          class="block w-full px-4 py-2 text-left"
+                          @click="courseProviderAllowModal = true"
+                        >
+                          開啟開課功能
+                        </button>
+                      </template>
+                      <template v-if="user.identity == '[1]'">
+                        <hr class="my-2" />
+                        <router-link to="/instructor/courses" class="block px-4 py-2"
+                          >課程後台</router-link
+                        >
+                      </template>
                       <hr class="my-2" />
                       <a href="/" @click.prevent="handleLogout" class="block px-4 py-2 pb-4"
                         >登出</a
@@ -265,7 +268,6 @@ function handleLogout() {
 
 onMounted(() => {
   getLocalCart()
-  cartHandle()
   isImmediateCheckout.value = false
 })
 </script>

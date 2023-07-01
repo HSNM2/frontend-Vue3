@@ -36,15 +36,17 @@
         </div>
         <div class="flex flex-col gap-y-2">
           <p class="text-center font-bold text-neutral-50">關於我們</p>
-          <RouterLink to="/" class="text-center text-neutral-50">品牌介紹</RouterLink>
+          <RouterLink to="/about" class="text-center text-neutral-50">品牌介紹</RouterLink>
         </div>
         <div class="flex flex-col gap-y-2">
           <p class="text-center font-bold text-neutral-50">商品類型</p>
-          <RouterLink to="/" class="text-center text-neutral-50">線上課程</RouterLink>
+          <RouterLink to="/courses" class="text-center text-neutral-50">線上課程</RouterLink>
         </div>
         <div class="flex flex-col gap-y-2">
           <p class="text-center font-bold text-neutral-50">幫助</p>
-          <RouterLink to="/" class="text-center text-neutral-50">線上開課教學</RouterLink>
+          <RouterLink to="/createCourseInfo" class="text-center text-neutral-50"
+            >線上開課教學</RouterLink
+          >
           <RouterLink to="/" class="text-center text-neutral-50">常見問答</RouterLink>
           <RouterLink to="/" class="text-center text-neutral-50">聯絡我們</RouterLink>
         </div>

@@ -76,12 +76,18 @@
                     {{ n <= immediateCheckoutCourseInfo.avgRating ? 'star' : 'star_border' }}
                   </span>
                 </div>
-                <span class="text-primary-5"
-                  >{{ `$${immediateCheckoutCourseInfo.price} `
-                  }}<span class="text-sm text-neutral-900 line-through">{{
-                    `$${immediateCheckoutCourseInfo.originPrice}`
-                  }}</span></span
-                >
+                <p class="text-primary-5">
+                  {{ `$${immediateCheckoutCourseInfo.price}` }}
+                  <span
+                    v-if="
+                      immediateCheckoutCourseInfo.originPrice !== 0 &&
+                      immediateCheckoutCourseInfo.price < immediateCheckoutCourseInfo.originPrice
+                    "
+                    class="text-sm text-neutral-900 line-through"
+                  >
+                    {{ `$${immediateCheckoutCourseInfo.originPrice}` }}
+                  </span>
+                </p>
               </div>
             </div>
           </div>
@@ -111,12 +117,15 @@
                         {{ n <= item.avgRating ? 'star' : 'star_border' }}
                       </span>
                     </div>
-                    <span class="text-primary-5"
-                      >{{ `$${item.price} `
-                      }}<span class="text-sm text-neutral-900 line-through">{{
-                        `$${item.originPrice}`
-                      }}</span></span
-                    >
+                    <p class="text-primary-5">
+                      {{ `$${item.price} ` }}
+                      <span
+                        v-if="item.originPrice !== 0 && item.price < item.originPrice"
+                        class="text-sm text-neutral-900 line-through"
+                      >
+                        {{ `$${item.originPrice}` }}
+                      </span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -132,13 +141,15 @@
         <p class="">總計</p>
         <span class="block text-lg font-bold"
           >${{
-            immediateCheckoutCourseInfo.price ? immediateCheckoutCourseInfo.price : cart.totalPrice
+            isImmediateCheckout && immediateCheckoutCourseInfo.price
+              ? immediateCheckoutCourseInfo.price
+              : cart.totalPrice
           }}</span
         >
         <div class="flex justify-between">
           <span class="line-through"
             >${{
-              immediateCheckoutCourseInfo.originPrice
+              isImmediateCheckout && immediateCheckoutCourseInfo.originPrice
                 ? immediateCheckoutCourseInfo.originPrice
                 : cart.totalOriginPrice
             }}</span

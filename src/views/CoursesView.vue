@@ -18,13 +18,13 @@
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           <template v-for="item in courseList?.data" :key="item.id">
             <div class="relative">
-              <span
-                class="material-icons absolute right-2 top-2 z-10 cursor-pointer text-2xl text-primary-3"
-                @click="handleCourseTag(item.id)"
-              >
-                {{ judgeTags(item.id) ? 'bookmark' : 'bookmark_border' }}
-              </span>
               <router-link :to="`/course/${item.id}`">
+                <span
+                  class="material-icons absolute right-2 top-2 z-10 cursor-pointer text-2xl text-primary-3"
+                  @click.prevent="courseTagAction(item.id)"
+                >
+                  {{ judgeTags(item.id) ? 'bookmark' : 'bookmark_border' }}
+                </span>
                 <div class="cursor-pointer hover:shadow hover:shadow-md hover:shadow-neutral-150">
                   <div class="overflow-hidden">
                     <img
@@ -33,9 +33,9 @@
                       alt=""
                     />
                   </div>
-                  <div class="h-48 border border-t-0 border-solid border-neutral-150 p-3">
+                  <div class="h-56 border border-t-0 border-solid border-neutral-150 p-3">
                     <div class="flex h-full flex-col justify-between">
-                      <h3 class="text-lg font-bold text-primary-6">
+                      <h3 class="line-clamp-2 text-lg font-bold text-primary-6">
                         {{ item.title }}
                       </h3>
                       <div>
@@ -62,7 +62,9 @@
                         </div>
                         <div class="flex items-center gap-x-2">
                           <span class="text-2xl font-bold text-primary-4">NT${{ item.price }}</span>
-                          <span class="text-sm font-bold text-neutral-400 line-through"
+                          <span
+                            v-if="item.originPrice !== 0 && item.price < item.originPrice"
+                            class="text-sm font-bold text-neutral-400 line-through"
                             >NT${{ item.originPrice }}</span
                           >
                         </div>
@@ -103,11 +105,13 @@
 import { ref, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
+import { useStatusStore } from '@/stores/status.js'
 import { useAuthStore } from '@/stores/auth'
+import { useTagStore } from '@/stores/tag'
 import { getStar } from '@/composables/userCourse'
 import useErrorHandler from '@/composables/useErrorHandler'
 
-import { GetCoursesListRequest, GetCourseTagRequest, UseCourseTagRequest } from '@/models/course'
+import { GetCoursesListRequest } from '@/models/course'
 
 interface CourseList {
   page: number
@@ -128,9 +132,9 @@ interface Course {
   tag: string
   buyers: number
   totalTime: number
-  courseStatus: string // 待修改
+  courseStatus: string
   type: string
-  category: string // 待修改
+  category: string
   rating: {
     avgRating: number
     countRating: number
@@ -139,9 +143,14 @@ interface Course {
 
 const { showError } = useErrorHandler()
 
+const status = useStatusStore()
+const { updateLoading } = status
 const auth = useAuthStore()
 const { authModal, authModalType, user } = storeToRefs(auth)
 const isLogin = ref(user.value !== null)
+const tag = useTagStore()
+const { tagList } = storeToRefs(tag)
+const { getTagList, handleCourseTag, judgeTags } = tag
 
 const selectCoursesList = [
   { value: '', label: '全部課程' },
@@ -154,6 +163,7 @@ const courseList = ref<CourseList>({ page: 1, totalPages: 1, success: false, dat
 const currentPage = ref(1)
 
 const getDataList = () => {
+  updateLoading(true)
   let limit = 20
   let query = `page=${currentPage.value}&limit=${limit}`
 
@@ -164,48 +174,24 @@ const getDataList = () => {
     .catch((err) => {
       showError(err)
     })
+
+  setTimeout(() => {
+    updateLoading(false)
+  }, 500)
 }
 
-//#region tag需整理
-const openAuthModal = (type = 'login') => {
+function openAuthModal(type = 'login') {
   authModal.value = true
   authModalType.value = type
 }
 
-const tagList = ref([])
-const getTagList = () => {
-  GetCourseTagRequest()
-    .then((res) => {
-      if (res.data.status === true) {
-        tagList.value = res.data.data.split(',')
-      } else {
-        tagList.value = []
-      }
-    })
-    .catch((err) => {
-      showError(err)
-    })
-}
-
-const handleCourseTag = (courseID: number) => {
+const courseTagAction = (courseID: number) => {
   if (isLogin.value === false) {
     openAuthModal()
   } else {
-    let method = judgeTags(courseID) === true ? 'delete' : 'post'
-    UseCourseTagRequest(method, courseID)
-      .then((res) => {
-        getTagList()
-      })
-      .catch((err) => {
-        showError(err)
-      })
+    handleCourseTag(courseID)
   }
 }
-
-const judgeTags = (courseID: number) => {
-  return tagList.value.some((tag) => Number(tag) === courseID)
-}
-//#endregion
 
 const setPage = (page: number) => {
   if (page <= 0 || page >= courseList.value.totalPages) return
@@ -217,7 +203,10 @@ const checkLogin = () => {
   if (user.value !== null) {
     isLogin.value = true
     getTagList()
-  } else isLogin.value = false
+  } else {
+    isLogin.value = false
+    tagList.value = []
+  }
 }
 
 watch(user, () => {

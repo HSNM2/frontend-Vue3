@@ -184,7 +184,6 @@
                 <option value="麵包">麵包</option>
               </select>
             </div>
-            <ErrorMessage v-if="meta.validated" class="invalid-feedback" name="price" />
           </VField>
         </div>
         <div class="flex-1">
@@ -271,7 +270,7 @@
           <label for="price" class="form-label">銷售價格</label>
           <VField
             name="price"
-            rules="required|integer"
+            rules="required|integer|min_value:1"
             label="銷售價格"
             v-model="course!.price"
             v-slot="{ field, errors, meta }"
@@ -285,6 +284,7 @@
               <input
                 id="price"
                 type="number"
+                min="0"
                 class="form-control rounded-s-none pe-7 text-right"
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
@@ -312,6 +312,7 @@
               <input
                 id="originPrice"
                 type="number"
+                min="0"
                 class="form-control rounded-s-none pe-7 text-right"
                 v-bind="field"
                 :class="{ invalid: meta.validated && !!errors.length }"
@@ -493,20 +494,28 @@ function addTag() {
 }
 
 function onSubmit() {
+  updateLoading(true)
   course!.tag = tags.value
   const { image_path, ...data } = course!
   editCourseInfo({
     id: +route.params.courseId,
     data
-  }).then((res) => {
-    if (res.data.status == true) {
-      Swal.fire({
-        icon: 'success',
-        title: res.data.message
-      })
-      courseInfoProcess()
-    }
   })
+    .then((res) => {
+      if (res.data.status == true) {
+        Swal.fire({
+          icon: 'success',
+          title: res.data.message
+        })
+        courseInfoProcess()
+      }
+    })
+    .catch((err) => {
+      showError(err)
+    })
+    .finally(() => {
+      updateLoading(false)
+    })
 }
 
 onMounted(() => {

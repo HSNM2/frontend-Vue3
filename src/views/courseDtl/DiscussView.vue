@@ -17,8 +17,8 @@
         <div class="">
           <div class="flex flex-col gap-y-2">
             <div class="flex items-center gap-x-4">
-              <img class="rounded-full" src="https://picsum.photos/40/40" alt="" />
-              <p class="">漂亮阿姨</p>
+              <img class="h-10 w-10 rounded-full" :src="getAvatar(user?.avatarImagePath)" alt="" />
+              <p class="">{{ user?.nickName === null ? user?.name : user?.nickName }}</p>
             </div>
             <div class="mb-4 flex items-center gap-x-4">
               <div class="">
@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <div class="mt-4 rounded-2.5xl border border-neutral-200 p-2 md:p-4">
+      <!-- <div class="mt-4 rounded-2.5xl border border-neutral-200 p-2 md:p-4">
         <div class="rounded-2.5xl px-4 py-4 md:px-5 md:py-6">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-x-4">
@@ -113,12 +113,25 @@
             </div>
           </button>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'
+
+import { getAvatar } from '@/composables/userCourse'
+
 const checkedChapter = ref('currentChapter')
+
+const emit = defineEmits(['update-video-path'])
+const props = defineProps({
+  user: {
+    type: Object
+  },
+  courseDetail: {
+    type: Object
+  }
+})
 </script>
 <style lang=""></style>

@@ -7,9 +7,45 @@ export function GetCoursesListRequest(query: string) {
   })
 }
 
+export function GetCourseIsExistRequest(data: object) {
+  return request({
+    url: `/api/course/courseIsExist`,
+    method: 'post',
+    data: data
+  })
+}
+
 export function GetCourseRequest(courseID: number) {
   return request({
     url: `/api/course/${courseID}`,
+    method: 'get'
+  })
+}
+
+export function GetCourseChapterRequest(courseID: number) {
+  return request({
+    url: `/api/course/${courseID}/chapter`,
+    method: 'get'
+  })
+}
+
+export function GetCourseInquiryRequest(courseID: number) {
+  return request({
+    url: `/api/course/${courseID}/inquiry`,
+    method: 'get'
+  })
+}
+
+export function GetCourseFaqRequest(courseID: number) {
+  return request({
+    url: `/api/course/${courseID}/faq`,
+    method: 'get'
+  })
+}
+
+export function GetCourseRatingRequest(courseID: number) {
+  return request({
+    url: `/api/course/${courseID}/rating`,
     method: 'get'
   })
 }

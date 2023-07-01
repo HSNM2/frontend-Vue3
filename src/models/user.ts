@@ -6,3 +6,10 @@ export function GetUserCoursesRequest() {
     method: 'get'
   })
 }
+
+export function GetUserTagsRequest() {
+  return request({
+    url: '/api/user/tag',
+    method: 'get'
+  })
+}

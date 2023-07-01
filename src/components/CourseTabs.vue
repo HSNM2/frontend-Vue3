@@ -57,8 +57,8 @@ watch(windowWidth, () => {
   if (windowWidth.value > 1296) {
     if (route.name === 'learn' && tabName.value === '課程內容') {
       tabName.value = '課程討論'
+      emit('changeTabView', tabName.value)
     }
-    emit('changeTabView', tabName.value)
   }
 })
 

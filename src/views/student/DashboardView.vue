@@ -1,7 +1,7 @@
 <template>
-  <main class="bg-neutral-100 py-8">
-    <div class="px-4 lg:container">
-      <div class="grid grid-cols-12 gap-6">
+  <main class="h-full bg-neutral-100 py-8">
+    <div class="h-full px-4 lg:container">
+      <div class="grid h-full grid-cols-12 gap-6">
         <aside class="col-span-3 flex flex-col items-center bg-neutral-50 py-6">
           <div class="relative">
             <img
@@ -32,6 +32,7 @@
               v-for="link in sidebarMenuLinks"
               :key="link.to"
               class="flex items-center justify-center p-4 text-neutral-600 hover:text-primary-4"
+              :class="{ 'pointer-events-none': !link.enabled }"
               :to="link.to"
             >
               <span class="material-icons me-2"> {{ link.icon }}</span>
@@ -63,10 +64,10 @@ const { getUser } = auth
 const avatarPic = ref<FormData | null>(new FormData())
 
 const sidebarMenuLinks = ref([
-  { name: '我的學習', icon: 'computer', to: '/student/courses' },
-  { name: '我的收藏', icon: 'bookmark', to: '/student/tags' },
-  { name: '訂單記錄', icon: 'description', to: '/student/orders' },
-  { name: '會員資料', icon: 'person', to: '/student/profile' }
+  { name: '我的學習', icon: 'computer', to: '/student/courses', enabled: true },
+  { name: '我的收藏', icon: 'bookmark', to: '/student/tags', enabled: true },
+  { name: '訂單記錄', icon: 'description', to: '/student/orders', enabled: false },
+  { name: '會員資料', icon: 'person', to: '/student/profile', enabled: true }
 ])
 
 function avatarPicChange(e: Event) {
