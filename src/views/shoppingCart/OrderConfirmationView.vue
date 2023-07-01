@@ -31,12 +31,15 @@
                       {{ n <= item.avgRating ? 'star' : 'star_border' }}
                     </span>
                   </div>
-                  <span class="text-primary-5"
-                    >{{ `$${item.price} `
-                    }}<span class="text-sm text-neutral-900 line-through">{{
-                      `$${item.originPrice}`
-                    }}</span></span
-                  >
+                  <p class="text-primary-5">
+                    {{ `$${item.price} ` }}
+                    <span
+                      v-if="item.originPrice !== 0 && item.price < item.originPrice"
+                      class="text-sm text-neutral-900 line-through"
+                    >
+                      {{ `$${item.originPrice}` }}
+                    </span>
+                  </p>
                 </div>
               </div>
               <div class="w-1/4 p-2">

@@ -62,7 +62,9 @@
                         </div>
                         <div class="flex items-center gap-x-2">
                           <span class="text-2xl font-bold text-primary-4">NT${{ item.price }}</span>
-                          <span class="text-sm font-bold text-neutral-400 line-through"
+                          <span
+                            v-if="item.originPrice !== 0 && item.price < item.originPrice"
+                            class="text-sm font-bold text-neutral-400 line-through"
                             >NT${{ item.originPrice }}</span
                           >
                         </div>

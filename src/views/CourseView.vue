@@ -40,7 +40,13 @@
                 <p class="text-2xl font-bold text-primary-4">
                   NT${{ courseDetail.data.course.price }}
                 </p>
-                <p class="text-sm font-bold text-neutral-400 line-through">
+                <p
+                  v-if="
+                    courseDetail.data.course.originPrice !== 0 &&
+                    courseDetail.data.course.price < courseDetail.data.course.originPrice
+                  "
+                  class="text-sm font-bold text-neutral-400 line-through"
+                >
                   NT${{ courseDetail.data.course.originPrice }}
                 </p>
               </div>

@@ -65,12 +65,15 @@
                             <p>{{ item.title }}</p>
                             <div class="flex items-end justify-between">
                               <div>
-                                <span class="text-lg text-primary-5"
-                                  >{{ `$${item.price} `
-                                  }}<span class="text-sm text-neutral-900 line-through">{{
-                                    `$${item.originPrice}`
-                                  }}</span></span
-                                >
+                                <p class="text-lg text-primary-5">
+                                  {{ `$${item.price} ` }}
+                                  <span
+                                    v-if="item.originPrice !== 0 && item.price < item.originPrice"
+                                    class="text-sm text-neutral-900 line-through"
+                                  >
+                                    {{ `$${item.originPrice}` }}
+                                  </span>
+                                </p>
                               </div>
                               <i
                                 class="material-icons cursor-pointer text-red-400"
