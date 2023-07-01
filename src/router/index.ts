@@ -107,6 +107,10 @@ const router = createRouter({
       },
       children: [
         {
+          path: '',
+          redirect: '/instructor/courses'
+        },
+        {
           path: 'courses',
           name: 'instructorCourses',
           component: () => import('../views/instructor/CoursesView.vue')
