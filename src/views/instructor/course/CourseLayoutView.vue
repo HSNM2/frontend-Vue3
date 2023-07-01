@@ -42,7 +42,10 @@
               <span class="">課程發布</span>
               <input type="checkbox" name="" id="" class="peer sr-only" :checked="isPublish" />
               <div
-                class="relative h-6 w-11 items-center rounded-full bg-neutral-400 after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-neutral-50 after:transition-all after:content-[''] peer-checked:bg-primary-6 peer-checked:after:translate-x-full peer-focus:ring-4 peer-focus:ring-primary-3"
+                class="relative h-6 w-11 items-center rounded-full bg-neutral-400 after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-neutral-50 after:transition-all after:content-[''] peer-focus:ring-4 peer-focus:ring-primary-3"
+                :class="{
+                  'peer-checked:bg-primary-6 peer-checked:after:translate-x-full': isPublish
+                }"
               ></div>
             </label>
           </li>
@@ -108,27 +111,35 @@ function publishStateHandle() {
 
 function publishHandle() {
   if (isPublish.value) {
-    courseUnpublish({ courseId: courseRouteParamsId.value }).then((res) => {
-      if (res.data.status == true) {
-        getCourses()
-        publishStateHandle()
-        Swal.fire({
-          icon: 'success',
-          title: res.data.message
-        })
-      }
-    })
+    courseUnpublish({ courseId: courseRouteParamsId.value })
+      .then((res) => {
+        if (res.data.status == true) {
+          getCourses()
+          publishStateHandle()
+          Swal.fire({
+            icon: 'success',
+            title: res.data.message
+          })
+        }
+      })
+      .catch((err) => {
+        showError(err)
+      })
   } else {
-    coursePublish({ courseId: courseRouteParamsId.value }).then((res) => {
-      if (res.data.status == true) {
-        getCourses()
-        publishStateHandle()
-        Swal.fire({
-          icon: 'success',
-          title: res.data.message
-        })
-      }
-    })
+    coursePublish({ courseId: courseRouteParamsId.value })
+      .then((res) => {
+        if (res.data.status == true) {
+          getCourses()
+          publishStateHandle()
+          Swal.fire({
+            icon: 'success',
+            title: res.data.message
+          })
+        }
+      })
+      .catch((err) => {
+        showError(err)
+      })
   }
 }
 </script>

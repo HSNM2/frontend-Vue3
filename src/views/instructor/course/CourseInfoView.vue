@@ -270,7 +270,7 @@
           <label for="price" class="form-label">銷售價格</label>
           <VField
             name="price"
-            rules="required|integer"
+            rules="required|integer|min_value:1"
             label="銷售價格"
             v-model="course!.price"
             v-slot="{ field, errors, meta }"
