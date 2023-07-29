@@ -38,7 +38,10 @@
           </li>
           <li>
             <span class="text-sm text-neutral-600">發布</span>
-            <label class="relative mb-1 flex items-center justify-between" @click="publishHandle">
+            <label
+              class="relative mb-1 flex items-center justify-between"
+              @click="publishHandle($event)"
+            >
               <span class="">課程發布</span>
               <input type="checkbox" name="" id="" class="peer sr-only" :checked="isPublish" />
               <div
@@ -109,7 +112,8 @@ function publishStateHandle() {
   })
 }
 
-function publishHandle() {
+function publishHandle(e: any) {
+  e.preventDefault()
   if (isPublish.value) {
     courseUnpublish({ courseId: courseRouteParamsId.value })
       .then((res) => {
