@@ -1,0 +1,1 @@
+import{Y as e}from"./index-bcaa0858.js";function s(){return e({url:"/api/user/courses",method:"get"})}function t(){return e({url:"/api/user/tag",method:"get"})}export{s as G,t as a};
