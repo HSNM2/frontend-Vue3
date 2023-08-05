@@ -1,0 +1,1 @@
+import{o as e,G as t}from"./index-efb9783c.js";function n(){e(()=>{t(()=>{document.querySelector("main")&&(document.querySelector("main").style.minHeight=`calc(100vh - ${document.querySelector("header").offsetHeight}px - ${document.querySelector("footer").offsetHeight}px)`)})})}export{n as u};
